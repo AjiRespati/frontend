@@ -1,0 +1,30 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "frontend",
+      "request": "launch",
+      "type": "dart",
+      // "args": ["-d", "chrome", "--web-port", "3330", "--wasm"]
+      "args": [
+        "-d",
+        "chrome",
+        "--web-port",
+        "3333",
+        "canvaskit"
+      ]
+      // "args": [
+      //     "-d",  
+      //     "web-server",
+      //     "--web-port",
+      //     "8080",
+      //     "--web-hostname",
+      //     "192.168.110.104",
+      //     // flutter run -d web-server --web-port 8080 --web-hostname 192.168.110.104
+      // ],
+    }
+  ]
+}
