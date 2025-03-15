@@ -55,6 +55,15 @@ class SideBar extends StatelessWidget with GetItMixin {
                   ListTile(
                     leading: const Icon(Icons.shopping_cart, size: 22),
                     // leading: const Icon(Icons.bar_chart_rounded, size: 22),
+                    title: const Text("Dashboard"),
+                    dense: true,
+                    onTap: () {
+                      onTapMenu(menuTitle: "Dashboard");
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.shopping_cart, size: 22),
+                    // leading: const Icon(Icons.bar_chart_rounded, size: 22),
                     title: const Text("Products"),
                     dense: true,
                     onTap: () {

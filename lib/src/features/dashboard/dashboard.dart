@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/services/api_service.dart';
+import 'package:frontend/src/widgets/page_container.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -28,41 +29,46 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Commission Dashboard')),
-      body:
-          commissionData == null
-              ? const Center(child: CircularProgressIndicator())
-              : Column(
-                children: [
-                  _buildCommissionCard(
-                    "Total Commission",
-                    (commissionData!['totalCommission'] as num).toDouble(),
-                  ),
-                  _buildCommissionCard(
-                    "Agent",
-                    (commissionData!['agentCommission'] as num).toDouble(),
-                  ),
-                  _buildCommissionCard(
-                    "SubAgent",
-                    (commissionData!['subAgentCommission'] as num).toDouble(),
-                  ),
-                  _buildCommissionCard(
-                    "Salesman",
-                    (commissionData!['salesmanCommission'] as num).toDouble(),
-                  ),
-                  _buildCommissionCard(
-                    "Shop",
-                    (commissionData!['shopCommission'] as num).toDouble(),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/agentDetail');
-                    },
-                    child: const Text('View Agent Details'),
-                  ),
-                ],
-              ),
+      // appBar: AppBar(title: const Text('Commission Dashboard')),
+      body: PageContainer(
+        setSidebarExpanding: true,
+        showMenubutton: true,
+
+        mainSection:
+            commissionData == null
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+                  children: [
+                    _buildCommissionCard(
+                      "Total Commission",
+                      (commissionData!['totalCommission'] as num).toDouble(),
+                    ),
+                    _buildCommissionCard(
+                      "Agent",
+                      (commissionData!['agentCommission'] as num).toDouble(),
+                    ),
+                    _buildCommissionCard(
+                      "SubAgent",
+                      (commissionData!['subAgentCommission'] as num).toDouble(),
+                    ),
+                    _buildCommissionCard(
+                      "Salesman",
+                      (commissionData!['salesmanCommission'] as num).toDouble(),
+                    ),
+                    _buildCommissionCard(
+                      "Shop",
+                      (commissionData!['shopCommission'] as num).toDouble(),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/agentDetail');
+                      },
+                      child: const Text('View Agent Details'),
+                    ),
+                  ],
+                ),
+      ),
     );
   }
 
