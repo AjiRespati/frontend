@@ -15,9 +15,15 @@ class LoginScreen extends StatefulWidget with GetItStatefulWidgetMixin {
 class _LoginScreenState extends State<LoginScreen> with GetItStateMixin {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     get<SystemViewModel>().checkSession(context: context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    get<SystemViewModel>().usernameController.dispose();
+    get<SystemViewModel>().passwordController.dispose();
   }
 
   @override

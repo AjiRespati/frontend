@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../application_info.dart';
+import '../../application_info.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class SideBar extends StatelessWidget with GetItMixin {

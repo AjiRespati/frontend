@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'application_info.dart';
+import '../application_info.dart';
 import 'routes/animate_route_transitions.dart';
 import 'routes/app_router.dart';
 import 'utils/custom_scroll_behavior.dart';

@@ -66,6 +66,8 @@ class SystemViewModel extends ChangeNotifier {
       passwordController.text,
     );
     if (isLogin) {
+      usernameController.text = "";
+      passwordController.text = "";
       Navigator.pushReplacementNamed(context, dashboardRoute);
     } else {
       ScaffoldMessenger.of(

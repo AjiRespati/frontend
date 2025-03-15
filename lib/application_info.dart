@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ApplicationInfo {
@@ -6,7 +7,8 @@ class ApplicationInfo {
 
   static const appName = "Ice Stock 1.0";
 
-  static const baseUrlDev = "http://10.0.2.2:3000/api";
+  static const baseUrlDev =
+      kIsWeb ? 'http://localhost:3000/api' : "http://10.0.2.2:3000/api";
   static const baseUrlProd = "http://10.0.2.2:3000/api";
 
   static const baseUrl = baseUrlDev;

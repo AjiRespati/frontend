@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../application_info.dart';
+import '../../application_info.dart';
 import 'package:intl/intl.dart'; // ✅ For formatting dates
 
 class ProductCard extends StatelessWidget {
@@ -10,17 +10,19 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String imageUrl = ApplicationInfo.baseUrl + (product['image'] ?? '');
-    String formattedStockIn = product['last_stock_in'] != null
-        ? DateFormat.yMMMd().format(
-            DateTime.parse(product['last_stock_in']),
-          )
-        : "N/A";
+    String formattedStockIn =
+        product['last_stock_in'] != null
+            ? DateFormat.yMMMd().format(
+              DateTime.parse(product['last_stock_in']),
+            )
+            : "N/A";
 
-    String formattedStockOut = product['last_stock_out'] != null
-        ? DateFormat.yMMMd().format(
-            DateTime.parse(product['last_stock_out']),
-          )
-        : "N/A";
+    String formattedStockOut =
+        product['last_stock_out'] != null
+            ? DateFormat.yMMMd().format(
+              DateTime.parse(product['last_stock_out']),
+            )
+            : "N/A";
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -31,17 +33,20 @@ class ProductCard extends StatelessWidget {
           // ✅ Product Image
           Expanded(
             child: ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(10)),
-              child: product['image'] != null
-                  ? Image.network(
-                      imageUrl,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.image_not_supported, size: 50),
-                    )
-                  : const Icon(Icons.image, size: 50),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(10),
+              ),
+              child:
+                  product['image'] != null
+                      ? Image.network(
+                        imageUrl,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder:
+                            (context, error, stackTrace) =>
+                                const Icon(Icons.image_not_supported, size: 50),
+                      )
+                      : const Icon(Icons.image, size: 50),
             ),
           ),
 
@@ -123,16 +128,20 @@ class ProductCard extends StatelessWidget {
                         // ✅ Last Stock In Date
                         Text(
                           "Last In: $formattedStockIn",
-                          style:
-                              const TextStyle(fontSize: 12, color: Colors.blue),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue,
+                          ),
                         ),
                         const SizedBox(height: 4),
 
                         // ✅ Last Stock Out Date
                         Text(
                           "Last Out: $formattedStockOut",
-                          style:
-                              const TextStyle(fontSize: 12, color: Colors.red),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.red,
+                          ),
                         ),
                       ],
                     ),
