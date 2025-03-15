@@ -7,8 +7,12 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SystemViewModel extends ChangeNotifier {
-  // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final ApiService apiService = ApiService();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _isBusy = false;
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool _showPassword = false;
 
   //====================//
   //  GETTER n SETTER   //
@@ -20,6 +24,12 @@ class SystemViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get showPassword => _showPassword;
+  set showPassword(bool val) {
+    _showPassword = val;
+    notifyListeners();
+  }
+
   //====================//
   //       METHOD       //
   //====================//
@@ -27,7 +37,7 @@ class SystemViewModel extends ChangeNotifier {
   /// call this method after mounted
   checkSession({required BuildContext context}) async {
     isBusy = true;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await _prefs;
     String? token = prefs.getString('accessToken');
 
     if (!isTokenExpired(token)) {
@@ -45,8 +55,22 @@ class SystemViewModel extends ChangeNotifier {
 
     bool isNeedRefresh = JwtDecoder.isExpired(token);
     if (isNeedRefresh) {
-      ApiService().refreshAccessToken();
+      apiService.refreshAccessToken();
     }
     return JwtDecoder.isExpired(token);
+  }
+
+  void onLogin({required BuildContext context}) async {
+    bool isLogin = await apiService.login(
+      usernameController.text,
+      passwordController.text,
+    );
+    if (isLogin) {
+      Navigator.pushReplacementNamed(context, dashboardRoute);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Invalid credentials")));
+    }
   }
 }

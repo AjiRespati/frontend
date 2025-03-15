@@ -20,10 +20,10 @@ class AppRouter {
 
       switch (settings.name) {
         case '/':
-          screen = const LoginScreen();
+          screen = LoginScreen();
           break;
         case signInRoute:
-          screen = const LoginScreen();
+          screen = LoginScreen();
           break;
         case dashboardRoute:
           screen = const Dashboard();
