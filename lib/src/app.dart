@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'application_info.dart';
 import 'routes/animate_route_transitions.dart';
 import 'routes/app_router.dart';
@@ -13,26 +14,31 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: ApplicationInfo.appName,
-      theme: ThemeData(
-        textTheme: GoogleFonts.mulishTextTheme(),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          // surface: const Color.fromRGBO(0, 0, 255, 0.03),
-        ),
-        useMaterial3: true,
-      ),
-      navigatorKey: locator<NavigationKey>().navigatorKey,
-      initialRoute: "/",
-      onGenerateRoute: AppRouter.routes(),
-      onUnknownRoute: (settings) {
-        return FadeRoute(page: const NotFoundPage(), settings: settings);
+    return ScreenUtilInit(
+      designSize: Size(375, 812),
+      builder: (context, child) {
+        return MaterialApp(
+          title: ApplicationInfo.appName,
+          theme: ThemeData(
+            textTheme: GoogleFonts.mulishTextTheme(),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple,
+              // surface: const Color.fromRGBO(0, 0, 255, 0.03),
+            ),
+            useMaterial3: true,
+          ),
+          navigatorKey: locator<NavigationKey>().navigatorKey,
+          initialRoute: "/",
+          onGenerateRoute: AppRouter.routes(),
+          onUnknownRoute: (settings) {
+            return FadeRoute(page: const NotFoundPage(), settings: settings);
+          },
+          scrollBehavior: CustomScrollBehavior(),
+          localizationsDelegates: const [GlobalMaterialLocalizations.delegate],
+          supportedLocales: const [Locale('en'), Locale('id')],
+          debugShowCheckedModeBanner: !ApplicationInfo.isProduction,
+        );
       },
-      scrollBehavior: CustomScrollBehavior(),
-      localizationsDelegates: const [GlobalMaterialLocalizations.delegate],
-      supportedLocales: const [Locale('en'), Locale('id')],
-      debugShowCheckedModeBanner: !ApplicationInfo.isProduction,
     );
   }
 }

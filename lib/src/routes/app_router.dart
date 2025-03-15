@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/src/features/dashboard/dashboard.dart';
 import 'package:frontend/src/features/products/add_product.dart';
 import 'package:frontend/src/features/suppliers/add_supplier.dart';
 import 'package:frontend/src/features/suppliers/suppliers.dart';
@@ -23,6 +24,9 @@ class AppRouter {
           break;
         case signInRoute:
           screen = const LoginScreen();
+          break;
+        case dashboardRoute:
+          screen = const Dashboard();
           break;
         case productsRoute:
           screen = const Products();

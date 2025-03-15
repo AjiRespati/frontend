@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/src/utils/responsive_layout.dart';
 import '../../application_info.dart';
 import '../../routes/route_names.dart';
 import '../../services/api_service.dart';
@@ -30,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _passwordController.text,
     );
     if (isLogin) {
-      Navigator.pushReplacementNamed(context, productsRoute);
+      Navigator.pushReplacementNamed(context, dashboardRoute);
     } else {
       ScaffoldMessenger.of(
         context,
@@ -58,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String? token = prefs.getString('accessToken');
 
     if (!isTokenExpired(token) && mounted) {
-      Navigator.pushNamed(context, productsRoute);
+      Navigator.pushNamed(context, dashboardRoute);
       setState(() {
         _isbusy = false;
       });
@@ -78,268 +79,270 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("HEADER")),
-      body:
-          _isbusy
-              ? const Center(
-                child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: CircularProgressIndicator(),
-                ),
-              )
-              : Column(
-                children: [
-                  const SizedBox(height: 20),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        ApplicationInfo.appName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
+    return ResponsiveLayout(
+      desktopLayout: Scaffold(
+        body: Row(
+          children: [
+            const SizedBox(width: 900),
+            Column(
+              children: [
+                Container(
+                  constraints: const BoxConstraints(
+                    minHeight: 600,
+                    maxWidth: 350,
                   ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      label: Text(
-                        "Username",
-                        style: GoogleFonts.inter(fontSize: 12),
-                      ),
-                      hintText: "Username",
-                      hintStyle: GoogleFonts.inter(fontSize: 12),
-                      prefixIcon: const Icon(Icons.person_rounded, size: 20),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 2,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Username can't be empty";
-                      }
-
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: !_showPassword,
-                    onEditingComplete: _onLogin,
-                    onTap: () {
-                      log('tapped');
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      hintStyle: GoogleFonts.inter(fontSize: 12),
-                      label: Text(
-                        "Password",
-                        style: GoogleFonts.inter(fontSize: 12),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 2,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      prefixIcon: const Icon(Icons.lock, size: 20),
-                      suffixIcon: IconButton(
-                        splashRadius: 20,
-                        icon: Icon(
-                          _showPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _showPassword = !_showPassword;
-                          });
-                        },
-                      ),
-                    ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Password can't be empty";
-                      }
-
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 44,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff3487a5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      onPressed: _onLogin,
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-    );
-    return Scaffold(
-      body: Row(
-        children: [
-          const SizedBox(width: 900),
-          Column(
-            children: [
-              Container(
-                constraints: const BoxConstraints(
-                  minHeight: 600,
-                  maxWidth: 350,
-                ),
-                child:
-                    _isbusy
-                        ? const Center(
-                          child: SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                        : Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  ApplicationInfo.appName,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
+                  child:
+                      _isbusy
+                          ? const Center(
+                            child: SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                          : Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    ApplicationInfo.appName,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            TextFormField(
-                              controller: _usernameController,
-                              decoration: InputDecoration(
-                                label: Text(
-                                  "Username",
-                                  style: GoogleFonts.inter(fontSize: 12),
-                                ),
-                                hintText: "Username",
-                                hintStyle: GoogleFonts.inter(fontSize: 12),
-                                prefixIcon: const Icon(
-                                  Icons.person_rounded,
-                                  size: 20,
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 2,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
+                                ],
                               ),
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Username can't be empty";
-                                }
-
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 20),
-                            TextFormField(
-                              controller: _passwordController,
-                              obscureText: !_showPassword,
-                              onEditingComplete: _onLogin,
-                              onTap: () {
-                                log('tapped');
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Password",
-                                hintStyle: GoogleFonts.inter(fontSize: 12),
-                                label: Text(
-                                  "Password",
-                                  style: GoogleFonts.inter(fontSize: 12),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 2,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                prefixIcon: const Icon(Icons.lock, size: 20),
-                                suffixIcon: IconButton(
-                                  splashRadius: 20,
-                                  icon: Icon(
-                                    _showPassword
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
+                              const SizedBox(height: 20),
+                              TextFormField(
+                                controller: _usernameController,
+                                decoration: InputDecoration(
+                                  label: Text(
+                                    "Username",
+                                    style: GoogleFonts.inter(fontSize: 12),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _showPassword = !_showPassword;
-                                    });
-                                  },
-                                ),
-                              ),
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Password can't be empty";
-                                }
-
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 20),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 44,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xff3487a5),
-                                  shape: RoundedRectangleBorder(
+                                  hintText: "Username",
+                                  hintStyle: GoogleFonts.inter(fontSize: 12),
+                                  prefixIcon: const Icon(
+                                    Icons.person_rounded,
+                                    size: 20,
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 2,
+                                  ),
+                                  border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
-                                onPressed: _onLogin,
-                                child: const Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Username can't be empty";
+                                  }
+
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              TextFormField(
+                                controller: _passwordController,
+                                obscureText: !_showPassword,
+                                onEditingComplete: _onLogin,
+                                onTap: () {
+                                  log('tapped');
+                                },
+                                decoration: InputDecoration(
+                                  hintText: "Password",
+                                  hintStyle: GoogleFonts.inter(fontSize: 12),
+                                  label: Text(
+                                    "Password",
+                                    style: GoogleFonts.inter(fontSize: 12),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 2,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  prefixIcon: const Icon(Icons.lock, size: 20),
+                                  suffixIcon: IconButton(
+                                    splashRadius: 20,
+                                    icon: Icon(
+                                      _showPassword
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _showPassword = !_showPassword;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Password can't be empty";
+                                  }
+
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 44,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xff3487a5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  onPressed: _onLogin,
+                                  child: const Text(
+                                    "Login",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      mobileLayout: Scaffold(
+        appBar: AppBar(title: Text("HEADER")),
+        body:
+            _isbusy
+                ? const Center(
+                  child: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+                : Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          ApplicationInfo.appName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
                         ),
-              ),
-            ],
-          ),
-        ],
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        label: Text(
+                          "Username",
+                          style: GoogleFonts.inter(fontSize: 12),
+                        ),
+                        hintText: "Username",
+                        hintStyle: GoogleFonts.inter(fontSize: 12),
+                        prefixIcon: const Icon(Icons.person_rounded, size: 20),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 2,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Username can't be empty";
+                        }
+
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: !_showPassword,
+                      onEditingComplete: _onLogin,
+                      onTap: () {
+                        log('tapped');
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        hintStyle: GoogleFonts.inter(fontSize: 12),
+                        label: Text(
+                          "Password",
+                          style: GoogleFonts.inter(fontSize: 12),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 2,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        prefixIcon: const Icon(Icons.lock, size: 20),
+                        suffixIcon: IconButton(
+                          splashRadius: 20,
+                          icon: Icon(
+                            _showPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _showPassword = !_showPassword;
+                            });
+                          },
+                        ),
+                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Password can't be empty";
+                        }
+
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 44,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff3487a5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        onPressed: _onLogin,
+                        child: const Text(
+                          "Login",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
       ),
     );
   }

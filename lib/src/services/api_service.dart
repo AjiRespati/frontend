@@ -323,4 +323,34 @@ class ApiService {
     );
     return response.statusCode < 400;
   }
+
+  Future<Map<String, dynamic>> fetchCommissionSummary() async {
+    String? token = await _getToken();
+    final response = await http.get(
+      Uri.parse('$baseUrl/dashboard/commissionSummary'),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to fetch commission data');
+    }
+  }
+
+  Future<List<dynamic>> fetchEntityDetail(
+    String path,
+    Map<String, String> queryParams,
+  ) async {
+    String? token = await _getToken();
+    final uri = Uri.http(baseUrl, '/api/dashboard/$path', queryParams);
+    final response = await http.get(
+      uri,
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to fetch detail data');
+    }
+  }
 }
