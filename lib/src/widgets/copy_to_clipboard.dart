@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CopyToClipboard extends StatefulWidget {
-  const CopyToClipboard(
-    this.text, {
-    this.isMobile,
-    this.isSkeleton,
-    Key? key,
-  }) : super(key: key);
+  const CopyToClipboard(this.text, {this.isMobile, this.isSkeleton, super.key});
   final String text;
   final bool? isMobile;
   final bool? isSkeleton;
@@ -32,9 +27,9 @@ class _CopyToClipboardState extends State<CopyToClipboard> {
             height: widget.isMobile == true ? 21 : 23,
             child: ElevatedButton(
               style: ButtonStyle(
-                padding: MaterialStateProperty.all(EdgeInsets.zero),
-                elevation: MaterialStateProperty.all(2),
-                backgroundColor: MaterialStateProperty.all(Colors.white),
+                padding: WidgetStateProperty.all(EdgeInsets.zero),
+                elevation: WidgetStateProperty.all(2),
+                backgroundColor: WidgetStateProperty.all(Colors.white),
               ),
               onPressed: () async {
                 Clipboard.setData(ClipboardData(text: widget.text));
@@ -54,13 +49,13 @@ class _CopyToClipboardState extends State<CopyToClipboard> {
           _isMessageShown
               ? const Card(child: Text(" Berhasil disalin. "))
               : const Card(
-                  elevation: 0,
-                  color: Colors.transparent,
-                  child: Text(
-                    " Berhasil disalin. ",
-                    style: TextStyle(color: Colors.transparent),
-                  ),
+                elevation: 0,
+                color: Colors.transparent,
+                child: Text(
+                  " Berhasil disalin. ",
+                  style: TextStyle(color: Colors.transparent),
                 ),
+              ),
         ],
       ),
     );

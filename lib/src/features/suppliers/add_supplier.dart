@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/src/services/api_service.dart';
 
@@ -28,12 +30,14 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
     );
 
     if (success) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Supplier Created!")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Supplier Created!")));
       Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Failed to create supplier")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to create supplier")));
     }
   }
 
@@ -46,20 +50,25 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
         child: Column(
           children: [
             TextField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: "Name")),
+              controller: _nameController,
+              decoration: InputDecoration(labelText: "Name"),
+            ),
             TextField(
-                controller: _addressController,
-                decoration: InputDecoration(labelText: "Address")),
+              controller: _addressController,
+              decoration: InputDecoration(labelText: "Address"),
+            ),
             TextField(
-                controller: _phoneController,
-                decoration: InputDecoration(labelText: "Phone")),
+              controller: _phoneController,
+              decoration: InputDecoration(labelText: "Phone"),
+            ),
             TextField(
-                controller: _emailController,
-                decoration: InputDecoration(labelText: "Email")),
+              controller: _emailController,
+              decoration: InputDecoration(labelText: "Email"),
+            ),
             TextField(
-                controller: _contactPersonController,
-                decoration: InputDecoration(labelText: "Contact Person")),
+              controller: _contactPersonController,
+              decoration: InputDecoration(labelText: "Contact Person"),
+            ),
             SizedBox(height: 20),
             ElevatedButton(onPressed: _submit, child: Text("Create Supplier")),
           ],

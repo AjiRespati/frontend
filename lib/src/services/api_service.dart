@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import '../../application_info.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart'; // ✅ Use this one!
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
@@ -112,21 +113,20 @@ class ApiService {
   Future<bool> createProduct(
     String name,
     String description,
-    int amount,
     String metric,
     double price,
     Uint8List? imageWeb,
     XFile? imageDevice,
   ) async {
     String? token = await _getToken();
-
     var request = http.MultipartRequest("POST", Uri.parse('$baseUrl/products'));
     request.headers['Authorization'] = "Bearer $token";
     request.fields["name"] = name;
     request.fields["description"] = description;
-    request.fields["amount"] = amount.toString();
+    //TODO: ambil dari user JWT
+    request.fields["updateBy"] = "ambil dari user";
     request.fields["price"] = price.toString();
-    request.fields["metric"] = metric; // ✅ Add metric field
+    request.fields["metricType"] = metric; // ✅ Add metric field
 
     // ✅ Handle Web (File Picker)
     if (kIsWeb && imageWeb != null) {
@@ -136,6 +136,7 @@ class ApiService {
           'image',
           imageBytes,
           filename: "product_image.png",
+          contentType: MediaType('image', 'png'),
         ),
       );
     }
@@ -143,7 +144,11 @@ class ApiService {
     else if (!kIsWeb && imageDevice != null) {
       XFile imageFile = XFile(imageDevice.path);
       request.files.add(
-        await http.MultipartFile.fromPath('image', imageFile.path),
+        await http.MultipartFile.fromPath(
+          'image',
+          imageFile.path,
+          contentType: MediaType('image', 'png'),
+        ),
       );
     }
 

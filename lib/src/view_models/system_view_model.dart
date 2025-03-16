@@ -34,7 +34,6 @@ class SystemViewModel extends ChangeNotifier {
 
   int get currentPageIndex => _currentPageIndex;
   set currentPageIndex(int val) {
-    print(val);
     _currentPageIndex = val;
     notifyListeners();
   }

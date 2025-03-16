@@ -61,7 +61,7 @@ class ProductCard extends StatelessWidget {
                 Text(
                   product['productName'],
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                   textAlign: TextAlign.center,
@@ -72,7 +72,7 @@ class ProductCard extends StatelessWidget {
                 Text(
                   "Rp${product['price'] ?? 0}/${product['metricType'] ?? "pcs"}",
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 14,
                     color: Colors.green[600],
                     fontWeight: FontWeight.w800,
                   ),
@@ -80,7 +80,7 @@ class ProductCard extends StatelessWidget {
                 // ✅ Description
                 Text(
                   product['description'] ?? "No description",
-                  style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                  style: TextStyle(fontSize: 10, color: Colors.grey[700]),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -96,13 +96,13 @@ class ProductCard extends StatelessWidget {
                 // ✅ Last Stock In Date
                 Text(
                   "Last In: $formattedStockIn",
-                  style: const TextStyle(fontSize: 12, color: Colors.blue),
+                  style: const TextStyle(fontSize: 11, color: Colors.blue),
                 ),
 
                 // ✅ Last Stock Out Date
                 Text(
                   "Last Out: $formattedStockOut",
-                  style: const TextStyle(fontSize: 12, color: Colors.red),
+                  style: const TextStyle(fontSize: 11, color: Colors.red),
                 ),
                 Row(
                   children: [

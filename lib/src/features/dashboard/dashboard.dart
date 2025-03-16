@@ -9,7 +9,7 @@ class Dashboard extends StatefulWidget with GetItStatefulWidgetMixin {
   Dashboard({super.key});
 
   @override
-  _DashboardState createState() => _DashboardState();
+  State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> with GetItStateMixin {

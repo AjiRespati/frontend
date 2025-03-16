@@ -66,7 +66,7 @@ class _GradientElevatedButtonState extends State<GradientElevatedButton> {
                 ? null
                 : widget.onPressed == null
                 ? null
-                : () {
+                : () async {
                   setState(() => _isPressed = true);
                   Future.delayed(Durations.short3, () {
                     setState(() {

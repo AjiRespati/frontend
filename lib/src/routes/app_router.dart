@@ -38,7 +38,7 @@ class AppRouter {
           screen = const Warehouses();
           break;
         case addProductsRoute:
-          screen = const AddProductScreen();
+          screen = AddProductScreen();
           break;
         case addSuppliersRoute:
           screen = const AddSupplierScreen();

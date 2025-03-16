@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/products/add_product.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/add_button.dart';
-import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:frontend/src/widgets/product_card.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -20,21 +19,29 @@ class ProductMobile extends StatelessWidget with GetItMixin {
           AddButton(
             message: "Add Product",
             onPressed: () {
-              if (kIsWeb) {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      backgroundColor: Colors.white,
-                      child: SizedBox(
-                        width: 600,
-                        // height: 450,
-                        child: AddProductScreen(),
-                      ),
-                    );
-                  },
-                );
-              }
+              showModalBottomSheet(
+                isScrollControlled: true,
+                constraints: BoxConstraints(maxHeight: 540),
+                context: context,
+                builder: (context) {
+                  return AddProductScreen();
+                },
+              );
+              // if (kIsWeb) {
+              //   showDialog(
+              //     context: context,
+              //     builder: (context) {
+              //       return Dialog(
+              //         backgroundColor: Colors.white,
+              //         child: SizedBox(
+              //           width: 600,
+              //           // height: 450,
+              //           child: AddProductScreen(),
+              //         ),
+              //       );
+              //     },
+              //   );
+              // }
             },
           ),
           SizedBox(width: 20),
@@ -43,33 +50,45 @@ class ProductMobile extends StatelessWidget with GetItMixin {
       body:
           watchOnly((StockViewModel x) => x.isLoading)
               ? const Center(child: CircularProgressIndicator())
-              : get<StockViewModel>().products.isEmpty
+              : watchOnly((StockViewModel x) => x.products).isEmpty
               ? Padding(
                 padding: const EdgeInsets.all(20),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    SizedBox(),
                     const Center(child: Text("No products found")),
-                    GradientElevatedButton(
+                    AddButton(
+                      message: "Add Product",
                       onPressed: () {
                         if (kIsWeb) {
-                          showDialog(
+                          showModalBottomSheet(
                             context: context,
                             builder: (context) {
                               return Dialog(
                                 backgroundColor: Colors.white,
-                                child: AddProductScreen(),
+                                child: SizedBox(
+                                  width: 600,
+                                  // height: 450,
+                                  child: AddProductScreen(),
+                                ),
                               );
                             },
                           );
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (context) {
+                          //     return Dialog(
+                          //       backgroundColor: Colors.white,
+                          //       child: SizedBox(
+                          //         width: 600,
+                          //         // height: 450,
+                          //         child: AddProductScreen(),
+                          //       ),
+                          //     );
+                          //   },
+                          // );
                         }
-                        // Navigator.pushNamed(context, addProductsRoute);
                       },
-                      child: Text(
-                        "Add Products",
-                        style: TextStyle(color: Colors.white),
-                      ),
                     ),
                   ],
                 ),

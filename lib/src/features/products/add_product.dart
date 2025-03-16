@@ -1,23 +1,28 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/src/services/api_service.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart'; // For detecting web
 
-class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key});
+class AddProductScreen extends StatefulWidget with GetItStatefulWidgetMixin {
+  AddProductScreen({super.key});
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
 }
 
-class _AddProductScreenState extends State<AddProductScreen> {
+class _AddProductScreenState extends State<AddProductScreen>
+    with GetItStateMixin {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  String _selectedMetric = "piece"; // ✅ Default metric
+  String _selectedMetric = "pcs"; // ✅ Default metric
   final ApiService apiService = ApiService();
 
   XFile? _imageMobile;
@@ -49,7 +54,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     bool success = await apiService.createProduct(
       _nameController.text,
       _descriptionController.text,
-      int.parse(_amountController.text),
       _selectedMetric,
       double.parse(_priceController.text),
       _imageWeb,
@@ -57,9 +61,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
 
     if (success) {
+      await get<StockViewModel>().fetchProducts();
       Navigator.pop(context);
     } else {
-      print("gimana gimana");
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Failed to create product")));
@@ -72,43 +76,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
       padding: EdgeInsets.all(16.0),
       child: Column(
         children: [
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(labelText: "Name"),
+          Text(
+            "Add Product",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          TextField(
-            controller: _descriptionController,
-            decoration: InputDecoration(labelText: "Description"),
-          ),
-          TextField(
-            controller: _amountController,
-            decoration: InputDecoration(labelText: "Amount"),
-            keyboardType: TextInputType.number,
-          ),
-          TextField(
-            controller: _priceController,
-            decoration: InputDecoration(labelText: "Price"),
-            keyboardType: TextInputType.number,
-          ),
-
-          // ✅ Metric Dropdown
-          DropdownButtonFormField<String>(
-            value: _selectedMetric,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedMetric = newValue!;
-              });
-            },
-            items:
-                ['piece', 'kg', 'gallon', 'liter', 'box', 'bucket'].map((
-                  metric,
-                ) {
-                  return DropdownMenuItem(value: metric, child: Text(metric));
-                }).toList(),
-            decoration: InputDecoration(labelText: "Metric"),
-          ),
-          SizedBox(height: 20),
-
+          SizedBox(height: 4),
           // ✅ Image Preview
           _imageMobile != null || _imageWeb != null
               ? Container(
@@ -122,9 +94,48 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ? Image.memory(_imageWeb!)
                         : Image.file(File(_imageMobile!.path)),
               )
-              : Icon(Icons.image, size: 100, color: Colors.grey),
+              : SizedBox(
+                height: 150,
+                width: 150,
+                child: Icon(Icons.image, size: 100, color: Colors.grey),
+              ),
 
           SizedBox(height: 10),
+
+          TextField(
+            controller: _nameController,
+            decoration: InputDecoration(labelText: "Name"),
+          ),
+          SizedBox(height: 4),
+          TextField(
+            controller: _descriptionController,
+            decoration: InputDecoration(labelText: "Description"),
+          ),
+          SizedBox(height: 4),
+          TextField(
+            controller: _priceController,
+            decoration: InputDecoration(labelText: "Price"),
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 4),
+
+          // ✅ Metric Dropdown
+          DropdownButtonFormField<String>(
+            value: _selectedMetric,
+            onChanged: (newValue) {
+              setState(() {
+                _selectedMetric = newValue!;
+              });
+            },
+            items:
+                ["kg", "g", "liter", "bucket", "carton", "box", "pcs"].map((
+                  metric,
+                ) {
+                  return DropdownMenuItem(value: metric, child: Text(metric));
+                }).toList(),
+            decoration: InputDecoration(labelText: "Metric"),
+          ),
+          SizedBox(height: 25),
 
           // ✅ Pick Image Buttons
           Row(
@@ -144,16 +155,34 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   onPressed: () => _pickImageMobile(ImageSource.gallery),
                 ),
               if (kIsWeb) // ✅ Web: File Picker
-                ElevatedButton.icon(
-                  icon: Icon(Icons.upload_file),
-                  label: Text("Upload Image"),
+                GradientElevatedButton(
                   onPressed: _pickImageWeb,
+                  buttonHeight: 30,
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.green,
+                      Colors.green[800] ?? Colors.greenAccent,
+                    ],
+                  ),
+                  child: Text(
+                    "Upload Image",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
+              // ElevatedButton.icon(
+              //   icon: Icon(Icons.upload_file),
+              //   label: Text("Upload Image"),
+              //   onPressed: _pickImageWeb,
+              // ),
             ],
           ),
 
           SizedBox(height: 20),
-          ElevatedButton(onPressed: _submit, child: Text("Create Product")),
+          GradientElevatedButton(
+            onPressed: _submit,
+            child: Text("Create Product"),
+          ),
+          // ElevatedButton(onPressed: _submit, child: Text("Create Product")),
         ],
       ),
     );

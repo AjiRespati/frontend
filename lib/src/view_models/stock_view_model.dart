@@ -1,11 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/services/api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class StockViewModel extends ChangeNotifier {
   final ApiService apiService = ApiService();
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _isBusy = false;
   bool _isLoading = true;
 
@@ -44,7 +46,7 @@ class StockViewModel extends ChangeNotifier {
   //       METHOD       //
   //====================//
 
-  void fetchCommissionData({required BuildContext context}) async {
+  fetchCommissionData({required BuildContext context}) async {
     final data = await apiService.fetchCommissionSummary(context: context);
     if (data['message'] == "Invalid token") {
       Navigator.pushReplacementNamed(context, signInRoute);
@@ -53,7 +55,7 @@ class StockViewModel extends ChangeNotifier {
     }
   }
 
-  void fetchProducts() async {
+  fetchProducts() async {
     List<dynamic> data = await apiService.fetchProducts();
     products = data;
     isLoading = false;
