@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/products/add_product.dart';
+import 'package:frontend/src/features/products/components/add_product.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:frontend/src/widgets/page_container.dart';

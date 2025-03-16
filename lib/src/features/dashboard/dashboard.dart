@@ -16,7 +16,9 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
   @override
   void initState() {
     super.initState();
-    get<StockViewModel>().fetchCommissionData(context: context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      get<StockViewModel>().fetchCommissionData(context: context);
+    });
   }
 
   @override

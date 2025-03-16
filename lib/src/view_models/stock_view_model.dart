@@ -10,13 +10,78 @@ class StockViewModel extends ChangeNotifier {
   // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _isBusy = false;
   bool _isLoading = true;
+  final formKey = GlobalKey<FormState>();
 
   Map<String, dynamic>? _commissionData;
   List<dynamic> _products = [];
 
+  String? _metricId;
+  String _stockEvent = 'stock_in';
+  String? _createdBy;
+  int _stockAmount = 0;
+  String? _salesId;
+  String? _subAgentId;
+  String? _agentId;
+  String _status = 'created';
+  String? _description;
+
   //====================//
   //  GETTER n SETTER   //
   //====================//
+
+  String? get metricId => _metricId;
+  set metricId(String? val) {
+    _metricId = val;
+    notifyListeners();
+  }
+
+  String get stockEvent => _stockEvent;
+  set stockEvent(String val) {
+    _stockEvent = val;
+    notifyListeners();
+  }
+
+  String? get createdBy => _createdBy;
+  set createdBy(String? val) {
+    _createdBy = val;
+    notifyListeners();
+  }
+
+  int get stockAmount => _stockAmount;
+  set stockAmount(int val) {
+    _stockAmount = val;
+    notifyListeners();
+  }
+
+  String? get salesId => _salesId;
+  set salesId(String? val) {
+    _salesId = val;
+    notifyListeners();
+  }
+
+  String? get subAgentId => _subAgentId;
+  set subAgentId(String? val) {
+    _subAgentId = val;
+    notifyListeners();
+  }
+
+  String? get agentId => _agentId;
+  set agentId(String? val) {
+    _agentId = val;
+    notifyListeners();
+  }
+
+  String get status => _status;
+  set status(String val) {
+    _status = val;
+    notifyListeners();
+  }
+
+  String? get description => _description;
+  set description(String? val) {
+    _description = val;
+    notifyListeners();
+  }
 
   bool get isBusy => _isBusy;
   set isBusy(bool val) {
@@ -47,17 +112,55 @@ class StockViewModel extends ChangeNotifier {
   //====================//
 
   fetchCommissionData({required BuildContext context}) async {
+    isLoading = true;
     final data = await apiService.fetchCommissionSummary(context: context);
     if (data['message'] == "Invalid token") {
+      isLoading = false;
       Navigator.pushReplacementNamed(context, signInRoute);
     } else {
+      isLoading = false;
       commissionData = data;
     }
   }
 
   fetchProducts() async {
+    isLoading = true;
     List<dynamic> data = await apiService.fetchProducts();
     products = data;
+    isLoading = false;
+  }
+
+  Future<void> createStock({required BuildContext context}) async {
+    isLoading = true;
+
+    final resp = await apiService.createStock(
+      metricId,
+      stockEvent,
+      createdBy,
+      stockAmount,
+      salesId,
+      subAgentId,
+      agentId,
+      status,
+      description,
+    );
+
+    if (resp) {
+      isLoading = false;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Stock created successfully')));
+    } else {
+      isLoading = false;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to create stock')));
+    }
+  }
+
+  fetchStock() async {
+    isLoading = true;
+
     isLoading = false;
   }
 }

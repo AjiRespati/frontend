@@ -173,162 +173,6 @@ class ApiService {
     return null;
   }
 
-  /// SUPPLIERS ROUTES
-  /// GET /
-  /// POST /
-  /// PUT /:id
-  Future<List<dynamic>> fetchSuppliers() async {
-    String? token = await _getToken();
-
-    final response = await http.get(
-      Uri.parse('$baseUrl/suppliers'),
-      headers: {"Authorization": "Bearer $token"},
-    );
-
-    if (response.statusCode == 401) {
-      token = await refreshAccessToken();
-      if (token == null) return [];
-      return fetchSuppliers();
-    } else if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      return [];
-    }
-  }
-
-  Future<bool> createSupplier(
-    String name,
-    String address,
-    String phone,
-    String email,
-    String contactPerson,
-    String createdBy,
-  ) async {
-    String? token = await _getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/suppliers'),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
-      },
-      body: jsonEncode({
-        "name": name,
-        "address": address,
-        "phone": phone,
-        "email": email,
-        "contact_person": contactPerson,
-        "created_by": createdBy,
-      }),
-    );
-    return response.statusCode < 400;
-  }
-
-  Future<bool> updateSupplier(
-    String supplierId,
-    String? name,
-    String? address,
-    String? phone,
-    String? email,
-    String? contactPerson,
-    String? createdBy,
-  ) async {
-    String? token = await _getToken();
-    final response = await http.put(
-      Uri.parse('$baseUrl/suppliers/$supplierId'),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
-      },
-      body: jsonEncode({
-        "name": name,
-        "address": address,
-        "phone": phone,
-        "email": email,
-        "contact_person": contactPerson,
-        "created_by": createdBy,
-      }),
-    );
-    return response.statusCode < 400;
-  }
-
-  /// WAREHOUSES ROUTES
-  /// GET /
-  /// POST /
-  /// PUT /:id
-  Future<List<dynamic>> fetchWarehouses() async {
-    String? token = await _getToken();
-
-    final response = await http.get(
-      Uri.parse('$baseUrl/warehouses'),
-      headers: {"Authorization": "Bearer $token"},
-    );
-
-    if (response.statusCode == 401) {
-      token = await refreshAccessToken();
-      if (token == null) return [];
-      return fetchSuppliers();
-    } else if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      return [];
-    }
-  }
-
-  Future<bool> createWarehouse(
-    String name,
-    String address,
-    String phone,
-    String email,
-    String contactPerson,
-    String createdBy,
-  ) async {
-    String? token = await _getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/warehouses'),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
-      },
-      body: jsonEncode({
-        "name": name,
-        "address": address,
-        "phone": phone,
-        "email": email,
-        "contact_person": contactPerson,
-        "created_by": createdBy,
-      }),
-    );
-    return response.statusCode < 400;
-  }
-
-  Future<bool> updateWarehouse(
-    String warehouseId,
-    String? name,
-    String? address,
-    String? phone,
-    String? email,
-    String? contactPerson,
-    String? createdBy,
-  ) async {
-    String? token = await _getToken();
-    final response = await http.put(
-      Uri.parse('$baseUrl/warehouses/$warehouseId'),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
-      },
-      body: jsonEncode({
-        "name": name,
-        "address": address,
-        "phone": phone,
-        "email": email,
-        "contact_person": contactPerson,
-        "created_by": createdBy,
-      }),
-    );
-    return response.statusCode < 400;
-  }
-
   Future<Map<String, dynamic>> fetchCommissionSummary({
     required BuildContext context,
   }) async {
@@ -348,20 +192,37 @@ class ApiService {
     }
   }
 
-  Future<List<dynamic>> fetchEntityDetail(
-    String path,
-    Map<String, String> queryParams,
+  Future<bool> createStock(
+    String? metricId,
+    String stockEvent,
+    String? createdBy,
+    int amount,
+    String? salesId,
+    String? subAgentId,
+    String? agentId,
+    String status,
+    String? description,
   ) async {
-    String? token = await _getToken();
-    final uri = Uri.http(baseUrl, '/api/dashboard/$path', queryParams);
-    final response = await http.get(
-      uri,
-      headers: {"Authorization": "Bearer $token"},
+    final response = await http.post(
+      Uri.parse('$baseUrl/stocks'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'metricId': metricId,
+        'stockEvent': stockEvent,
+        'amount': amount,
+        'createdBy': createdBy,
+        'salesId': salesId,
+        'subAgentId': subAgentId,
+        'agentId': agentId,
+        'status': status,
+        'description': description,
+      }),
     );
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
+
+    if (response.statusCode == 201) {
+      return true;
     } else {
-      throw Exception('Failed to fetch detail data');
+      return false;
     }
   }
 }

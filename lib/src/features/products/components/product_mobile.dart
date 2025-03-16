@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/products/add_product.dart';
+import 'package:frontend/src/features/products/components/add_product.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/add_button.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
@@ -27,21 +27,6 @@ class ProductMobile extends StatelessWidget with GetItMixin {
                   return AddProductScreen();
                 },
               );
-              // if (kIsWeb) {
-              //   showDialog(
-              //     context: context,
-              //     builder: (context) {
-              //       return Dialog(
-              //         backgroundColor: Colors.white,
-              //         child: SizedBox(
-              //           width: 600,
-              //           // height: 450,
-              //           child: AddProductScreen(),
-              //         ),
-              //       );
-              //     },
-              //   );
-              // }
             },
           ),
           SizedBox(width: 20),
@@ -74,19 +59,6 @@ class ProductMobile extends StatelessWidget with GetItMixin {
                               );
                             },
                           );
-                          // showDialog(
-                          //   context: context,
-                          //   builder: (context) {
-                          //     return Dialog(
-                          //       backgroundColor: Colors.white,
-                          //       child: SizedBox(
-                          //         width: 600,
-                          //         // height: 450,
-                          //         child: AddProductScreen(),
-                          //       ),
-                          //     );
-                          //   },
-                          // );
                         }
                       },
                     ),

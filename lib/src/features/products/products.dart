@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/products/product_desktop.dart';
-import 'package:frontend/src/features/products/product_mobile.dart';
+import 'package:frontend/src/features/products/components/product_desktop.dart';
+import 'package:frontend/src/features/products/components/product_mobile.dart';
 import 'package:frontend/src/utils/responsive_layout.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -16,7 +16,10 @@ class _ProductsState extends State<Products> with GetItStateMixin {
   @override
   void initState() {
     super.initState();
-    get<StockViewModel>().fetchProducts();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      get<StockViewModel>().fetchProducts();
+    });
   }
 
   @override

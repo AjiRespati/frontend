@@ -37,12 +37,6 @@ class _PageContainerState extends State<PageContainer> {
       case "Products":
         Navigator.pushNamed(context, productsRoute);
         break;
-      case "Suppliers":
-        Navigator.pushNamed(context, warehousesRoute);
-        break;
-      case "Warehouses":
-        Navigator.pushNamed(context, warehousesRoute);
-        break;
       default:
     }
   }

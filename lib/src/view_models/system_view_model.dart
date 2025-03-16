@@ -14,7 +14,7 @@ class SystemViewModel extends ChangeNotifier {
   final TextEditingController passwordController = TextEditingController();
   bool _showPassword = false;
   int _currentPageIndex = 0;
-  List<String> pageLabels = ["Home", "Stock", "Products", "Sales"];
+  List<String> pageLabels = ["Home", "Products", "Stock", "Sales"];
   // List<String> pageLabels = ["Home", "Stock", "Products", "Sales", "Setting"];
 
   //====================//
