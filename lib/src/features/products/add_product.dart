@@ -164,16 +164,12 @@ class _AddProductScreenState extends State<AddProductScreen>
                       Colors.green[800] ?? Colors.greenAccent,
                     ],
                   ),
+                  inactiveDelay: Duration.zero,
                   child: Text(
                     "Upload Image",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-              // ElevatedButton.icon(
-              //   icon: Icon(Icons.upload_file),
-              //   label: Text("Upload Image"),
-              //   onPressed: _pickImageWeb,
-              // ),
             ],
           ),
 
@@ -182,7 +178,6 @@ class _AddProductScreenState extends State<AddProductScreen>
             onPressed: _submit,
             child: Text("Create Product"),
           ),
-          // ElevatedButton(onPressed: _submit, child: Text("Create Product")),
         ],
       ),
     );
