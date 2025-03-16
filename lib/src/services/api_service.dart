@@ -90,6 +90,26 @@ class ApiService {
   /// TODO: PRODUCTS ROUTES
   /// GET /
   /// POST /
+  Future<dynamic> fetchProduct(String productId) async {
+    String? token = await _getToken();
+    print("kesinikan???");
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/products/$productId'),
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) return null;
+      return fetchProduct(productId);
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return null;
+    }
+  }
+
   Future<List<dynamic>> fetchProducts() async {
     String? token = await _getToken();
 
@@ -189,6 +209,30 @@ class ApiService {
       } else {
         throw Exception('Failed to fetch commission data');
       }
+    }
+  }
+
+  /// TODO: STOCKS ROUTES
+  /// GET /
+  /// POST /
+
+  Future<dynamic> fetchStockByProduct(String productId) async {
+    String? token = await _getToken();
+    print("kesinikan???");
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/stocks/product/$productId'),
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) return null;
+      return fetchStockByProduct(productId);
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return null;
     }
   }
 

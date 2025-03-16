@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/src/routes/route_names.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 import '../../application_info.dart';
 import 'package:intl/intl.dart'; // ✅ For formatting dates
 
-class ProductCard extends StatelessWidget {
-  const ProductCard({super.key, required this.isMobile, required this.product});
+class ProductCard extends StatelessWidget with GetItMixin {
+  ProductCard({super.key, required this.isMobile, required this.product});
 
   final Map<String, dynamic> product;
   final bool isMobile;
@@ -29,7 +31,13 @@ class ProductCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            productDetailRoute,
+            arguments: product["productId"],
+          );
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

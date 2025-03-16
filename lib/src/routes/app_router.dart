@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/dashboard/dashboard.dart';
 import 'package:frontend/src/features/products/components/add_product.dart';
+import 'package:frontend/src/features/products/product_detail.dart';
 import 'package:frontend/src/features/stock/stock.dart';
 import '../features/auth/login_screen.dart';
 import '../features/products/products.dart';
@@ -12,7 +13,7 @@ import 'route_names.dart';
 class AppRouter {
   static RouteFactory routes() {
     return ((settings) {
-      // dynamic arguments = settings.arguments;
+      dynamic arguments = settings.arguments;
       Widget screen;
 
       switch (settings.name) {
@@ -30,6 +31,9 @@ class AppRouter {
           break;
         case productsRoute:
           screen = Products();
+          break;
+        case productDetailRoute:
+          screen = ProductDetail(productId: arguments);
           break;
         case addProductsRoute:
           screen = AddProductScreen();
