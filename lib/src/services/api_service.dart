@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../application_info.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -324,7 +324,9 @@ class ApiService {
     return response.statusCode < 400;
   }
 
-  Future<Map<String, dynamic>> fetchCommissionSummary() async {
+  Future<Map<String, dynamic>> fetchCommissionSummary({
+    required BuildContext context,
+  }) async {
     String? token = await _getToken();
     final response = await http.get(
       Uri.parse('$baseUrl/dashboard/commissionSummary'),
@@ -333,7 +335,11 @@ class ApiService {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      throw Exception('Failed to fetch commission data');
+      if (response.body.contains("Invalid token")) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to fetch commission data');
+      }
     }
   }
 

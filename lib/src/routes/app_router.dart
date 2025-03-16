@@ -26,7 +26,7 @@ class AppRouter {
           screen = LoginScreen();
           break;
         case dashboardRoute:
-          screen = const Dashboard();
+          screen = Dashboard();
           break;
         case productsRoute:
           screen = const Products();

@@ -13,6 +13,8 @@ class SystemViewModel extends ChangeNotifier {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _showPassword = false;
+  int _currentPageIndex = 0;
+  List<String> pageLabels = ["Home", "Stock", "Products", "Sales", "Setting"];
 
   //====================//
   //  GETTER n SETTER   //
@@ -27,6 +29,13 @@ class SystemViewModel extends ChangeNotifier {
   bool get showPassword => _showPassword;
   set showPassword(bool val) {
     _showPassword = val;
+    notifyListeners();
+  }
+
+  int get currentPageIndex => _currentPageIndex;
+  set currentPageIndex(int val) {
+    print(val);
+    _currentPageIndex = val;
     notifyListeners();
   }
 

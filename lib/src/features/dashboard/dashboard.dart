@@ -1,87 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/src/services/api_service.dart';
-import 'package:frontend/src/widgets/page_container.dart';
+import 'package:frontend/src/features/dashboard/dashboard_desktop.dart';
+import 'package:frontend/src/features/dashboard/dashboard_mobile.dart';
+import 'package:frontend/src/utils/responsive_layout.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+class Dashboard extends StatefulWidget with GetItStatefulWidgetMixin {
+  Dashboard({super.key});
 
   @override
   _DashboardState createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
-  final ApiService _apiService = ApiService();
-  Map<String, dynamic>? commissionData;
-
+class _DashboardState extends State<Dashboard> with GetItStateMixin {
   @override
   void initState() {
     super.initState();
-    _fetchCommissionData();
-  }
-
-  void _fetchCommissionData() async {
-    final data = await _apiService.fetchCommissionSummary();
-    setState(() {
-      commissionData = data;
-    });
+    get<StockViewModel>().fetchCommissionData(context: context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(title: const Text('Commission Dashboard')),
-      body: PageContainer(
-        setSidebarExpanding: true,
-        showMenubutton: true,
-
-        mainSection:
-            commissionData == null
-                ? const Center(child: CircularProgressIndicator())
-                : Column(
-                  children: [
-                    _buildCommissionCard(
-                      "Total Commission",
-                      (commissionData!['totalCommission'] as num).toDouble(),
-                    ),
-                    _buildCommissionCard(
-                      "Agent",
-                      (commissionData!['agentCommission'] as num).toDouble(),
-                    ),
-                    _buildCommissionCard(
-                      "SubAgent",
-                      (commissionData!['subAgentCommission'] as num).toDouble(),
-                    ),
-                    _buildCommissionCard(
-                      "Salesman",
-                      (commissionData!['salesmanCommission'] as num).toDouble(),
-                    ),
-                    _buildCommissionCard(
-                      "Shop",
-                      (commissionData!['shopCommission'] as num).toDouble(),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/agentDetail');
-                      },
-                      child: const Text('View Agent Details'),
-                    ),
-                  ],
-                ),
-      ),
-    );
-  }
-
-  Widget _buildCommissionCard(String title, double value) {
-    return Card(
-      margin: const EdgeInsets.all(10),
-      child: ListTile(
-        title: Text(title),
-        trailing: Text(
-          "\$${value.toStringAsFixed(2)}",
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ),
+    return ResponsiveLayout(
+      mobileLayout: DashboardMobile(),
+      desktopLayout: DashboardDesktop(),
     );
   }
 }
