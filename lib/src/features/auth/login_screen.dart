@@ -22,8 +22,8 @@ class _LoginScreenState extends State<LoginScreen> with GetItStateMixin {
   @override
   void dispose() {
     super.dispose();
-    get<SystemViewModel>().usernameController.dispose();
-    get<SystemViewModel>().passwordController.dispose();
+    // get<SystemViewModel>().usernameController.dispose();
+    // get<SystemViewModel>().passwordController.dispose();
   }
 
   @override

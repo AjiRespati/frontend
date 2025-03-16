@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 class AddButton extends StatelessWidget {
   const AddButton({
     this.size,
-    this.messaage,
+    required this.message,
     required this.onPressed,
     super.key,
   });
 
   final double? size;
-  final String? messaage;
+  final String? message;
   final Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: messaage,
+      message: message,
       child: SizedBox(
         height: size ?? 25,
         width: size ?? 25,

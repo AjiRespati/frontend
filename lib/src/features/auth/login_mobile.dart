@@ -7,7 +7,7 @@ class LoginMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("HEADER")),
+      appBar: AppBar(title: Text("Welcome"), automaticallyImplyLeading: false),
       body: Padding(padding: const EdgeInsets.all(20), child: LoginContent()),
     );
   }

@@ -3,9 +3,10 @@ import '../../application_info.dart';
 import 'package:intl/intl.dart'; // ✅ For formatting dates
 
 class ProductCard extends StatelessWidget {
-  final Map<String, dynamic> product;
+  const ProductCard({super.key, required this.isMobile, required this.product});
 
-  const ProductCard({super.key, required this.product});
+  final Map<String, dynamic> product;
+  final bool isMobile;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class ProductCard extends StatelessWidget {
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      elevation: 4,
+      elevation: 2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -54,66 +55,68 @@ class ProductCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // ✅ Product Name
+                Text(
+                  product['productName'],
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                // ✅ Price
+                Text(
+                  "Rp${product['price'] ?? 0}/${product['metricType'] ?? "pcs"}",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.green[600],
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                // ✅ Description
+                Text(
+                  product['description'] ?? "No description",
+                  style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                // ✅ Stock Amount
+                Text(
+                  "Stock: ${product['totalStock'] ?? 0}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                // ✅ Last Stock In Date
+                Text(
+                  "Last In: $formattedStockIn",
+                  style: const TextStyle(fontSize: 12, color: Colors.blue),
+                ),
+
+                // ✅ Last Stock Out Date
+                Text(
+                  "Last Out: $formattedStockOut",
+                  style: const TextStyle(fontSize: 12, color: Colors.red),
+                ),
                 Row(
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // ✅ Product Name
-                        Text(
-                          product['name'],
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-
-                        // ✅ Price
-                        Text(
-                          "\$${product['price'].toString()}",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-
-                        // ✅ Description
-                        Text(
-                          product['description'] ?? "No description",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[700],
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                      ],
+                      children: [const SizedBox(height: 4)],
                     ),
                     const Spacer(),
                     const SizedBox(width: 5),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        // ✅ Stock Amount
-                        Text(
-                          "Stock: ${product['amount']}",
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                      ],
+                      children: [const SizedBox(height: 4)],
                     ),
                   ],
                 ),
@@ -124,26 +127,7 @@ class ProductCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        // ✅ Last Stock In Date
-                        Text(
-                          "Last In: $formattedStockIn",
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-
-                        // ✅ Last Stock Out Date
-                        Text(
-                          "Last Out: $formattedStockOut",
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
+                      children: [],
                     ),
                   ],
                 ),

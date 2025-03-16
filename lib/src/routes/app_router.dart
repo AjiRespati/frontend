@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/dashboard/dashboard.dart';
 import 'package:frontend/src/features/products/add_product.dart';
+import 'package:frontend/src/features/stock/stock.dart';
 import 'package:frontend/src/features/suppliers/add_supplier.dart';
-import 'package:frontend/src/features/suppliers/suppliers.dart';
 import 'package:frontend/src/features/warehouses/add_warehouse.dart';
 import 'package:frontend/src/features/warehouses/warehouses.dart';
 import '../features/auth/login_screen.dart';
@@ -28,11 +28,11 @@ class AppRouter {
         case dashboardRoute:
           screen = Dashboard();
           break;
-        case productsRoute:
-          screen = const Products();
+        case stockRoute:
+          screen = const Stock();
           break;
-        case suppliersRoute:
-          screen = const Suppliers();
+        case productsRoute:
+          screen = Products();
           break;
         case warehousesRoute:
           screen = const Warehouses();

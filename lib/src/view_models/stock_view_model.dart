@@ -7,8 +7,10 @@ class StockViewModel extends ChangeNotifier {
   final ApiService apiService = ApiService();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _isBusy = false;
+  bool _isLoading = true;
 
   Map<String, dynamic>? _commissionData;
+  List<dynamic> _products = [];
 
   //====================//
   //  GETTER n SETTER   //
@@ -20,9 +22,21 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get isLoading => _isLoading;
+  set isLoading(bool val) {
+    _isLoading = val;
+    notifyListeners();
+  }
+
   Map<String, dynamic>? get commissionData => _commissionData;
   set commissionData(Map<String, dynamic>? val) {
     _commissionData = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get products => _products;
+  set products(List<dynamic> val) {
+    _products = val;
     notifyListeners();
   }
 
@@ -37,5 +51,11 @@ class StockViewModel extends ChangeNotifier {
     } else {
       commissionData = data;
     }
+  }
+
+  void fetchProducts() async {
+    List<dynamic> data = await apiService.fetchProducts();
+    products = data;
+    isLoading = false;
   }
 }

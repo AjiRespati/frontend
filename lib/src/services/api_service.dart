@@ -86,7 +86,7 @@ class ApiService {
     }
   }
 
-  /// PRODUCTS ROUTES
+  /// TODO: PRODUCTS ROUTES
   /// GET /
   /// POST /
   Future<List<dynamic>> fetchProducts() async {
