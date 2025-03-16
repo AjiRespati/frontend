@@ -4,7 +4,7 @@ import 'package:frontend/src/features/products/components/add_product.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:frontend/src/widgets/page_container.dart';
-import 'package:frontend/src/widgets/product_card.dart';
+import 'package:frontend/src/features/products/components/product_card.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ProductDesktop extends StatelessWidget with GetItMixin {

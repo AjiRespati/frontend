@@ -16,14 +16,14 @@ class StockMobile extends StatelessWidget with GetItMixin {
           AddButton(
             message: "Add Product",
             onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                constraints: BoxConstraints(maxHeight: 540),
-                context: context,
-                builder: (context) {
-                  return AddStock();
-                },
-              );
+              // showModalBottomSheet(
+              //   isScrollControlled: true,
+              //   constraints: BoxConstraints(maxHeight: 540),
+              //   context: context,
+              //   builder: (context) {
+              //     return AddStock();
+              //   },
+              // );
             },
           ),
           SizedBox(width: 20),

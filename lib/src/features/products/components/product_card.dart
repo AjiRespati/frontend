@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import '../../application_info.dart';
+import '../../../../application_info.dart';
 import 'package:intl/intl.dart'; // ✅ For formatting dates
 
 class ProductCard extends StatelessWidget with GetItMixin {

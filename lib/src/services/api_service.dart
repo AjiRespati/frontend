@@ -87,12 +87,11 @@ class ApiService {
     }
   }
 
-  /// TODO: PRODUCTS ROUTES
+  // TODO: PRODUCTS ROUTES
   /// GET /
   /// POST /
   Future<dynamic> fetchProduct(String productId) async {
     String? token = await _getToken();
-    print("kesinikan???");
 
     final response = await http.get(
       Uri.parse('$baseUrl/products/$productId'),
@@ -143,6 +142,7 @@ class ApiService {
     request.headers['Authorization'] = "Bearer $token";
     request.fields["name"] = name;
     request.fields["description"] = description;
+
     //TODO: ambil dari user JWT
     request.fields["updateBy"] = "ambil dari user";
     request.fields["price"] = price.toString();
@@ -212,13 +212,12 @@ class ApiService {
     }
   }
 
-  /// TODO: STOCKS ROUTES
+  // TODO: STOCKS ROUTES
   /// GET /
   /// POST /
 
   Future<dynamic> fetchStockByProduct(String productId) async {
     String? token = await _getToken();
-    print("kesinikan???");
 
     final response = await http.get(
       Uri.parse('$baseUrl/stocks/product/$productId'),
@@ -247,9 +246,13 @@ class ApiService {
     String status,
     String? description,
   ) async {
+    String? token = await _getToken();
     final response = await http.post(
       Uri.parse('$baseUrl/stocks'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
       body: jsonEncode({
         'metricId': metricId,
         'stockEvent': stockEvent,
