@@ -19,6 +19,9 @@ class StockViewModel extends ChangeNotifier {
 
   String? _metricId;
   String _stockEvent = 'stock_in';
+  String _measurement = 'kg';
+  String _client = 'salesman';
+  final List<String> _clients = ['salesman', 'subAgent', "agent"];
   String? _createdBy;
   int _stockAmount = 0;
   String? _salesId;
@@ -42,6 +45,20 @@ class StockViewModel extends ChangeNotifier {
     _stockEvent = val;
     notifyListeners();
   }
+
+  String get measurement => _measurement;
+  set measurement(String val) {
+    _measurement = val;
+    notifyListeners();
+  }
+
+  String get client => _client;
+  set client(String val) {
+    _client = val;
+    notifyListeners();
+  }
+
+  List<String> get clients => _clients;
 
   String? get createdBy => _createdBy;
   set createdBy(String? val) {

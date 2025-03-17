@@ -44,6 +44,15 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                 padding: EdgeInsets.all(8),
                 child: Column(
                   children: [
+                    Text(
+                      mainProduct['productName'],
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.blue[900],
+                      ),
+                    ),
+                    SizedBox(height: 5),
                     Center(
                       child: SizedBox(
                         height: 160,
@@ -70,8 +79,8 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                         ),
                       ),
                     ),
-                    Text(mainProduct['productName']),
                     Text(mainProduct['description']),
+                    SizedBox(height: 10),
                     stocks == null || stocks.isEmpty
                         ? Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -87,7 +96,18 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                                     constraints: BoxConstraints(maxHeight: 540),
                                     context: context,
                                     builder: (context) {
-                                      return AddStock(mainProduct: mainProduct);
+                                      return AddStock(
+                                        mainProduct: mainProduct,
+                                        measurements: [
+                                          "kg",
+                                          "g",
+                                          "liter",
+                                          "bucket",
+                                          "carton",
+                                          "box",
+                                          "pcs",
+                                        ],
+                                      );
                                     },
                                   );
                                 },
@@ -97,7 +117,7 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                           ],
                         )
                         : SizedBox(
-                          height: MediaQuery.of(context).size.height - 296,
+                          height: MediaQuery.of(context).size.height - 320,
                           child: ListView.builder(
                             itemCount:
                                 get<StockViewModel>().productsDetail!.length,
