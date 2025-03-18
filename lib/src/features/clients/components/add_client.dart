@@ -19,9 +19,10 @@ class AddClient extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _AddClientState extends State<AddClient> with GetItStateMixin {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  String _selectedMetric = "pcs"; // ✅ Default metric
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  String _selectedClient = "Salesman"; // ✅ Default metric
   final ApiService apiService = ApiService();
 
   XFile? _imageMobile;
@@ -50,22 +51,20 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
 
   // ✅ Submit Form
   void _submit() async {
-    bool success = await apiService.createProduct(
-      _nameController.text,
-      _descriptionController.text,
-      _selectedMetric,
-      double.parse(_priceController.text),
-      _imageWeb,
-      _imageMobile,
+    bool success = await apiService.createSalesman(
+      name: _nameController.text,
+      address: _addressController.text,
+      phone: _phoneController.text,
+      email: _emailController.text,
     );
 
     if (success) {
-      await get<StockViewModel>().fetchProducts();
+      await get<StockViewModel>().fetchSalesmen();
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Failed to create product")));
+      ).showSnackBar(SnackBar(content: Text("Failed to create salesman")));
     }
   }
 
@@ -76,28 +75,25 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
       child: Column(
         children: [
           Text(
-            "Add Product",
+            "Add Clients",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           SizedBox(height: 4),
-          // ✅ Image Preview
-          _imageMobile != null || _imageWeb != null
-              ? Container(
-                height: 150,
-                width: 150,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                ),
-                child:
-                    kIsWeb
-                        ? Image.memory(_imageWeb!)
-                        : Image.file(File(_imageMobile!.path)),
-              )
-              : SizedBox(
-                height: 150,
-                width: 150,
-                child: Icon(Icons.image, size: 100, color: Colors.grey),
-              ),
+
+          // ✅ Client Type Dropdown
+          DropdownButtonFormField<String>(
+            value: _selectedClient,
+            onChanged: (newValue) {
+              setState(() {
+                _selectedClient = newValue!;
+              });
+            },
+            items:
+                ["Salesman", "Sub Agent", "Agent"].map((metric) {
+                  return DropdownMenuItem(value: metric, child: Text(metric));
+                }).toList(),
+            decoration: InputDecoration(labelText: "Client Type"),
+          ),
 
           SizedBox(height: 10),
 
@@ -107,76 +103,21 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
           ),
           SizedBox(height: 4),
           TextField(
-            controller: _descriptionController,
-            decoration: InputDecoration(labelText: "Description"),
+            controller: _addressController,
+            decoration: InputDecoration(labelText: "Address"),
           ),
           SizedBox(height: 4),
           TextField(
-            controller: _priceController,
-            decoration: InputDecoration(labelText: "Price"),
-            keyboardType: TextInputType.number,
+            controller: _phoneController,
+            decoration: InputDecoration(labelText: "Phone"),
           ),
           SizedBox(height: 4),
-
-          // ✅ Metric Dropdown
-          DropdownButtonFormField<String>(
-            value: _selectedMetric,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedMetric = newValue!;
-              });
-            },
-            items:
-                ["kg", "g", "liter", "bucket", "carton", "box", "pcs"].map((
-                  metric,
-                ) {
-                  return DropdownMenuItem(value: metric, child: Text(metric));
-                }).toList(),
-            decoration: InputDecoration(labelText: "Metric"),
+          TextField(
+            controller: _emailController,
+            decoration: InputDecoration(labelText: "Email"),
           ),
-          SizedBox(height: 25),
-
-          // ✅ Pick Image Buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (!kIsWeb) // ✅ Mobile: Camera & Gallery
-                ElevatedButton.icon(
-                  icon: Icon(Icons.camera),
-                  label: Text("Camera"),
-                  onPressed: () => _pickImageMobile(ImageSource.camera),
-                ),
-              if (!kIsWeb) SizedBox(width: 10),
-              if (!kIsWeb)
-                ElevatedButton.icon(
-                  icon: Icon(Icons.photo),
-                  label: Text("Gallery"),
-                  onPressed: () => _pickImageMobile(ImageSource.gallery),
-                ),
-              if (kIsWeb) // ✅ Web: File Picker
-                GradientElevatedButton(
-                  onPressed: _pickImageWeb,
-                  buttonHeight: 30,
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.green,
-                      Colors.green[800] ?? Colors.greenAccent,
-                    ],
-                  ),
-                  inactiveDelay: Duration.zero,
-                  child: Text(
-                    "Upload Image",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-            ],
-          ),
-
-          SizedBox(height: 20),
-          GradientElevatedButton(
-            onPressed: _submit,
-            child: Text("Create Product"),
-          ),
+          SizedBox(height: 40),
+          GradientElevatedButton(onPressed: _submit, child: Text("Add Client")),
         ],
       ),
     );

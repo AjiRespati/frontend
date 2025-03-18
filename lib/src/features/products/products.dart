@@ -16,7 +16,6 @@ class _ProductsState extends State<Products> with GetItStateMixin {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       get<StockViewModel>().fetchProducts();
     });

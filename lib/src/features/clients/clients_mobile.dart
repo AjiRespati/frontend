@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/clients/components/add_client.dart';
+import 'package:frontend/src/features/clients/components/salesmen_view.dart';
 import 'package:frontend/src/widgets/buttons/add_button.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -23,6 +24,7 @@ class ClientsMobile extends StatelessWidget with GetItMixin {
           title: const Text('Clients'),
           actions: [
             AddButton(
+              size: 32,
               message: "Add Product",
               onPressed: () {
                 showModalBottomSheet(
@@ -38,9 +40,9 @@ class ClientsMobile extends StatelessWidget with GetItMixin {
             SizedBox(width: 20),
           ],
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            Icon(Icons.directions_car),
+            SalesmenView(),
             Icon(Icons.directions_transit),
             Icon(Icons.directions_bike),
           ],

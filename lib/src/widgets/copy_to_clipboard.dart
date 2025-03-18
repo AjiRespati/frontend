@@ -18,8 +18,8 @@ class _CopyToClipboardState extends State<CopyToClipboard> {
   Widget build(BuildContext context) {
     return SizedBox(
       // width: isMobile == true ? 21 : 23,
-      height: widget.isSkeleton == true ? 23 : 60,
-      child: Column(
+      // height: widget.isSkeleton == true ? 23 : 60,
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(

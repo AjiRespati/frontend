@@ -15,6 +15,8 @@ class StockViewModel extends ChangeNotifier {
   Map<String, dynamic>? _commissionData;
   List<dynamic> _products = [];
   List<dynamic>? _productsDetail;
+  List<dynamic> _salesmen = [];
+
   dynamic _stock;
 
   String? _metricId;
@@ -132,6 +134,12 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<dynamic> get salesmen => _salesmen;
+  set salesmen(List<dynamic> val) {
+    _salesmen = val;
+    notifyListeners();
+  }
+
   dynamic get stock => _stock;
   set stock(dynamic val) {
     _stock = val;
@@ -201,6 +209,15 @@ class StockViewModel extends ChangeNotifier {
     isLoading = true;
     dynamic data = await apiService.fetchStockByProduct(productId);
     stock = data;
+    isLoading = false;
+    return;
+  }
+
+  fetchSalesmen() async {
+    isLoading = true;
+    List<dynamic> data = await apiService.getSalesmen();
+    salesmen = data;
+    print(salesmen);
     isLoading = false;
     return;
   }

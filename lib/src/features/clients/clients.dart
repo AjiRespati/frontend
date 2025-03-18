@@ -16,7 +16,9 @@ class _ClientsState extends State<Clients> with GetItStateMixin {
   @override
   void initState() {
     super.initState();
-    get<StockViewModel>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      get<StockViewModel>().fetchSalesmen();
+    });
   }
 
   @override
