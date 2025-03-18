@@ -47,14 +47,11 @@ class _CopyToClipboardState extends State<CopyToClipboard> {
             ),
           ),
           _isMessageShown
-              ? const Card(child: Text(" Berhasil disalin. "))
+              ? Card(child: Icon(Icons.check, color: Colors.green[600]))
               : const Card(
                 elevation: 0,
                 color: Colors.transparent,
-                child: Text(
-                  " Berhasil disalin. ",
-                  style: TextStyle(color: Colors.transparent),
-                ),
+                child: Icon(Icons.check, color: Colors.transparent),
               ),
         ],
       ),

@@ -17,6 +17,7 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic>? _productsDetail;
   List<dynamic> _salesmen = [];
   List<dynamic> _subAgents = [];
+  List<dynamic> _agents = [];
 
   dynamic _stock;
 
@@ -32,6 +33,7 @@ class StockViewModel extends ChangeNotifier {
   String? _agentId;
   String _status = 'created';
   String? _description;
+  int _clientTabIndex = 0;
 
   //====================//
   //  GETTER n SETTER   //
@@ -105,6 +107,12 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  int get clientTabIndex => _clientTabIndex;
+  set clientTabIndex(int val) {
+    _clientTabIndex = val;
+    notifyListeners();
+  }
+
   bool get isBusy => _isBusy;
   set isBusy(bool val) {
     _isBusy = val;
@@ -144,6 +152,12 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> get subAgents => _subAgents;
   set subAgents(List<dynamic> val) {
     _subAgents = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get agents => _agents;
+  set agents(List<dynamic> val) {
+    _agents = val;
     notifyListeners();
   }
 
@@ -214,26 +228,38 @@ class StockViewModel extends ChangeNotifier {
 
   Future<dynamic> fetchStockByProduct(String productId) async {
     isLoading = true;
-    dynamic data = await apiService.fetchStockByProduct(productId);
-    stock = data;
+    stock = await apiService.fetchStockByProduct(productId);
     isLoading = false;
     return;
   }
 
-  fetchSalesmen() async {
+  fetchSalesmen({required bool isInitial}) async {
     isLoading = true;
-    List<dynamic> data = await apiService.getSalesmen();
-    salesmen = data;
+    salesmen = await apiService.getSalesmen();
+    if (!isInitial) {
+      clientTabIndex = 0;
+    }
     isLoading = false;
     return;
   }
 
-  fetchSubAgents() async {
-    print('dipanggilkah??');
+  fetchSubAgents({required bool isInitial}) async {
     isLoading = true;
-    List<dynamic> data = await apiService.getSubAgents();
-    subAgents = data;
-    print(subAgents);
+    subAgents = await apiService.getSubAgents();
+    if (!isInitial) {
+      clientTabIndex = 1;
+    }
+    isLoading = false;
+    return;
+  }
+
+  fetchAgents({required bool isInitial}) async {
+    isLoading = true;
+    agents = await apiService.getAgents();
+    if (!isInitial) {
+      print('mosok kesini??');
+      clientTabIndex = 2;
+    }
     isLoading = false;
     return;
   }

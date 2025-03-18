@@ -45,7 +45,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
     );
 
     if (success) {
-      await get<StockViewModel>().fetchSalesmen();
+      await get<StockViewModel>().fetchSalesmen(isInitial: false);
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(
@@ -63,7 +63,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
     );
 
     if (success) {
-      await get<StockViewModel>().fetchSubAgents();
+      await get<StockViewModel>().fetchSubAgents(isInitial: false);
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(
@@ -73,7 +73,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
   }
 
   void _submitAgent() async {
-    bool success = await apiService.createSalesman(
+    bool success = await apiService.createAgent(
       name: _nameController.text,
       address: _addressController.text,
       phone: _phoneController.text,
@@ -81,7 +81,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
     );
 
     if (success) {
-      await get<StockViewModel>().fetchSubAgents();
+      await get<StockViewModel>().fetchAgents(isInitial: false);
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(
@@ -114,7 +114,17 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
                 ["Salesman", "Sub Agent", "Agent"].map((metric) {
                   return DropdownMenuItem(value: metric, child: Text(metric));
                 }).toList(),
-            decoration: InputDecoration(labelText: "Client Type"),
+            decoration: InputDecoration(
+              labelText: "Client Type",
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.red[600],
+              ),
+            ),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.red[700],
+            ),
           ),
 
           SizedBox(height: 10),

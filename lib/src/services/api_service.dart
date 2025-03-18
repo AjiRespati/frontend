@@ -370,4 +370,51 @@ class ApiService {
       return [];
     }
   }
+
+  Future<bool> createAgent({
+    required String name,
+    required String address,
+    required String phone,
+    required String email,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/agents'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        'name': name,
+        'address': address,
+        'phone': phone,
+        'email': email,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<List<dynamic>> getAgents() async {
+    String? token = await _getToken();
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/agents'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return [];
+    }
+  }
 }
