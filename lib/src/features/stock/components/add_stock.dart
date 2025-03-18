@@ -128,9 +128,10 @@ class AddStock extends StatelessWidget with GetItMixin {
                             );
                           }).toList(),
                       onChanged: (value) {
-                        get<StockViewModel>().measurement = value ?? "pcs";
+                        get<StockViewModel>().client = value ?? "salesman";
                       },
                     ),
+                    SizedBox(height: 10),
                   ],
                 )
                 : SizedBox(),

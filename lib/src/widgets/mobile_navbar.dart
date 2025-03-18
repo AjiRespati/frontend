@@ -21,8 +21,11 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
           case 2:
             Navigator.pushNamed(context, stockRoute);
             break;
+          case 3:
+            Navigator.pushNamed(context, clientsRoute);
+            break;
           default:
-            Navigator.pushNamed(context, dashboardRoute);
+            Navigator.pushNamed(context, settingsRoute);
           //   break;
           // default:
           //   Navigator.pushNamed(context, dashboardRoute);
@@ -39,8 +42,11 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
           icon: Icon(Icons.shopping_cart_checkout_rounded),
           label: "Stock",
         ),
-        NavigationDestination(icon: Icon(Icons.store_rounded), label: "Sales"),
-        // NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
+        NavigationDestination(
+          icon: Icon(Icons.store_rounded),
+          label: "Clients",
+        ),
+        NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
       ],
     );
   }

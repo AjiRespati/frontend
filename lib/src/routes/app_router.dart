@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/src/features/clients/clients.dart';
 import 'package:frontend/src/features/dashboard/dashboard.dart';
 import 'package:frontend/src/features/products/components/add_product.dart';
 import 'package:frontend/src/features/products/product_detail.dart';
+import 'package:frontend/src/features/settings/settings.dart';
 import 'package:frontend/src/features/stock/stock.dart';
 import '../features/auth/login_screen.dart';
 import '../features/products/products.dart';
@@ -26,9 +28,6 @@ class AppRouter {
         case dashboardRoute:
           screen = Dashboard();
           break;
-        case stockRoute:
-          screen = Stock();
-          break;
         case productsRoute:
           screen = Products();
           break;
@@ -37,6 +36,15 @@ class AppRouter {
           break;
         case addProductsRoute:
           screen = AddProductScreen();
+          break;
+        case stockRoute:
+          screen = Stock();
+          break;
+        case clientsRoute:
+          screen = Clients();
+          break;
+        case settingsRoute:
+          screen = Settings();
           break;
         default:
           screen = const NotFoundPage();
