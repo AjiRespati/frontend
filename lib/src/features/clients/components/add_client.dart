@@ -5,10 +5,6 @@ import 'package:frontend/src/services/api_service.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart'; // For detecting web
 
 class AddClient extends StatefulWidget with GetItStatefulWidgetMixin {
   AddClient({super.key});
@@ -22,35 +18,25 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  String _selectedClient = "Salesman"; // ✅ Default metric
+  String _selectedClient = "Salesman"; // ✅ Default
   final ApiService apiService = ApiService();
-
-  XFile? _imageMobile;
-  Uint8List? _imageWeb;
-  final ImagePicker _picker = ImagePicker();
-
-  // ✅ Pick Image for Mobile
-  Future<void> _pickImageMobile(ImageSource source) async {
-    final XFile? pickedImage = await _picker.pickImage(source: source);
-    setState(() {
-      _imageMobile = pickedImage;
-    });
-  }
-
-  // ✅ Pick Image for Web
-  Future<void> _pickImageWeb() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-    if (result != null) {
-      setState(() {
-        _imageWeb = result.files.first.bytes;
-      });
-    }
-  }
 
   // ✅ Submit Form
   void _submit() async {
+    print(_selectedClient);
+    switch (_selectedClient) {
+      case "Salesman":
+        _submitSalesman();
+        break;
+      case "Sub Agent":
+        _submitSubAgent();
+        break;
+      default:
+        _submitAgent();
+    }
+  }
+
+  void _submitSalesman() async {
     bool success = await apiService.createSalesman(
       name: _nameController.text,
       address: _addressController.text,
@@ -65,6 +51,42 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Failed to create salesman")));
+    }
+  }
+
+  void _submitSubAgent() async {
+    bool success = await apiService.createSubAgent(
+      name: _nameController.text,
+      address: _addressController.text,
+      phone: _phoneController.text,
+      email: _emailController.text,
+    );
+
+    if (success) {
+      await get<StockViewModel>().fetchSubAgents();
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to create sub agent")));
+    }
+  }
+
+  void _submitAgent() async {
+    bool success = await apiService.createSalesman(
+      name: _nameController.text,
+      address: _addressController.text,
+      phone: _phoneController.text,
+      email: _emailController.text,
+    );
+
+    if (success) {
+      await get<StockViewModel>().fetchSubAgents();
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to create agent")));
     }
   }
 

@@ -16,6 +16,7 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> _products = [];
   List<dynamic>? _productsDetail;
   List<dynamic> _salesmen = [];
+  List<dynamic> _subAgents = [];
 
   dynamic _stock;
 
@@ -140,6 +141,12 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<dynamic> get subAgents => _subAgents;
+  set subAgents(List<dynamic> val) {
+    _subAgents = val;
+    notifyListeners();
+  }
+
   dynamic get stock => _stock;
   set stock(dynamic val) {
     _stock = val;
@@ -217,7 +224,16 @@ class StockViewModel extends ChangeNotifier {
     isLoading = true;
     List<dynamic> data = await apiService.getSalesmen();
     salesmen = data;
-    print(salesmen);
+    isLoading = false;
+    return;
+  }
+
+  fetchSubAgents() async {
+    print('dipanggilkah??');
+    isLoading = true;
+    List<dynamic> data = await apiService.getSubAgents();
+    subAgents = data;
+    print(subAgents);
     isLoading = false;
     return;
   }

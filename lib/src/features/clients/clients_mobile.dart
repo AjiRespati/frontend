@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/clients/components/add_client.dart';
 import 'package:frontend/src/features/clients/components/salesmen_view.dart';
+import 'package:frontend/src/features/clients/components/sub_agent_view.dart';
 import 'package:frontend/src/widgets/buttons/add_button.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -43,7 +44,7 @@ class ClientsMobile extends StatelessWidget with GetItMixin {
         body: TabBarView(
           children: [
             SalesmenView(),
-            Icon(Icons.directions_transit),
+            SubAgentView(),
             Icon(Icons.directions_bike),
           ],
         ),
