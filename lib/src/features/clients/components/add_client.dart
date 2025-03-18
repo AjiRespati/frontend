@@ -14,6 +14,7 @@ class AddClient extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _AddClientState extends State<AddClient> with GetItStateMixin {
+  final List<String> _clientType = ["Salesman", "Sub Agent", "Agent"];
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -23,17 +24,97 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
 
   // ✅ Submit Form
   void _submit() async {
-    print(_selectedClient);
-    switch (_selectedClient) {
-      case "Salesman":
-        _submitSalesman();
-        break;
-      case "Sub Agent":
-        _submitSubAgent();
-        break;
-      default:
-        _submitAgent();
-    }
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: SizedBox(
+            height: 230,
+            child: Column(
+              children: [
+                SizedBox(height: 30),
+                Icon(Icons.error_outline, size: 38, color: Colors.amber),
+                SizedBox(height: 10),
+                Text(
+                  "Anda akan menambahkan",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  _selectedClient,
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.green[600],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 40,
+                      width: 70,
+                      child: GradientElevatedButton(
+                        inactiveDelay: Duration.zero,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "No",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 15),
+                    SizedBox(
+                      height: 40,
+                      width: 70,
+                      child: GradientElevatedButton(
+                        inactiveDelay: Duration.zero,
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color.fromRGBO(30, 241, 107, 1),
+                            Colors.green,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context, true);
+                        },
+                        child: Text(
+                          "Yes",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((value) {
+      if (value == true) {
+        switch (_selectedClient) {
+          case "Salesman":
+            _submitSalesman();
+            break;
+          case "Sub Agent":
+            _submitSubAgent();
+            break;
+          default:
+            _submitAgent();
+        }
+      }
+    });
   }
 
   void _submitSalesman() async {
@@ -91,6 +172,12 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _selectedClient = _clientType[get<StockViewModel>().clientTabIndex];
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),
@@ -111,7 +198,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
               });
             },
             items:
-                ["Salesman", "Sub Agent", "Agent"].map((metric) {
+                _clientType.map((metric) {
                   return DropdownMenuItem(value: metric, child: Text(metric));
                 }).toList(),
             decoration: InputDecoration(
@@ -149,7 +236,17 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
             decoration: InputDecoration(labelText: "Email"),
           ),
           SizedBox(height: 40),
-          GradientElevatedButton(onPressed: _submit, child: Text("Add Client")),
+          GradientElevatedButton(
+            inactiveDelay: Duration.zero,
+            onPressed: _submit,
+            child: Text(
+              "Add Client",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
         ],
       ),
     );

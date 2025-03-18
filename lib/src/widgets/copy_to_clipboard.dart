@@ -23,8 +23,8 @@ class _CopyToClipboardState extends State<CopyToClipboard> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: widget.isMobile == true ? 21 : 23,
-            height: widget.isMobile == true ? 21 : 23,
+            width: widget.isMobile == true ? 20 : 23,
+            height: widget.isMobile == true ? 20 : 23,
             child: ElevatedButton(
               style: ButtonStyle(
                 padding: WidgetStateProperty.all(EdgeInsets.zero),
@@ -47,11 +47,21 @@ class _CopyToClipboardState extends State<CopyToClipboard> {
             ),
           ),
           _isMessageShown
-              ? Card(child: Icon(Icons.check, color: Colors.green[600]))
-              : const Card(
+              ? Card(
+                child: Icon(
+                  Icons.check,
+                  size: widget.isMobile == true ? 16 : 20,
+                  color: Colors.green[600],
+                ),
+              )
+              : Card(
                 elevation: 0,
                 color: Colors.transparent,
-                child: Icon(Icons.check, color: Colors.transparent),
+                child: Icon(
+                  Icons.check,
+                  size: widget.isMobile == true ? 16 : 20,
+                  color: Colors.transparent,
+                ),
               ),
         ],
       ),

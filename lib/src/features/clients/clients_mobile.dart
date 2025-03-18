@@ -18,21 +18,27 @@ class ClientsMobile extends StatefulWidget with GetItStatefulWidgetMixin {
 class _ClientsMobileState extends State<ClientsMobile>
     with SingleTickerProviderStateMixin, GetItStateMixin {
   late TabController _tabController;
-  int defaultTabIndex = 0; // Default tab index
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-      length: 3,
-      vsync: this,
-      initialIndex: defaultTabIndex,
-    );
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      // kalau index tidak berubah berarti swipe.
+      if (!_tabController.indexIsChanging) {
+        get<StockViewModel>().clientTabIndex = _tabController.index;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    _tabController.index = watchOnly((StockViewModel x) => x.clientTabIndex);
     return Scaffold(
       appBar: AppBar(
         bottom: TabBar(
@@ -56,7 +62,12 @@ class _ClientsMobileState extends State<ClientsMobile>
                 builder: (context) {
                   return AddClient();
                 },
-              );
+              ).then((value) {
+                // mendengarkan tab setelah selesai request add
+                _tabController.index = watchOnly(
+                  (StockViewModel x) => x.clientTabIndex,
+                );
+              });
             },
           ),
           SizedBox(width: 20),

@@ -238,6 +238,8 @@ class StockViewModel extends ChangeNotifier {
     salesmen = await apiService.getSalesmen();
     if (!isInitial) {
       clientTabIndex = 0;
+    } else {
+      clientTabIndex = 0;
     }
     isLoading = false;
     return;
@@ -248,6 +250,8 @@ class StockViewModel extends ChangeNotifier {
     subAgents = await apiService.getSubAgents();
     if (!isInitial) {
       clientTabIndex = 1;
+    } else {
+      clientTabIndex = 0;
     }
     isLoading = false;
     return;
@@ -259,6 +263,8 @@ class StockViewModel extends ChangeNotifier {
     if (!isInitial) {
       print('mosok kesini??');
       clientTabIndex = 2;
+    } else {
+      clientTabIndex = 0;
     }
     isLoading = false;
     return;

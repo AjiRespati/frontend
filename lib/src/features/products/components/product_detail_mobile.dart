@@ -111,7 +111,13 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                                     },
                                   );
                                 },
-                                child: Text("Initialize Stock"),
+                                child: Text(
+                                  "Initialize Stock",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
