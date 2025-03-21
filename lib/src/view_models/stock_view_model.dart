@@ -23,7 +23,17 @@ class StockViewModel extends ChangeNotifier {
 
   String? _metricId;
   String _stockEvent = 'stock_in';
-  String _measurement = 'kg';
+  String _measurement = "";
+  List<String> measurements = [
+    "kg",
+    "g",
+    "liter",
+    "bucket",
+    "carton",
+    "box",
+    "pcs",
+  ];
+  List<String> _availableMeasurement = [];
   String _client = 'salesman';
   final List<String> _clients = ['salesman', 'subAgent', "agent"];
   String? _createdBy;
@@ -54,6 +64,12 @@ class StockViewModel extends ChangeNotifier {
   String get measurement => _measurement;
   set measurement(String val) {
     _measurement = val;
+    notifyListeners();
+  }
+
+  List<String> get availableMeasurement => _availableMeasurement;
+  set availableMeasurement(List<String> val) {
+    _availableMeasurement = val;
     notifyListeners();
   }
 
@@ -194,6 +210,22 @@ class StockViewModel extends ChangeNotifier {
     isLoading = true;
     dynamic data = await apiService.fetchProduct(productId);
     productsDetail = data;
+    print("PRODUCT: $productsDetail");
+    List<String> usedMetric = [];
+    if (productsDetail != null) {
+      for (var i = 0; i < productsDetail!.length; i++) {
+        var item = productsDetail![i];
+        usedMetric.add(item['metricType']);
+      }
+
+      List<String> measurementLeft =
+          measurements
+              .where((measurement) => !usedMetric.contains(measurement))
+              .toList();
+      measurement = measurementLeft.first;
+      availableMeasurement = measurementLeft;
+    }
+
     isLoading = false;
     return;
   }
@@ -229,6 +261,7 @@ class StockViewModel extends ChangeNotifier {
   Future<dynamic> fetchStockByProduct(String productId) async {
     isLoading = true;
     stock = await apiService.fetchStockByProduct(productId);
+    print("STOCKS: $stock");
     isLoading = false;
     return;
   }

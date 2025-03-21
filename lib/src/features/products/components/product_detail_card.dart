@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
-class StockCard extends StatelessWidget with GetItMixin {
-  StockCard({required this.product, required this.stock, super.key});
+class ProductDetailCard extends StatelessWidget with GetItMixin {
+  ProductDetailCard({required this.product, super.key});
   final dynamic product;
-  final List<dynamic> stock;
+  // final List<dynamic>? stock;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,7 @@ class StockCard extends StatelessWidget with GetItMixin {
                   children: [
                     Text("Stock On Hand:  "),
                     Text(
-                      product['totalStock'].toString(),
+                      (product['totalStock'] ?? 0).toString(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,

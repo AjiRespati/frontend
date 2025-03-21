@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
-import 'package:frontend/src/features/products/components/stock_card.dart';
-import 'package:frontend/src/features/stock/components/add_stock.dart';
+import 'package:frontend/src/features/products/components/product_detail_card.dart';
+import 'package:frontend/src/features/products/components/create_product_stock.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
-import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
+import 'package:frontend/src/widgets/buttons/add_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ProductDetailMobile extends StatelessWidget with GetItMixin {
@@ -12,21 +12,25 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     dynamic mainProduct;
-    List<dynamic>? stocks;
+    // List<dynamic>? stocks;
     if (watchOnly((StockViewModel x) => x.productsDetail) == null) {
     } else if ((get<StockViewModel>().productsDetail!.isNotEmpty)) {
       mainProduct = get<StockViewModel>().productsDetail![0];
     }
-    if (watchOnly((StockViewModel x) => x.stock) == null) {
-    } else {
-      stocks = get<StockViewModel>().stock;
-    }
+    // if (watchOnly((StockViewModel x) => x.stock) == null) {
+    // } else {
+    //   stocks = get<StockViewModel>().stock;
+    // }
 
     String imageUrl = ApplicationInfo.baseUrl + (mainProduct?['image'] ?? '');
-    print("PRODUCT: ${get<StockViewModel>().productsDetail}");
-    print("STOCKS: ${get<StockViewModel>().stock}");
+
     return Scaffold(
-      appBar: AppBar(title: Text("Product Detail")),
+      appBar: AppBar(
+        title: Text(
+          "Product Detail",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+        ),
+      ),
       body:
           watchOnly((StockViewModel x) => x.productsDetail) == null
               ? Column(
@@ -44,13 +48,43 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                 padding: EdgeInsets.all(8),
                 child: Column(
                   children: [
-                    Text(
-                      mainProduct['productName'],
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.blue[900],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 20),
+                        Flexible(
+                          child: Text(
+                            mainProduct['productName'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.blue[900],
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        AddButton(
+                          size: 20,
+                          message: "Add Product",
+                          onPressed: () {
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              constraints: BoxConstraints(maxHeight: 540),
+                              context: context,
+                              builder: (context) {
+                                return CreateProductStock(
+                                  mainProduct: mainProduct,
+                                  measurements:
+                                      get<StockViewModel>()
+                                          .availableMeasurement,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        SizedBox(width: 20),
+                      ],
                     ),
                     SizedBox(height: 5),
                     Center(
@@ -81,62 +115,60 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                     ),
                     Text(mainProduct['description']),
                     SizedBox(height: 10),
-                    stocks == null || stocks.isEmpty
-                        ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 40),
-                            SizedBox(
-                              height: 30,
-                              // width: 30,
-                              child: GradientElevatedButton(
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    constraints: BoxConstraints(maxHeight: 540),
-                                    context: context,
-                                    builder: (context) {
-                                      return AddStock(
-                                        mainProduct: mainProduct,
-                                        measurements: [
-                                          "kg",
-                                          "g",
-                                          "liter",
-                                          "bucket",
-                                          "carton",
-                                          "box",
-                                          "pcs",
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Text(
-                                  "Initialize Stock",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                        : SizedBox(
-                          height: MediaQuery.of(context).size.height - 320,
-                          child: ListView.builder(
-                            itemCount:
-                                get<StockViewModel>().productsDetail!.length,
-                            itemBuilder: (context, index) {
-                              var product =
-                                  get<StockViewModel>().productsDetail![index];
-                              return StockCard(
-                                product: product,
-                                stock: stocks!,
-                              );
-                            },
-                          ),
-                        ),
+
+                    // stocks == null || stocks.isEmpty
+                    //     ? Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.center,
+                    //       children: [
+                    //         SizedBox(height: 40),
+                    //         SizedBox(
+                    //           height: 30,
+                    //           // width: 30,
+                    //           child: GradientElevatedButton(
+                    //             onPressed: () {
+                    //               showModalBottomSheet(
+                    //                 isScrollControlled: true,
+                    //                 constraints: BoxConstraints(maxHeight: 540),
+                    //                 context: context,
+                    //                 builder: (context) {
+                    //                   return AddStock(
+                    //                     mainProduct: mainProduct,
+                    //                     measurements: [
+                    //                       "kg",
+                    //                       "g",
+                    //                       "liter",
+                    //                       "bucket",
+                    //                       "carton",
+                    //                       "box",
+                    //                       "pcs",
+                    //                     ],
+                    //                   );
+                    //                 },
+                    //               );
+                    //             },
+                    //             child: Text(
+                    //               "Initialize Stock",
+                    //               style: TextStyle(
+                    //                 color: Colors.white,
+                    //                 fontWeight: FontWeight.w600,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     )
+                    //     :
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height - 320,
+                      child: ListView.builder(
+                        itemCount: get<StockViewModel>().productsDetail!.length,
+                        itemBuilder: (context, index) {
+                          var product =
+                              get<StockViewModel>().productsDetail![index];
+                          return ProductDetailCard(product: product);
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),

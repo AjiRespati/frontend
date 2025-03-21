@@ -14,14 +14,20 @@ class ProductMobile extends StatelessWidget with GetItMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Products"),
+        title: Text(
+          "Products",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+        ),
         actions: [
+          Text("Add Product"),
+          SizedBox(width: 5),
           AddButton(
+            size: 30,
             message: "Add Product",
             onPressed: () {
               showModalBottomSheet(
                 isScrollControlled: true,
-                constraints: BoxConstraints(maxHeight: 540),
+                constraints: BoxConstraints(minHeight: 600, maxHeight: 620),
                 context: context,
                 builder: (context) {
                   return AddProductScreen();
@@ -43,6 +49,7 @@ class ProductMobile extends StatelessWidget with GetItMixin {
                   children: [
                     const Center(child: Text("No products found")),
                     AddButton(
+                      size: 30,
                       message: "Add Product",
                       onPressed: () {
                         if (kIsWeb) {

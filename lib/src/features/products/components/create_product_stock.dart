@@ -3,8 +3,12 @@ import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 /// measurements is List of "kg", "g", "liter", "bucket", "carton", "box", "pcs".
-class AddStock extends StatelessWidget with GetItMixin {
-  AddStock({required this.measurements, required this.mainProduct, super.key});
+class CreateProductStock extends StatelessWidget with GetItMixin {
+  CreateProductStock({
+    required this.measurements,
+    required this.mainProduct,
+    super.key,
+  });
 
   final dynamic mainProduct;
   final List<String> measurements;
@@ -49,7 +53,8 @@ class AddStock extends StatelessWidget with GetItMixin {
                           );
                         }).toList(),
                     onChanged: (value) {
-                      get<StockViewModel>().measurement = value ?? "pcs";
+                      get<StockViewModel>().measurement =
+                          value ?? get<StockViewModel>().measurement;
                     },
                   ),
                 ),

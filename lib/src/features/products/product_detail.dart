@@ -15,13 +15,16 @@ class ProductDetail extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _ProductDetailState extends State<ProductDetail> with GetItStateMixin {
+  _setup() async {
+    get<StockViewModel>().fetchProduct(widget.productId);
+    // get<StockViewModel>().fetchStockByProduct(widget.productId);
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      get<StockViewModel>().fetchProduct(widget.productId).then((_) {
-        get<StockViewModel>().fetchStockByProduct(widget.productId);
-      });
+      _setup();
     });
   }
 
