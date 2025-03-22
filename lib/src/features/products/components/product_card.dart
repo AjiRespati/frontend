@@ -80,15 +80,15 @@ class ProductCard extends StatelessWidget with GetItMixin {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  // ✅ Price
-                  Text(
-                    "Rp${product['price'] ?? 0}/${product['metricType'] ?? "pcs"}",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.green[600],
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
+                  // // ✅ Price
+                  // Text(
+                  //   "Rp${product['price'] ?? 0}/${product['metricType'] ?? "pcs"}",
+                  //   style: TextStyle(
+                  //     fontSize: 14,
+                  //     color: Colors.green[600],
+                  //     fontWeight: FontWeight.w800,
+                  //   ),
+                  // ),
                   // ✅ Description
                   Text(
                     product['description'] ?? "No description",

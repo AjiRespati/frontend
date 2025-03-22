@@ -53,7 +53,7 @@ class ProductMobile extends StatelessWidget with GetItMixin {
                       message: "Add Product",
                       onPressed: () {
                         if (kIsWeb) {
-                          showModalBottomSheet(
+                          showDialog(
                             context: context,
                             builder: (context) {
                               return Dialog(
@@ -64,6 +64,18 @@ class ProductMobile extends StatelessWidget with GetItMixin {
                                   child: AddProductScreen(),
                                 ),
                               );
+                            },
+                          );
+                        } else {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            constraints: BoxConstraints(
+                              minHeight: 600,
+                              maxHeight: 620,
+                            ),
+                            context: context,
+                            builder: (context) {
+                              return AddProductScreen();
                             },
                           );
                         }

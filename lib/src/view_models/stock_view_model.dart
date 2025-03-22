@@ -209,8 +209,19 @@ class StockViewModel extends ChangeNotifier {
 
   fetchProducts() async {
     isLoading = true;
-    List<dynamic> data = await apiService.fetchProducts();
+    List<dynamic> datas = await apiService.fetchProducts();
+    Set<String> productIds = {};
+    List<dynamic> data = [];
+
+    for (var el in datas) {
+      if (productIds.add(el['productId'])) {
+        data.add(el);
+      }
+    }
     products = data;
+
+    print("ALL PRODUCTS: ");
+    print(data);
     isLoading = false;
   }
 

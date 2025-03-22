@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/add_stock.dart';
-import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
