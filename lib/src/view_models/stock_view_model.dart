@@ -34,6 +34,8 @@ class StockViewModel extends ChangeNotifier {
     "pcs",
   ];
   List<String> _availableMeasurement = [];
+  int _price = 0;
+
   String _client = 'salesman';
   final List<String> _clients = ['salesman', 'subAgent', "agent"];
   String? _createdBy;
@@ -90,6 +92,12 @@ class StockViewModel extends ChangeNotifier {
   int get stockAmount => _stockAmount;
   set stockAmount(int val) {
     _stockAmount = val;
+    notifyListeners();
+  }
+
+  int get price => _price;
+  set price(int val) {
+    _price = val;
     notifyListeners();
   }
 
@@ -230,10 +238,15 @@ class StockViewModel extends ChangeNotifier {
     return;
   }
 
-  Future<void> createStock({required BuildContext context}) async {
+  Future<void> createStock({
+    required BuildContext context,
+    required String productId,
+  }) async {
     isLoading = true;
 
     final resp = await apiService.createStock(
+      context,
+      productId,
       metricId,
       stockEvent,
       createdBy,
@@ -250,6 +263,35 @@ class StockViewModel extends ChangeNotifier {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Stock created successfully')));
+    } else {
+      isLoading = false;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to create stock')));
+    }
+  }
+
+  Future<void> createMetric({
+    required BuildContext context,
+    required String productId,
+    required String metricType,
+    required double price,
+  }) async {
+    isLoading = true;
+
+    final resp = await apiService.createMetric(
+      context,
+      productId,
+      metricType,
+      price,
+    );
+
+    if (resp) {
+      isLoading = false;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Stock created successfully')));
+      fetchProduct(productId);
     } else {
       isLoading = false;
       ScaffoldMessenger.of(

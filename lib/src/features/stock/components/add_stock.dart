@@ -3,15 +3,11 @@ import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 /// measurements is List of "kg", "g", "liter", "bucket", "carton", "box", "pcs".
-class CreateProductStock extends StatelessWidget with GetItMixin {
-  CreateProductStock({
-    required this.measurements,
-    required this.mainProduct,
-    super.key,
-  });
+class AddStock extends StatelessWidget with GetItMixin {
+  AddStock({required this.measurement, required this.mainProduct, super.key});
 
   final dynamic mainProduct;
-  final List<String> measurements;
+  final String measurement;
 
   @override
   Widget build(BuildContext context) {
@@ -41,23 +37,7 @@ class CreateProductStock extends StatelessWidget with GetItMixin {
                   ),
                 ),
                 SizedBox(width: 10),
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    decoration: InputDecoration(isDense: true),
-                    value: get<StockViewModel>().measurement,
-                    items:
-                        measurements.map((item) {
-                          return DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(item),
-                          );
-                        }).toList(),
-                    onChanged: (value) {
-                      get<StockViewModel>().measurement =
-                          value ?? get<StockViewModel>().measurement;
-                    },
-                  ),
-                ),
+                Expanded(child: Text(measurement)),
                 SizedBox(width: 10),
                 Expanded(child: SizedBox()),
                 SizedBox(width: 10),
@@ -70,46 +50,59 @@ class CreateProductStock extends StatelessWidget with GetItMixin {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
-                  child: DropdownButtonFormField<String>(
-                    value: get<StockViewModel>().stockEvent,
-                    items: [
-                      DropdownMenuItem(
-                        value: 'stock_in',
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.add_circle_outline_rounded,
-                              color: Colors.green,
-                              size: 30,
-                            ),
-                            SizedBox(width: 5),
-                            Text('Add Stock'),
-                          ],
-                        ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 10),
+                      Icon(
+                        Icons.add_circle_outline_rounded,
+                        color: Colors.green,
+                        size: 30,
                       ),
-                      DropdownMenuItem(
-                        value: 'stock_out',
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.shopping_cart_checkout_rounded,
-                              color: Colors.amber,
-                              size: 30,
-                            ),
-                            SizedBox(width: 5),
-                            Text('Send Stock'),
-                          ],
-                        ),
-                      ),
+                      SizedBox(width: 5),
+                      Text('Add Stock'),
                     ],
-                    onChanged: (value) {
-                      get<StockViewModel>().stockEvent = value ?? "stock_in";
-                    },
                   ),
+                  // child: DropdownButtonFormField<String>(
+                  //   value: get<StockViewModel>().stockEvent,
+                  //   items: [
+                  //     DropdownMenuItem(
+                  //       value: 'stock_in',
+                  //       child: Row(
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         children: [
+                  //           SizedBox(width: 10),
+                  //           Icon(
+                  //             Icons.add_circle_outline_rounded,
+                  //             color: Colors.green,
+                  //             size: 30,
+                  //           ),
+                  //           SizedBox(width: 5),
+                  //           Text('Add Stock'),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     DropdownMenuItem(
+                  //       value: 'stock_out',
+                  //       child: Row(
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         children: [
+                  //           SizedBox(width: 10),
+                  //           Icon(
+                  //             Icons.shopping_cart_checkout_rounded,
+                  //             color: Colors.amber,
+                  //             size: 30,
+                  //           ),
+                  //           SizedBox(width: 5),
+                  //           Text('Send Stock'),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  //   onChanged: (value) {
+                  //     get<StockViewModel>().stockEvent = value ?? "stock_in";
+                  //   },
+                  // ),
                 ),
                 SizedBox(width: 10),
                 Expanded(child: SizedBox()),
@@ -151,9 +144,13 @@ class CreateProductStock extends StatelessWidget with GetItMixin {
             ElevatedButton(
               onPressed: () {
                 get<StockViewModel>().metricId = mainProduct?['metricId'];
-                get<StockViewModel>().createStock(context: context);
+                get<StockViewModel>().stockEvent = 'stock_in';
+                get<StockViewModel>().createStock(
+                  context: context,
+                  productId: mainProduct?['productId'],
+                );
               },
-              child: Text('Create Stock'),
+              child: Text('Add Stock'),
             ),
           ],
         ),

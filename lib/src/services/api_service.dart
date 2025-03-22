@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -212,6 +214,39 @@ class ApiService {
     }
   }
 
+  // TODO: METRIC ROUTES
+  /// GET /
+  /// POST /
+  ///
+  Future<bool> createMetric(
+    BuildContext context,
+    String productId,
+    String metricType,
+    double price,
+  ) async {
+    String? token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/metrics'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        'productId': productId,
+        'metricType': metricType,
+        'price': price,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      fetchProduct(productId);
+      Navigator.pop(context);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // TODO: STOCKS ROUTES
   /// GET /
   /// POST /
@@ -236,6 +271,8 @@ class ApiService {
   }
 
   Future<bool> createStock(
+    BuildContext context,
+    String productId,
     String? metricId,
     String stockEvent,
     String? createdBy,
@@ -267,13 +304,14 @@ class ApiService {
     );
 
     if (response.statusCode == 201) {
+      Navigator.pop(context);
       return true;
     } else {
       return false;
     }
   }
 
-  // TODO: STOCKS ROUTES
+  // TODO: CLIENTS ROUTES
   /// GET /
   /// POST /
 

@@ -128,9 +128,7 @@ class _AddProductScreenState extends State<AddProductScreen>
               });
             },
             items:
-                ["kg", "g", "liter", "bucket", "carton", "box", "pcs"].map((
-                  metric,
-                ) {
+                get<StockViewModel>().measurements.map((metric) {
                   return DropdownMenuItem(value: metric, child: Text(metric));
                 }).toList(),
             decoration: InputDecoration(labelText: "Metric"),

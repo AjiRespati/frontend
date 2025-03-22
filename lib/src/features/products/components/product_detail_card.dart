@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/src/features/stock/components/add_stock.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -97,23 +99,57 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                 SizedBox(
                   width: 120,
                   child: GradientElevatedButton(
+                    inactiveDelay: Duration.zero,
                     buttonHeight: 25,
-                    onPressed: () {},
-                    child: Text(
-                      "Add Stock",
-                      style: TextStyle(color: Colors.white),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        constraints: BoxConstraints(maxHeight: 540),
+                        context: context,
+                        builder: (context) {
+                          return AddStock(
+                            measurement:
+                                product['metricType'].toString().toLowerCase(),
+                            mainProduct: product,
+                          );
+                        },
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.add_circle_outline_rounded,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          "Add Stock",
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 7),
                 SizedBox(
                   width: 120,
                   child: GradientElevatedButton(
                     buttonHeight: 25,
                     onPressed: () {},
-                    child: Text(
-                      "Send Stock",
-                      style: TextStyle(color: Colors.white),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.shopping_cart_checkout_rounded,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          "Send Stock",
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                      ],
                     ),
                   ),
                 ),

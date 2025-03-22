@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
 import 'package:frontend/src/features/products/components/product_detail_card.dart';
-import 'package:frontend/src/features/products/components/create_product_stock.dart';
+import 'package:frontend/src/features/products/components/create_product_measurement.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/add_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -13,8 +13,9 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
   Widget build(BuildContext context) {
     dynamic mainProduct;
     // List<dynamic>? stocks;
-    if (watchOnly((StockViewModel x) => x.productsDetail) == null) {
-    } else if ((get<StockViewModel>().productsDetail!.isNotEmpty)) {
+    watchOnly((StockViewModel x) => x.productsDetail);
+    if (get<StockViewModel>().productsDetail != null &&
+        get<StockViewModel>().productsDetail!.isNotEmpty) {
       mainProduct = get<StockViewModel>().productsDetail![0];
     }
     // if (watchOnly((StockViewModel x) => x.stock) == null) {
@@ -66,14 +67,14 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                         SizedBox(width: 10),
                         AddButton(
                           size: 20,
-                          message: "Add Product",
+                          message: "Add Product Measurement",
                           onPressed: () {
                             showModalBottomSheet(
                               isScrollControlled: true,
-                              constraints: BoxConstraints(maxHeight: 540),
+                              constraints: BoxConstraints(maxHeight: 340),
                               context: context,
                               builder: (context) {
-                                return CreateProductStock(
+                                return CreateProductMeasurement(
                                   mainProduct: mainProduct,
                                   measurements:
                                       get<StockViewModel>()
@@ -116,59 +117,21 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                     Text(mainProduct['description']),
                     SizedBox(height: 10),
 
-                    // stocks == null || stocks.isEmpty
-                    //     ? Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.center,
-                    //       children: [
-                    //         SizedBox(height: 40),
-                    //         SizedBox(
-                    //           height: 30,
-                    //           // width: 30,
-                    //           child: GradientElevatedButton(
-                    //             onPressed: () {
-                    //               showModalBottomSheet(
-                    //                 isScrollControlled: true,
-                    //                 constraints: BoxConstraints(maxHeight: 540),
-                    //                 context: context,
-                    //                 builder: (context) {
-                    //                   return AddStock(
-                    //                     mainProduct: mainProduct,
-                    //                     measurements: [
-                    //                       "kg",
-                    //                       "g",
-                    //                       "liter",
-                    //                       "bucket",
-                    //                       "carton",
-                    //                       "box",
-                    //                       "pcs",
-                    //                     ],
-                    //                   );
-                    //                 },
-                    //               );
-                    //             },
-                    //             child: Text(
-                    //               "Initialize Stock",
-                    //               style: TextStyle(
-                    //                 color: Colors.white,
-                    //                 fontWeight: FontWeight.w600,
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     )
-                    //     :
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height - 320,
-                      child: ListView.builder(
-                        itemCount: get<StockViewModel>().productsDetail!.length,
-                        itemBuilder: (context, index) {
-                          var product =
-                              get<StockViewModel>().productsDetail![index];
-                          return ProductDetailCard(product: product);
-                        },
+                    Expanded(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height - 320,
+                        child: ListView.builder(
+                          itemCount:
+                              get<StockViewModel>().productsDetail!.length,
+                          itemBuilder: (context, index) {
+                            var product =
+                                get<StockViewModel>().productsDetail![index];
+                            return ProductDetailCard(product: product);
+                          },
+                        ),
                       ),
                     ),
+                    SizedBox(height: 5),
                   ],
                 ),
               ),
