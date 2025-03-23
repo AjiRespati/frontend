@@ -25,3 +25,9 @@ String formatDateFromYearToDay(DateTime date) {
 String getYesOrNo(bool condition) {
   return condition ? 'Yes' : 'No';
 }
+
+String formatDateString(String dateTimeString) {
+  final dateTime = DateTime.parse(dateTimeString);
+  final formatter = DateFormat('yyyy-MM-dd');
+  return formatter.format(dateTime);
+}

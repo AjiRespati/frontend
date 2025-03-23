@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/services/api_service.dart';
+import 'package:intl/intl.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
 class StockViewModel extends ChangeNotifier {
@@ -27,6 +28,9 @@ class StockViewModel extends ChangeNotifier {
   String? _agentChoosen;
 
   dynamic _stock;
+  List<dynamic> _stockTable = [];
+  DateTime _dateFromFilter = DateTime.now().subtract(Duration(days: 7));
+  DateTime _dateToFilter = DateTime.now();
 
   String? _metricId;
   String _stockEvent = 'stock_in';
@@ -230,6 +234,24 @@ class StockViewModel extends ChangeNotifier {
   dynamic get stock => _stock;
   set stock(dynamic val) {
     _stock = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get stockTable => _stockTable;
+  set stockTable(List<dynamic> val) {
+    _stockTable = val;
+    notifyListeners();
+  }
+
+  DateTime get dateFromFilter => _dateFromFilter;
+  set dateFromFilter(DateTime val) {
+    _dateFromFilter = val;
+    notifyListeners();
+  }
+
+  DateTime get dateToFilter => _dateToFilter;
+  set dateToFilter(DateTime val) {
+    _dateToFilter = val;
     notifyListeners();
   }
 
@@ -463,5 +485,22 @@ class StockViewModel extends ChangeNotifier {
     }
     isLoading = false;
     return;
+  }
+
+  Future<bool> getStockTable() async {
+    String fromDate = generateDateString(dateFromFilter);
+    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+
+    stockTable = await apiService.getStockTable(
+      fromDate: fromDate,
+      toDate: toDate,
+    );
+
+    return true;
+  }
+
+  String generateDateString(DateTime time) {
+    final formatter = DateFormat('yyyy-MM-dd');
+    return formatter.format(time);
   }
 }

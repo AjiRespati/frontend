@@ -1,0 +1,104 @@
+import 'package:flutter/material.dart';
+import 'package:frontend/application_info.dart';
+import 'package:frontend/src/utils/utils.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
+
+class StockTableCard extends StatelessWidget with GetItMixin {
+  StockTableCard({super.key, required this.isMobile, required this.stock});
+
+  final Map<String, dynamic> stock;
+  final bool isMobile;
+
+  @override
+  Widget build(BuildContext context) {
+    String imageUrl = ApplicationInfo.baseUrl + (stock['image'] ?? '');
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 2,
+      child: InkWell(
+        onTap: () {},
+        child: SizedBox(
+          height: 110,
+          child: Row(
+            children: [
+              SizedBox(
+                width: 110,
+                height: 100,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(10),
+                    bottom: Radius.circular(10),
+                  ),
+                  child:
+                      stock['image'] != null
+                          ? Image.network(
+                            imageUrl,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) => const Icon(
+                                  Icons.image_not_supported,
+                                  size: 50,
+                                ),
+                          )
+                          : const Icon(Icons.image, size: 50),
+                ),
+              ),
+              SizedBox(width: 10),
+              Flexible(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          stock['productName'] ?? " N/A",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Unit: "),
+                        Text(
+                          stock['metricName'] ?? " N/A",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Stock In: "),
+                        Text((stock['totalStockIn'] ?? " N/A").toString()),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Stock Out: "),
+                        Text((stock['totalStockOut'] ?? " N/A").toString()),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Last Update: "),
+                        Text(
+                          formatDateString(
+                            (stock['lastStockUpdate'] ??
+                                "2000-01-01T01:00:00.204Z"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
