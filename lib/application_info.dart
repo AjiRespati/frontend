@@ -20,4 +20,14 @@ class ApplicationInfo {
 
   static const secondColor = Color.fromARGB(255, 171, 203, 60);
   static const thirdColor = Colors.amber;
+
+  static const measurements = [
+    "kg",
+    "g",
+    "liter",
+    "bucket",
+    "carton",
+    "box",
+    "pcs",
+  ];
 }

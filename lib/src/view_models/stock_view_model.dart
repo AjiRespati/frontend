@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:frontend/application_info.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/services/api_service.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -18,21 +19,19 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> _salesmen = [];
   List<dynamic> _subAgents = [];
   List<dynamic> _agents = [];
+  List<String> _salesmanNames = [];
+  List<String> _subAgentNames = [];
+  List<String> _agentNames = [];
+  String? _salesChoosen;
+  String? _subAgentChoosen;
+  String? _agentChoosen;
 
   dynamic _stock;
 
   String? _metricId;
   String _stockEvent = 'stock_in';
   String _measurement = "";
-  List<String> measurements = [
-    "kg",
-    "g",
-    "liter",
-    "bucket",
-    "carton",
-    "box",
-    "pcs",
-  ];
+  List<String> measurements = ApplicationInfo.measurements;
   List<String> _availableMeasurement = [];
   int _price = 0;
 
@@ -43,6 +42,7 @@ class StockViewModel extends ChangeNotifier {
   String? _salesId;
   String? _subAgentId;
   String? _agentId;
+  String? _shopId;
   String _status = 'created';
   String? _description;
   int _clientTabIndex = 0;
@@ -119,6 +119,12 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? get shopId => _shopId;
+  set shopId(String? val) {
+    _shopId = val;
+    notifyListeners();
+  }
+
   String get status => _status;
   set status(String val) {
     _status = val;
@@ -182,6 +188,42 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> get agents => _agents;
   set agents(List<dynamic> val) {
     _agents = val;
+    notifyListeners();
+  }
+
+  List<String> get salesmanNames => _salesmanNames;
+  set salesmanNames(List<String> val) {
+    _salesmanNames = val;
+    notifyListeners();
+  }
+
+  List<String> get subAgentNames => _subAgentNames;
+  set subAgentNames(List<String> val) {
+    _subAgentNames = val;
+    notifyListeners();
+  }
+
+  List<String> get agentNames => _agentNames;
+  set agentNames(List<String> val) {
+    _agentNames = val;
+    notifyListeners();
+  }
+
+  String? get salesChoosen => _salesChoosen;
+  set salesChoosen(String? val) {
+    _salesChoosen = val;
+    notifyListeners();
+  }
+
+  String? get subAgentChoosen => _subAgentChoosen;
+  set subAgentChoosen(String? val) {
+    _subAgentChoosen = val;
+    notifyListeners();
+  }
+
+  String? get agentChoosen => _agentChoosen;
+  set agentChoosen(String? val) {
+    _agentChoosen = val;
     notifyListeners();
   }
 
@@ -249,36 +291,87 @@ class StockViewModel extends ChangeNotifier {
     return;
   }
 
+  /// Generate client id by client choosen name
+  _generateClientId() {
+    switch (client) {
+      case 'salesman':
+        for (var el in salesmen) {
+          if (salesChoosen == el['name']) {
+            salesId = el['id'];
+          }
+        }
+        subAgentId = null;
+        agentId = null;
+        break;
+      case 'subAgent':
+        for (var el in subAgents) {
+          if (subAgentChoosen == el['name']) {
+            subAgentId = el['id'];
+          }
+        }
+        salesId = null;
+        agentId = null;
+        break;
+      default:
+        for (var el in agents) {
+          if (agentChoosen == el['name']) {
+            agentId = el['id'];
+          }
+        }
+        salesId = null;
+        subAgentId = null;
+    }
+  }
+
   Future<void> createStock({
     required BuildContext context,
-    required String productId,
+    // required String? salesName,
+    // required String? subAgentName,
+    // required String? agentName,
+    // required String? shopName,
   }) async {
     isLoading = true;
+    if (stockEvent == 'stock_out') {
+      _generateClientId();
+    } else {
+      salesId = null;
+      subAgentId = null;
+      agentId = null;
+    }
 
     final resp = await apiService.createStock(
-      context,
-      productId,
-      metricId,
-      stockEvent,
-      createdBy,
-      stockAmount,
-      salesId,
-      subAgentId,
-      agentId,
-      status,
-      description,
+      context: context,
+      metricId: metricId,
+      stockEvent: stockEvent,
+      amount: stockAmount,
+      salesId: salesId,
+      subAgentId: subAgentId,
+      agentId: agentId,
+      shopId: shopId,
+      status: status,
+      description: description,
     );
 
     if (resp) {
       isLoading = false;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Stock created successfully')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.green,
+          content: Text(
+            '${stockEvent == 'stock_out' ? "Send " : "Add "}stock, created successfully',
+          ),
+        ),
+      );
     } else {
       isLoading = false;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to create stock')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+          content: Text('Failed to create stock'),
+        ),
+      );
     }
   }
 
@@ -322,6 +415,12 @@ class StockViewModel extends ChangeNotifier {
   fetchSalesmen({required bool isInitial}) async {
     isLoading = true;
     salesmen = await apiService.getSalesmen();
+    List<String> names = [];
+    for (var element in salesmen) {
+      names.add(element['name']);
+    }
+    salesmanNames = names;
+
     if (!isInitial) {
       clientTabIndex = 0;
     } else {
@@ -334,6 +433,12 @@ class StockViewModel extends ChangeNotifier {
   fetchSubAgents({required bool isInitial}) async {
     isLoading = true;
     subAgents = await apiService.getSubAgents();
+    List<String> names = [];
+    for (var element in subAgents) {
+      names.add(element['name']);
+    }
+    subAgentNames = names;
+
     if (!isInitial) {
       clientTabIndex = 1;
     } else {
@@ -346,8 +451,12 @@ class StockViewModel extends ChangeNotifier {
   fetchAgents({required bool isInitial}) async {
     isLoading = true;
     agents = await apiService.getAgents();
+    List<String> names = [];
+    for (var element in agents) {
+      names.add(element['name']);
+    }
+    agentNames = names;
     if (!isInitial) {
-      print('mosok kesini??');
       clientTabIndex = 2;
     } else {
       clientTabIndex = 0;

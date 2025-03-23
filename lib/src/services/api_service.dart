@@ -270,19 +270,21 @@ class ApiService {
     }
   }
 
-  Future<bool> createStock(
-    BuildContext context,
-    String productId,
-    String? metricId,
-    String stockEvent,
-    String? createdBy,
-    int amount,
-    String? salesId,
-    String? subAgentId,
-    String? agentId,
-    String status,
-    String? description,
-  ) async {
+  // controller parameters:
+  // metricId, stockEvent, amount, createdBy,
+  // salesId, subAgentId, agentId, shopId, status, description
+  Future<bool> createStock({
+    required BuildContext context,
+    required String? metricId,
+    required String stockEvent,
+    required int amount,
+    required String? salesId,
+    required String? subAgentId,
+    required String? agentId,
+    required String? shopId,
+    required String status,
+    required String? description,
+  }) async {
     String? token = await _getToken();
     final response = await http.post(
       Uri.parse('$baseUrl/stocks'),
@@ -294,7 +296,6 @@ class ApiService {
         'metricId': metricId,
         'stockEvent': stockEvent,
         'amount': amount,
-        'createdBy': createdBy,
         'salesId': salesId,
         'subAgentId': subAgentId,
         'agentId': agentId,

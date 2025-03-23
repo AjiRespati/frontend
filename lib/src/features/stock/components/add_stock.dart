@@ -63,76 +63,12 @@ class AddStock extends StatelessWidget with GetItMixin {
                       Text('Add Stock'),
                     ],
                   ),
-                  // child: DropdownButtonFormField<String>(
-                  //   value: get<StockViewModel>().stockEvent,
-                  //   items: [
-                  //     DropdownMenuItem(
-                  //       value: 'stock_in',
-                  //       child: Row(
-                  //         crossAxisAlignment: CrossAxisAlignment.center,
-                  //         children: [
-                  //           SizedBox(width: 10),
-                  //           Icon(
-                  //             Icons.add_circle_outline_rounded,
-                  //             color: Colors.green,
-                  //             size: 30,
-                  //           ),
-                  //           SizedBox(width: 5),
-                  //           Text('Add Stock'),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     DropdownMenuItem(
-                  //       value: 'stock_out',
-                  //       child: Row(
-                  //         crossAxisAlignment: CrossAxisAlignment.center,
-                  //         children: [
-                  //           SizedBox(width: 10),
-                  //           Icon(
-                  //             Icons.shopping_cart_checkout_rounded,
-                  //             color: Colors.amber,
-                  //             size: 30,
-                  //           ),
-                  //           SizedBox(width: 5),
-                  //           Text('Send Stock'),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ],
-                  //   onChanged: (value) {
-                  //     get<StockViewModel>().stockEvent = value ?? "stock_in";
-                  //   },
-                  // ),
                 ),
                 SizedBox(width: 10),
                 Expanded(child: SizedBox()),
               ],
             ),
             SizedBox(height: 10),
-            watchOnly((StockViewModel x) => x.stockEvent) == "stock_out"
-                ? Column(
-                  children: [
-                    SizedBox(height: 10),
-                    Row(children: [Text("To: ")]),
-                    SizedBox(height: 10),
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(isDense: true),
-                      value: get<StockViewModel>().client,
-                      items:
-                          get<StockViewModel>().clients.map((item) {
-                            return DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(item),
-                            );
-                          }).toList(),
-                      onChanged: (value) {
-                        get<StockViewModel>().client = value ?? "salesman";
-                      },
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                )
-                : SizedBox(),
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Description (optional)',
@@ -142,13 +78,14 @@ class AddStock extends StatelessWidget with GetItMixin {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 get<StockViewModel>().metricId = mainProduct?['metricId'];
                 get<StockViewModel>().stockEvent = 'stock_in';
-                get<StockViewModel>().createStock(
-                  context: context,
-                  productId: mainProduct?['productId'],
+                await get<StockViewModel>().createStock(context: context);
+                await get<StockViewModel>().fetchProduct(
+                  mainProduct?['productId'],
                 );
+                get<StockViewModel>().fetchProducts();
               },
               child: Text('Add Stock'),
             ),

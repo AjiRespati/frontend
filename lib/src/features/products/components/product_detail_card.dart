@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/add_stock.dart';
+import 'package:frontend/src/features/stock/components/send_stock.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -130,12 +131,32 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                     ),
                   ),
                 ),
-                SizedBox(height: 7),
+                SizedBox(height: 10),
                 SizedBox(
                   width: 120,
                   child: GradientElevatedButton(
                     buttonHeight: 25,
-                    onPressed: () {},
+                    onPressed:
+                        product['totalStock'] == null ||
+                                product['totalStock'] == 0
+                            ? null
+                            : () {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                constraints: BoxConstraints(maxHeight: 540),
+                                context: context,
+                                builder: (context) {
+                                  return SendStock(
+                                    measurement:
+                                        product['metricType']
+                                            .toString()
+                                            .toLowerCase(),
+                                    mainProduct: product,
+                                    stockOnHand: product['totalStock'] ?? 0,
+                                  );
+                                },
+                              );
+                            },
                     child: Row(
                       children: [
                         Icon(

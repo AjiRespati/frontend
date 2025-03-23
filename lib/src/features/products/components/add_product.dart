@@ -102,39 +102,6 @@ class _AddProductScreenState extends State<AddProductScreen>
 
           SizedBox(height: 10),
 
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(labelText: "Name"),
-          ),
-          SizedBox(height: 4),
-          TextField(
-            controller: _descriptionController,
-            decoration: InputDecoration(labelText: "Description"),
-          ),
-          SizedBox(height: 4),
-          TextField(
-            controller: _priceController,
-            decoration: InputDecoration(labelText: "Price"),
-            keyboardType: TextInputType.number,
-          ),
-          SizedBox(height: 4),
-
-          // ✅ Metric Dropdown
-          DropdownButtonFormField<String>(
-            value: _selectedMetric,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedMetric = newValue!;
-              });
-            },
-            items:
-                get<StockViewModel>().measurements.map((metric) {
-                  return DropdownMenuItem(value: metric, child: Text(metric));
-                }).toList(),
-            decoration: InputDecoration(labelText: "Metric"),
-          ),
-          SizedBox(height: 25),
-
           // ✅ Pick Image Buttons
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -170,7 +137,40 @@ class _AddProductScreenState extends State<AddProductScreen>
                 ),
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
+
+          TextField(
+            controller: _nameController,
+            decoration: InputDecoration(labelText: "Name"),
+          ),
+          SizedBox(height: 4),
+          TextField(
+            controller: _descriptionController,
+            decoration: InputDecoration(labelText: "Description"),
+          ),
+          SizedBox(height: 4),
+          TextField(
+            controller: _priceController,
+            decoration: InputDecoration(labelText: "Price"),
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 4),
+
+          // ✅ Metric Dropdown
+          DropdownButtonFormField<String>(
+            value: _selectedMetric,
+            onChanged: (newValue) {
+              setState(() {
+                _selectedMetric = newValue!;
+              });
+            },
+            items:
+                get<StockViewModel>().measurements.map((metric) {
+                  return DropdownMenuItem(value: metric, child: Text(metric));
+                }).toList(),
+            decoration: InputDecoration(labelText: "Metric"),
+          ),
+          SizedBox(height: 30),
           GradientElevatedButton(
             onPressed: _submit,
             child: Text(
