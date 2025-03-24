@@ -10,6 +10,8 @@ class StockMobile extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    watchOnly((StockViewModel x) => x.dateFromFilter);
+    watchOnly((StockViewModel x) => x.dateToFilter);
     return Scaffold(
       appBar: AppBar(
         title: Text("Stock"),
@@ -43,10 +45,36 @@ class StockMobile extends StatelessWidget with GetItMixin {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildDatePicker(
+                          context,
+                          "From: ",
+                          get<StockViewModel>().dateFromFilter,
+                          (date) {
+                            get<StockViewModel>().dateFromFilter = date;
+                          },
+                        ),
+
+                        _buildDatePicker(
+                          context,
+                          "To: ",
+                          get<StockViewModel>().dateToFilter,
+                          (date) {
+                            get<StockViewModel>().dateToFilter = date;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
                       height:
                           (MediaQuery.of(context).size.height - 152) -
-                          (kIsWeb ? 0 : 50),
+                          (kIsWeb ? 0 : 50) -
+                          63,
                       child: ListView.builder(
                         itemCount: get<StockViewModel>().stockTable.length,
 
@@ -86,6 +114,28 @@ class StockMobile extends StatelessWidget with GetItMixin {
                 ],
               ),
       bottomNavigationBar: MobileNavbar(),
+    );
+  }
+
+  Widget _buildDatePicker(
+    BuildContext context,
+    String label,
+    DateTime? selectedDate,
+    Function(DateTime) onDateSelected,
+  ) {
+    return ElevatedButton(
+      onPressed: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: selectedDate ?? DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime.now(),
+        );
+        if (pickedDate != null) onDateSelected(pickedDate);
+      },
+      child: Text(
+        label + (selectedDate?.toLocal() ?? "").toString().split(' ')[0],
+      ),
     );
   }
 }

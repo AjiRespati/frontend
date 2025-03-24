@@ -284,8 +284,6 @@ class StockViewModel extends ChangeNotifier {
     }
     products = data;
 
-    print("ALL PRODUCTS: ");
-    print(data);
     isLoading = false;
   }
 
@@ -496,6 +494,8 @@ class StockViewModel extends ChangeNotifier {
       toDate: toDate,
     );
 
+    print("ALL STOCKS TABLE: ");
+    print(stockTable);
     return true;
   }
 

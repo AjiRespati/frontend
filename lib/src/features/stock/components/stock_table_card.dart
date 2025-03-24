@@ -18,12 +18,12 @@ class StockTableCard extends StatelessWidget with GetItMixin {
       child: InkWell(
         onTap: () {},
         child: SizedBox(
-          height: 110,
+          height: 130,
           child: Row(
             children: [
               SizedBox(
                 width: 110,
-                height: 100,
+                height: 90,
                 child: ClipRRect(
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(10),
@@ -65,6 +65,7 @@ class StockTableCard extends StatelessWidget with GetItMixin {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.blue,
+                            fontSize: 16,
                           ),
                         ),
                       ],
@@ -79,6 +80,19 @@ class StockTableCard extends StatelessWidget with GetItMixin {
                       children: [
                         Text("Stock Out: "),
                         Text((stock['totalStockOut'] ?? " N/A").toString()),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Stock On Hand: "),
+                        Text(
+                          (stock['latestUpdateAmount'] ?? " N/A").toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: Colors.green[800],
+                            fontSize: 16,
+                          ),
+                        ),
                       ],
                     ),
                     Row(
