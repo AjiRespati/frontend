@@ -334,6 +334,31 @@ class ApiService {
     }
   }
 
+  /// Date String yyyy-mm-dd, 2025-03-01
+  Future<List<dynamic>> getStockHistoryTable({
+    required String fromDate,
+    required String toDate,
+    required String metricId,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.get(
+      Uri.parse(
+        '$baseUrl/stocks/history?metricId=$metricId&fromDate=$fromDate&toDate=$toDate',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return [];
+    }
+  }
+
   // TODO: CLIENTS ROUTES
   /// GET /
   /// POST /

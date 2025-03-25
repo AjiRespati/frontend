@@ -7,5 +7,6 @@ const String productsRoute = "/Products";
 const String productDetailRoute = "/Products/Detail";
 const String addProductsRoute = "/AddProducts";
 const String stockRoute = "/Stock";
+const String stockDetailRoute = "/Stock/Detail";
 const String clientsRoute = "/Clients";
 const String settingsRoute = "/Settings";

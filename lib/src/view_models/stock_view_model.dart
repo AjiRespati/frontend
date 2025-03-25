@@ -29,8 +29,10 @@ class StockViewModel extends ChangeNotifier {
 
   dynamic _stock;
   List<dynamic> _stockTable = [];
+  List<dynamic> _stockHistoryTable = [];
   DateTime _dateFromFilter = DateTime.now().subtract(Duration(days: 7));
   DateTime _dateToFilter = DateTime.now();
+  String? _choosenMetricId;
 
   String? _metricId;
   String _stockEvent = 'stock_in';
@@ -54,6 +56,12 @@ class StockViewModel extends ChangeNotifier {
   //====================//
   //  GETTER n SETTER   //
   //====================//
+
+  String? get choosenMetricId => _choosenMetricId;
+  set choosenMetricId(String? val) {
+    _choosenMetricId = val;
+    notifyListeners();
+  }
 
   String? get metricId => _metricId;
   set metricId(String? val) {
@@ -243,6 +251,12 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<dynamic> get stockHistoryTable => _stockHistoryTable;
+  set stockHistoryTable(List<dynamic> val) {
+    _stockHistoryTable = val;
+    notifyListeners();
+  }
+
   DateTime get dateFromFilter => _dateFromFilter;
   set dateFromFilter(DateTime val) {
     _dateFromFilter = val;
@@ -291,7 +305,6 @@ class StockViewModel extends ChangeNotifier {
     isLoading = true;
     dynamic data = await apiService.fetchProduct(productId);
     productsDetail = data;
-    print("PRODUCT: $productsDetail");
     List<String> usedMetric = [];
     if (productsDetail != null) {
       for (var i = 0; i < productsDetail!.length; i++) {
@@ -493,9 +506,21 @@ class StockViewModel extends ChangeNotifier {
       fromDate: fromDate,
       toDate: toDate,
     );
+    return true;
+  }
 
-    print("ALL STOCKS TABLE: ");
-    print(stockTable);
+  Future<bool> getStockHistory() async {
+    String fromDate = generateDateString(dateFromFilter);
+    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+
+    stockHistoryTable = await apiService.getStockHistoryTable(
+      fromDate: fromDate,
+      toDate: toDate,
+      metricId: choosenMetricId ?? "",
+    );
+
+    print("ALL STOCKS HISTORY TABLE: ");
+    print(stockHistoryTable);
     return true;
   }
 

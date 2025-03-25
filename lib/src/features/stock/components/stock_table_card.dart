@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
+import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/utils/utils.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class StockTableCard extends StatelessWidget with GetItMixin {
@@ -16,7 +20,11 @@ class StockTableCard extends StatelessWidget with GetItMixin {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
       child: InkWell(
-        onTap: () {},
+        onTap: () async {
+          get<StockViewModel>().choosenMetricId = stock['metricId'];
+          bool resp = await get<StockViewModel>().getStockHistory();
+          if (resp) Navigator.pushNamed(context, stockDetailRoute);
+        },
         child: SizedBox(
           height: 130,
           child: Row(

@@ -5,6 +5,7 @@ import 'package:frontend/src/features/products/components/add_product.dart';
 import 'package:frontend/src/features/products/product_detail.dart';
 import 'package:frontend/src/features/settings/settings.dart';
 import 'package:frontend/src/features/stock/stock.dart';
+import 'package:frontend/src/features/stock/stock_detail.dart';
 import '../features/auth/login_screen.dart';
 import '../features/products/products.dart';
 import '../widgets/not_found_page.dart';
@@ -39,6 +40,9 @@ class AppRouter {
           break;
         case stockRoute:
           screen = Stock();
+          break;
+        case stockDetailRoute:
+          screen = StockDetail();
           break;
         case clientsRoute:
           screen = Clients();
