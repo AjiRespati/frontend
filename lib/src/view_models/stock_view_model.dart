@@ -428,7 +428,6 @@ class StockViewModel extends ChangeNotifier {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Stock created successfully')));
-      fetchProduct(productId);
     } else {
       isLoading = false;
       ScaffoldMessenger.of(
@@ -440,7 +439,6 @@ class StockViewModel extends ChangeNotifier {
   Future<dynamic> fetchStockByProduct(String productId) async {
     isLoading = true;
     stock = await apiService.fetchStockByProduct(productId);
-    print("STOCKS: $stock");
     isLoading = false;
     return;
   }
@@ -511,7 +509,7 @@ class StockViewModel extends ChangeNotifier {
 
   Future<bool> getStockHistory() async {
     String fromDate = generateDateString(dateFromFilter);
-    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+    String toDate = generateDateString(dateToFilter);
 
     stockHistoryTable = await apiService.getStockHistoryTable(
       fromDate: fromDate,
@@ -519,8 +517,7 @@ class StockViewModel extends ChangeNotifier {
       metricId: choosenMetricId ?? "",
     );
 
-    print("ALL STOCKS HISTORY TABLE: ");
-    print(stockHistoryTable);
+    print(stockHistoryTable.first);
     return true;
   }
 

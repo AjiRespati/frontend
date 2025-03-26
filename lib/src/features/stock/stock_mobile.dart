@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/stock_table_card.dart';
+import 'package:frontend/src/utils/utils.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -125,12 +126,17 @@ class StockMobile extends StatelessWidget with GetItMixin {
   ) {
     return ElevatedButton(
       onPressed: () async {
-        DateTime? pickedDate = await showDatePicker(
+        // DateTime? pickedDate = await showDatePicker(
+        //   context: context,
+        //   initialDate: selectedDate ?? DateTime.now(),
+        //   firstDate: DateTime(2000),
+        //   lastDate: DateTime.now(),
+        DateTime? pickedDate = await showCustomDatePicker(
           context: context,
           initialDate: selectedDate ?? DateTime.now(),
           firstDate: DateTime(2000),
-          lastDate: DateTime.now(),
         );
+        // );
         if (pickedDate != null) onDateSelected(pickedDate);
       },
       child: Text(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/stock_detail_desktop.dart';
 import 'package:frontend/src/features/stock/components/stock_detail_mobile.dart';
 import 'package:frontend/src/utils/responsive_layout.dart';
-import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class StockDetail extends StatefulWidget with GetItStatefulWidgetMixin {
