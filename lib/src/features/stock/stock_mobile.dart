@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/stock_table_card.dart';
-import 'package:frontend/src/utils/utils.dart';
+import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -17,6 +18,13 @@ class StockMobile extends StatelessWidget with GetItMixin {
       appBar: AppBar(
         title: Text("Stock"),
         actions: [
+          (watchOnly((StockViewModel x) => x.isBusy))
+              ? SizedBox(
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(color: Colors.blue),
+              )
+              : SizedBox(),
           // AddButton(
           //   message: "Add Product",
           //   onPressed: () {
@@ -33,87 +41,96 @@ class StockMobile extends StatelessWidget with GetItMixin {
           SizedBox(width: 20),
         ],
       ),
-      body:
-          watchOnly((StockViewModel x) => x.stockTable).isEmpty
-              ? Center(
-                child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: CircularProgressIndicator(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildDatePicker(
+                  context,
+                  "From: ",
+                  get<StockViewModel>().dateFromFilter,
+                  (date) {
+                    get<StockViewModel>().dateFromFilter = date;
+                  },
                 ),
-              )
-              : Column(
+
+                _buildDatePicker(
+                  context,
+                  "To: ",
+                  get<StockViewModel>().dateToFilter,
+                  (date) {
+                    get<StockViewModel>().dateToFilter = date;
+                  },
+                ),
+                GradientElevatedButton(
+                  inactiveDelay: Duration.zero,
+                  buttonHeight: 34,
+                  onPressed: () {
+                    get<StockViewModel>().getStockTable();
+                  },
+                  child: Icon(Icons.search, color: Colors.white, size: 30),
+                ),
+              ],
+            ),
+          ),
+          watchOnly((StockViewModel x) => x.stockTable).isEmpty
+              ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildDatePicker(
-                          context,
-                          "From: ",
-                          get<StockViewModel>().dateFromFilter,
-                          (date) {
-                            get<StockViewModel>().dateFromFilter = date;
-                          },
-                        ),
-
-                        _buildDatePicker(
-                          context,
-                          "To: ",
-                          get<StockViewModel>().dateToFilter,
-                          (date) {
-                            get<StockViewModel>().dateToFilter = date;
-                          },
-                        ),
-                      ],
-                    ),
+                  SizedBox(
+                    height: 30,
+                    child: Text("Tidak ada stok pada tanggal dipilih."),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height:
-                          (MediaQuery.of(context).size.height - 152) -
-                          (kIsWeb ? 0 : 50) -
-                          63,
-                      child: ListView.builder(
-                        itemCount: get<StockViewModel>().stockTable.length,
-
-                        itemBuilder: (context, index) {
-                          return StockTableCard(
-                            isMobile: true,
-                            stock: get<StockViewModel>().stockTable[index],
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: SizedBox(
-                  //     height:
-                  //         (MediaQuery.of(context).size.height - 152) -
-                  //         (kIsWeb ? 0 : 50),
-                  //     child: GridView.builder(
-                  //       gridDelegate:
-                  //           const SliverGridDelegateWithFixedCrossAxisCount(
-                  //             crossAxisCount: 1, // ✅ 2 Columns
-                  //             crossAxisSpacing: 8,
-                  //             mainAxisSpacing: 8,
-                  //             childAspectRatio: 3, // ✅ Adjust aspect ratio
-                  //           ),
-                  //       itemCount: get<StockViewModel>().stockTable.length,
-                  //       itemBuilder: (context, index) {
-                  //         return StockTableCard(
-                  //           isMobile: true,
-                  //           stock: get<StockViewModel>().stockTable[index],
-                  //         );
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
                 ],
+              )
+              : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height:
+                      (MediaQuery.of(context).size.height - 152) -
+                      (kIsWeb ? 0 : 50) -
+                      63,
+                  child: ListView.builder(
+                    itemCount: get<StockViewModel>().stockTable.length,
+
+                    itemBuilder: (context, index) {
+                      return StockTableCard(
+                        isMobile: true,
+                        stock: get<StockViewModel>().stockTable[index],
+                      );
+                    },
+                  ),
+                ),
               ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: SizedBox(
+          //     height:
+          //         (MediaQuery.of(context).size.height - 152) -
+          //         (kIsWeb ? 0 : 50),
+          //     child: GridView.builder(
+          //       gridDelegate:
+          //           const SliverGridDelegateWithFixedCrossAxisCount(
+          //             crossAxisCount: 1, // ✅ 2 Columns
+          //             crossAxisSpacing: 8,
+          //             mainAxisSpacing: 8,
+          //             childAspectRatio: 3, // ✅ Adjust aspect ratio
+          //           ),
+          //       itemCount: get<StockViewModel>().stockTable.length,
+          //       itemBuilder: (context, index) {
+          //         return StockTableCard(
+          //           isMobile: true,
+          //           stock: get<StockViewModel>().stockTable[index],
+          //         );
+          //       },
+          //     ),
+          //   ),
+          // ),
+        ],
+      ),
       bottomNavigationBar: MobileNavbar(),
     );
   }
@@ -124,23 +141,26 @@ class StockMobile extends StatelessWidget with GetItMixin {
     DateTime? selectedDate,
     Function(DateTime) onDateSelected,
   ) {
-    return ElevatedButton(
-      onPressed: () async {
-        // DateTime? pickedDate = await showDatePicker(
-        //   context: context,
-        //   initialDate: selectedDate ?? DateTime.now(),
-        //   firstDate: DateTime(2000),
-        //   lastDate: DateTime.now(),
-        DateTime? pickedDate = await showCustomDatePicker(
-          context: context,
-          initialDate: selectedDate ?? DateTime.now(),
-          firstDate: DateTime(2000),
-        );
-        // );
-        if (pickedDate != null) onDateSelected(pickedDate);
-      },
-      child: Text(
-        label + (selectedDate?.toLocal() ?? "").toString().split(' ')[0],
+    return SizedBox(
+      height: 34,
+      child: ElevatedButton(
+        onPressed: () async {
+          // DateTime? pickedDate = await showDatePicker(
+          //   context: context,
+          //   initialDate: selectedDate ?? DateTime.now(),
+          //   firstDate: DateTime(2000),
+          //   lastDate: DateTime.now(),
+          DateTime? pickedDate = await showCustomDatePicker(
+            context: context,
+            initialDate: selectedDate ?? DateTime.now(),
+            firstDate: DateTime(2000),
+          );
+          // );
+          if (pickedDate != null) onDateSelected(pickedDate);
+        },
+        child: Text(
+          label + (selectedDate?.toLocal() ?? "").toString().split(' ')[0],
+        ),
       ),
     );
   }

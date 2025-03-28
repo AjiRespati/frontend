@@ -497,6 +497,7 @@ class StockViewModel extends ChangeNotifier {
   }
 
   Future<bool> getStockTable() async {
+    isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
@@ -504,6 +505,7 @@ class StockViewModel extends ChangeNotifier {
       fromDate: fromDate,
       toDate: toDate,
     );
+    isBusy = false;
     return true;
   }
 
@@ -517,7 +519,7 @@ class StockViewModel extends ChangeNotifier {
       metricId: choosenMetricId ?? "",
     );
 
-    print(stockHistoryTable.first);
+    print(stockHistoryTable);
     return true;
   }
 

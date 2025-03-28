@@ -33,6 +33,12 @@ String formatDateString(String dateTimeString) {
   return formatter.format(dateTime);
 }
 
+String formatMonthDay(String dateTimeString) {
+  final dateTime = DateTime.parse(dateTimeString);
+  final formatter = DateFormat('MM/dd');
+  return formatter.format(dateTime);
+}
+
 Future<DateTime?> showCustomDatePicker({
   required BuildContext context,
   required DateTime initialDate,
@@ -58,4 +64,19 @@ Future<DateTime?> showCustomDatePicker({
   );
 
   return selectedDate;
+}
+
+String formatCurrency(num number) {
+  // Floor rounding the number
+  int roundedNumber = number.floor();
+
+  // Create a NumberFormat for Indonesian Rupiah
+  final currencyFormatter = NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: 'Rp',
+    decimalDigits: 0, // No decimal digits
+  );
+
+  // Format the rounded number
+  return currencyFormatter.format(roundedNumber);
 }
