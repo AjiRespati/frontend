@@ -363,6 +363,28 @@ class ApiService {
     }
   }
 
+  Future<bool> settlingStock({
+    required String stockId,
+    required String metricId,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/stocks/settled'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({'id': stockId, 'metricId': metricId}),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // TODO: CLIENTS ROUTES
   /// GET /
   /// POST /

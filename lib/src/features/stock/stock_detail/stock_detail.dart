@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/stock/components/stock_detail_desktop.dart';
-import 'package:frontend/src/features/stock/components/stock_detail_mobile.dart';
+import 'package:frontend/src/features/stock/stock_detail/stock_detail_desktop.dart';
+import 'package:frontend/src/features/stock/stock_detail/stock_detail_mobile.dart';
 import 'package:frontend/src/utils/responsive_layout.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 

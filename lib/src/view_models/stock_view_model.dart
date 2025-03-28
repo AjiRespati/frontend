@@ -530,6 +530,13 @@ class StockViewModel extends ChangeNotifier {
     return true;
   }
 
+  Future<bool> settlingStock({
+    required String stockId,
+    required String metricId,
+  }) async {
+    return await apiService.settlingStock(stockId: stockId, metricId: metricId);
+  }
+
   Future<bool> getStockHistory({required String status}) async {
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
