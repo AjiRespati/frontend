@@ -52,6 +52,7 @@ class StockViewModel extends ChangeNotifier {
   String _status = 'created';
   String? _description;
   int _clientTabIndex = 0;
+  int _stockTabIndex = 0;
 
   //====================//
   //  GETTER n SETTER   //
@@ -152,6 +153,12 @@ class StockViewModel extends ChangeNotifier {
   int get clientTabIndex => _clientTabIndex;
   set clientTabIndex(int val) {
     _clientTabIndex = val;
+    notifyListeners();
+  }
+
+  int get stockTabIndex => _stockTabIndex;
+  set stockTabIndex(int val) {
+    _stockTabIndex = val;
     notifyListeners();
   }
 
@@ -282,6 +289,7 @@ class StockViewModel extends ChangeNotifier {
     } else {
       isLoading = false;
       commissionData = data;
+      print(data);
     }
   }
 
