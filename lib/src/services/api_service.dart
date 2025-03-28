@@ -316,11 +316,14 @@ class ApiService {
   Future<List<dynamic>> getStockTable({
     required String fromDate,
     required String toDate,
+    required String status,
   }) async {
     String? token = await _getToken();
 
     final response = await http.get(
-      Uri.parse('$baseUrl/stocks/table?fromDate=$fromDate&toDate=$toDate'),
+      Uri.parse(
+        '$baseUrl/stocks/table?fromDate=$fromDate&toDate=$toDate&status=$status',
+      ),
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
@@ -339,12 +342,13 @@ class ApiService {
     required String fromDate,
     required String toDate,
     required String metricId,
+    required String status,
   }) async {
     String? token = await _getToken();
 
     final response = await http.get(
       Uri.parse(
-        '$baseUrl/stocks/history?metricId=$metricId&fromDate=$fromDate&toDate=$toDate',
+        '$baseUrl/stocks/history?metricId=$metricId&fromDate=$fromDate&toDate=$toDate&status=$status',
       ),
       headers: {
         'Content-Type': 'application/json',

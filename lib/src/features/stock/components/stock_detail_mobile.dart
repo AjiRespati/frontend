@@ -16,130 +16,137 @@ class StockDetailMobile extends StatelessWidget with GetItMixin {
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
         ),
       ),
-      body: Column(
-        children: [
-          Text(
-            stocks.first['productName'],
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-          ),
-          SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text("Stock Amount:"),
-              SizedBox(width: 5),
-              Text(stocks.first['updateAmount'].toString()),
-              SizedBox(width: 20),
-            ],
-          ),
-          SizedBox(height: 5),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height - 155,
-              child: ListView.builder(
-                itemCount: stocks.length,
-                itemBuilder: (context, idx) {
-                  var item = stocks[idx];
-                  return Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(width: 10),
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            formatMonthDay(
-                                              item['createdAt'] ??
-                                                  "2000-01-01T01:00:00.204Z",
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            "${item['entityType'] == 'Unknown' ? "Produsen" : item['entityType']}:",
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          SizedBox(width: 20),
-                                          Flexible(
-                                            child: Text(
-                                              "${item['relatedEntity'] == 'N/A' ? "Gracia Factory" : item['relatedEntity']}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16,
+      body:
+          stocks.isEmpty
+              ? SizedBox()
+              : Column(
+                children: [
+                  Text(
+                    stocks.first['productName'],
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text("Stock Amount:"),
+                      SizedBox(width: 5),
+                      Text(stocks.first['updateAmount'].toString()),
+                      SizedBox(width: 20),
+                    ],
+                  ),
+                  SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 155,
+                      child: ListView.builder(
+                        itemCount: stocks.length,
+                        itemBuilder: (context, idx) {
+                          var item = stocks[idx];
+                          return Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    formatMonthDay(
+                                                      item['createdAt'] ??
+                                                          "2000-01-01T01:00:00.204Z",
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    "${item['entityType'] == 'Unknown' ? "Produsen" : item['entityType']}:",
+                                                  ),
+                                                ],
                                               ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(width: 20),
+                                                  Flexible(
+                                                    child: Text(
+                                                      "${item['relatedEntity'] == 'N/A' ? "Gracia Factory" : item['relatedEntity']}",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        item['stockEvent'] == 'stock_out'
-                                            ? "Stock Out"
-                                            : "Stock In",
-                                      ),
-                                      Text(
-                                        "${item['amount']}",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                          color:
-                                              item['stockEvent'] == 'stock_out'
-                                                  ? Colors.red
-                                                  : Colors.green[600],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      Text("Amount"),
-                                      Text(
-                                        "${item['updateAmount']}",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                item['stockEvent'] ==
+                                                        'stock_out'
+                                                    ? "Stock Out"
+                                                    : "Stock In",
+                                              ),
+                                              Text(
+                                                "${item['amount']}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
+                                                  color:
+                                                      item['stockEvent'] ==
+                                                              'stock_out'
+                                                          ? Colors.red
+                                                          : Colors.green[600],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Text("Amount"),
+                                              Text(
+                                                "${item['updateAmount']}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

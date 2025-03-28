@@ -8,10 +8,16 @@ import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class StockTableCard extends StatelessWidget with GetItMixin {
-  StockTableCard({super.key, required this.isMobile, required this.stock});
+  StockTableCard({
+    super.key,
+    required this.stockStatus,
+    required this.isMobile,
+    required this.stock,
+  });
 
   final Map<String, dynamic> stock;
   final bool isMobile;
+  final String stockStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +28,9 @@ class StockTableCard extends StatelessWidget with GetItMixin {
       child: InkWell(
         onTap: () async {
           get<StockViewModel>().choosenMetricId = stock['metricId'];
-          bool resp = await get<StockViewModel>().getStockHistory();
+          bool resp = await get<StockViewModel>().getStockHistory(
+            status: stockStatus,
+          );
           if (resp) Navigator.pushNamed(context, stockDetailRoute);
         },
         child: SizedBox(

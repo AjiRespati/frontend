@@ -29,6 +29,7 @@ class StockViewModel extends ChangeNotifier {
 
   dynamic _stock;
   List<dynamic> _stockTable = [];
+  List<dynamic> _stockOnProgressTable = [];
   List<dynamic> _stockHistoryTable = [];
   DateTime _dateFromFilter = DateTime.now().subtract(Duration(days: 7));
   DateTime _dateToFilter = DateTime.now();
@@ -249,6 +250,12 @@ class StockViewModel extends ChangeNotifier {
   dynamic get stock => _stock;
   set stock(dynamic val) {
     _stock = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get stockOnProgressTable => _stockOnProgressTable;
+  set stockOnProgressTable(List<dynamic> val) {
+    _stockOnProgressTable = val;
     notifyListeners();
   }
 
@@ -504,27 +511,34 @@ class StockViewModel extends ChangeNotifier {
     return;
   }
 
-  Future<bool> getStockTable() async {
+  Future<bool> getStockTable({required String status}) async {
     isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
-    stockTable = await apiService.getStockTable(
+    List<dynamic> response = await apiService.getStockTable(
       fromDate: fromDate,
       toDate: toDate,
+      status: status,
     );
+    if (status == 'settled') {
+      stockTable = response;
+    } else {
+      stockOnProgressTable = response;
+    }
     isBusy = false;
     return true;
   }
 
-  Future<bool> getStockHistory() async {
+  Future<bool> getStockHistory({required String status}) async {
     String fromDate = generateDateString(dateFromFilter);
-    String toDate = generateDateString(dateToFilter);
+    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
     stockHistoryTable = await apiService.getStockHistoryTable(
       fromDate: fromDate,
       toDate: toDate,
       metricId: choosenMetricId ?? "",
+      status: status,
     );
 
     print(stockHistoryTable);
