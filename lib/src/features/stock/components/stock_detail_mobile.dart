@@ -18,7 +18,11 @@ class StockDetailMobile extends StatelessWidget with GetItMixin {
       ),
       body:
           stocks.isEmpty
-              ? SizedBox()
+              ? SizedBox(
+                child: Text(
+                  "Tidak ada stock yang perlu diproses didalam filter tanggal.",
+                ),
+              )
               : Column(
                 children: [
                   Text(
@@ -26,15 +30,17 @@ class StockDetailMobile extends StatelessWidget with GetItMixin {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                   ),
                   SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text("Stock Amount:"),
-                      SizedBox(width: 5),
-                      Text(stocks.first['updateAmount'].toString()),
-                      SizedBox(width: 20),
-                    ],
-                  ),
+                  stocks.first?['updateAmount'] == null
+                      ? SizedBox(height: 15)
+                      : Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text("Stock Amount:"),
+                          SizedBox(width: 5),
+                          Text(stocks.first['updateAmount'].toString()),
+                          SizedBox(width: 20),
+                        ],
+                      ),
                   SizedBox(height: 5),
                   Padding(
                     padding: const EdgeInsets.all(8.0),

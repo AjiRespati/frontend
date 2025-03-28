@@ -125,6 +125,23 @@ class StockTableCard extends StatelessWidget with GetItMixin {
                   ],
                 ),
               ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      get<StockViewModel>().choosenMetricId = stock['metricId'];
+                      bool resp = await get<StockViewModel>().getStockHistory(
+                        status: stockStatus,
+                      );
+                      if (resp) Navigator.pushNamed(context, stockDetailRoute);
+                    },
+                    icon: Icon(Icons.chevron_right_outlined, size: 40),
+                  ),
+                ],
+              ),
+              SizedBox(width: 10),
             ],
           ),
         ),

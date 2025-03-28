@@ -52,7 +52,9 @@ class StockProcessedView extends StatelessWidget with GetItMixin {
               children: [
                 SizedBox(
                   height: 30,
-                  child: Text("Tidak ada stok pada tanggal dipilih."),
+                  child: Text(
+                    "Tidak ada stock yang perlu diproses didalam filter tanggal.",
+                  ),
                 ),
               ],
             )
