@@ -52,7 +52,12 @@ class _StockMobileState extends State<StockMobile>
           SizedBox(width: 20),
         ],
         bottom: TabBar(
+          labelColor: Colors.blue,
+          unselectedLabelColor: Colors.grey,
           controller: _stockTabController,
+          indicatorColor: Colors.blue,
+          indicatorSize: TabBarIndicatorSize.label,
+          indicatorWeight: 5,
           tabs: [
             Tab(icon: Icon(Icons.work_history_outlined), text: "Processing"),
             Tab(icon: Icon(Icons.check), text: "Settled"),
