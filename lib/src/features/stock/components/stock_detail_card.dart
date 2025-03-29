@@ -33,16 +33,22 @@ class StockDetailCard extends StatelessWidget with GetItMixin {
           child: Card(
             child: InkWell(
               borderRadius: BorderRadius.circular(10),
-              onTap: () {
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  constraints: BoxConstraints(minHeight: 600, maxHeight: 620),
-                  context: context,
-                  builder: (context) {
-                    return SettlingStock(item: item);
-                  },
-                );
-              },
+              onTap:
+                  !isNew
+                      ? null
+                      : () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          constraints: BoxConstraints(
+                            minHeight: 600,
+                            maxHeight: 620,
+                          ),
+                          context: context,
+                          builder: (context) {
+                            return SettlingStock(item: item);
+                          },
+                        );
+                      },
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Row(

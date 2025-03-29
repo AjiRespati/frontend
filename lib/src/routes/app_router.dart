@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/clients/clients.dart';
 import 'package:frontend/src/features/dashboard/dashboard.dart';
 import 'package:frontend/src/features/products/components/add_product.dart';
-import 'package:frontend/src/features/products/product_detail.dart';
+import 'package:frontend/src/features/products/product_detail/product_detail.dart';
 import 'package:frontend/src/features/settings/settings.dart';
 import 'package:frontend/src/features/stock/stock.dart';
 import 'package:frontend/src/features/stock/stock_detail/stock_detail.dart';

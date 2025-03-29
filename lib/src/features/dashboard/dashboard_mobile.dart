@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -18,6 +19,13 @@ class DashboardMobile extends StatelessWidget with GetItMixin {
                   _buildCommissionCard(
                     "Total Commission",
                     (get<StockViewModel>().commissionData!['totalCommission']
+                            as num)
+                        .toDouble(),
+                  ),
+                  _buildCommissionCard(
+                    "Distributor",
+                    (get<StockViewModel>()
+                                .commissionData!['distributorCommission']
                             as num)
                         .toDouble(),
                   ),
@@ -64,7 +72,7 @@ class DashboardMobile extends StatelessWidget with GetItMixin {
       child: ListTile(
         title: Text(title),
         trailing: Text(
-          "\$${value.toStringAsFixed(2)}",
+          formatCurrency(value),
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),

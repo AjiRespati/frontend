@@ -60,14 +60,28 @@ class _StockMobileState extends State<StockMobile>
           indicatorSize: TabBarIndicatorSize.label,
           indicatorWeight: 5,
           tabs: [
-            Tab(icon: Icon(Icons.work_history_outlined), text: "Processing"),
             Tab(icon: Icon(Icons.check), text: "Settled"),
+            Tab(
+              icon: Badge.count(
+                isLabelVisible:
+                    watchOnly(
+                      (StockViewModel x) => x.stockOnProgressTable,
+                    ).isNotEmpty,
+                textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                count:
+                    watchOnly(
+                      (StockViewModel x) => x.stockOnProgressTable,
+                    ).length,
+                child: Icon(Icons.history_rounded),
+              ),
+              text: "Processing",
+            ),
           ],
         ),
       ),
       body: TabBarView(
         controller: _stockTabController,
-        children: [StockProcessedView(), StockSettledView()],
+        children: [StockSettledView(), StockProcessedView()],
       ),
       bottomNavigationBar: MobileNavbar(),
     );

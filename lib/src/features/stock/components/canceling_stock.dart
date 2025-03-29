@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/stock/components/canceling_stock.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
@@ -9,21 +8,29 @@ import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 // For detecting web
 
-class SettlingStock extends StatefulWidget with GetItStatefulWidgetMixin {
-  SettlingStock({required this.item, super.key});
+class CancelingStock extends StatefulWidget with GetItStatefulWidgetMixin {
+  CancelingStock({required this.item, super.key});
   final dynamic item;
 
   @override
-  State<SettlingStock> createState() => _AddProductScreenState();
+  State<CancelingStock> createState() => _AddProductScreenState();
 }
 
-class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
+class _AddProductScreenState extends State<CancelingStock>
+    with GetItStateMixin {
   bool _showError = false;
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _showError = false;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _descriptionController.dispose();
   }
 
   @override
@@ -36,13 +43,17 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
         children: [
           Center(
             child: Text(
-              "Konfirmasi Pembayaran",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+              "Batalkan Pengiriman Stock",
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                color: Colors.amber.shade900,
+              ),
             ),
           ),
           SizedBox(height: 20),
           Text(
-            "Apakah produk ini: ",
+            "Apakah anda yakin membatalkan pengiriman: ",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           Padding(
@@ -67,29 +78,24 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
           ),
           SizedBox(height: 10),
           Text(
-            "Telah dibayarkan oleh:",
+            "Kepada:",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           Row(
             children: [
               SizedBox(width: 20),
               Text(
-                widget.item['entityType'] + ", " + widget.item['relatedEntity'],
+                "${widget.item['entityType']}, ${widget.item['relatedEntity']}",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ],
           ),
-          SizedBox(height: 20),
-          Center(
-            child: Text(
-              "Pastikan pembayaran telah diterima!",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Colors.amber.shade900,
-              ),
-            ),
+          SizedBox(height: 10),
+          TextField(
+            controller: _descriptionController,
+            decoration: InputDecoration(labelText: "Keterangan (Optional)"),
           ),
+
           SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -98,6 +104,11 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                 width: 120,
                 child: GradientElevatedButton(
                   inactiveDelay: Duration.zero,
+                  gradient: LinearGradient(
+                    colors: [Colors.red.shade700, Colors.red.shade400],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   onPressed: () => Navigator.pop(context),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -119,15 +130,10 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                 width: 120,
                 child: GradientElevatedButton(
                   inactiveDelay: Durations.short1,
-                  gradient: LinearGradient(
-                    colors: [Colors.green.shade400, Colors.green.shade700],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
                   onPressed: () async {
-                    bool success = await get<StockViewModel>().settlingStock(
+                    bool success = await get<StockViewModel>().cancelingStock(
                       stockId: widget.item['stockId'],
-                      metricId: get<StockViewModel>().choosenMetricId ?? "",
+                      description: _descriptionController.text,
                     );
 
                     if (success) {
@@ -151,51 +157,6 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                 ),
               ),
             ],
-          ),
-          SizedBox(height: 30),
-          Center(
-            child: SizedBox(
-              width: 220,
-              child: GradientElevatedButton(
-                inactiveDelay: Duration.zero,
-                gradient: LinearGradient(
-                  colors: [Colors.red.shade300, Colors.red.shade600],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    constraints: BoxConstraints(minHeight: 600, maxHeight: 620),
-                    context: context,
-                    builder: (context) {
-                      return CancelingStock(item: widget.item);
-                    },
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Batalkan Pengiriman  ",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      "!",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ),
           if (_showError)
             Padding(

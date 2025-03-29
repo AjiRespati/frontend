@@ -296,7 +296,6 @@ class StockViewModel extends ChangeNotifier {
     } else {
       isLoading = false;
       commissionData = data;
-      print(data);
     }
   }
 
@@ -545,6 +544,21 @@ class StockViewModel extends ChangeNotifier {
     return response;
   }
 
+  Future<bool> cancelingStock({
+    required String stockId,
+    required String description,
+  }) async {
+    isBusy = true;
+
+    bool response = await apiService.cancelingStock(
+      stockId: stockId,
+      description: description,
+    );
+    isBusy = false;
+
+    return response;
+  }
+
   Future<bool> getStockHistory({required String status}) async {
     isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
@@ -557,7 +571,6 @@ class StockViewModel extends ChangeNotifier {
       status: status,
     );
 
-    print(stockHistoryTable);
     isBusy = false;
     return true;
   }

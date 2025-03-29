@@ -135,6 +135,7 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                 SizedBox(
                   width: 120,
                   child: GradientElevatedButton(
+                    inactiveDelay: Duration.zero,
                     buttonHeight: 25,
                     onPressed:
                         product['totalStock'] == null ||
