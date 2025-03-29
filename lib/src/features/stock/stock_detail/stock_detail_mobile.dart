@@ -9,13 +9,23 @@ class StockDetailMobile extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     var stocks = get<StockViewModel>().stockHistoryTable;
-    print(stocks);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "Stock Detail",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
         ),
+        actions: [
+          if (watchOnly((StockViewModel x) => x.isBusy))
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(color: Colors.blue),
+              ),
+            ),
+        ],
       ),
       body:
           stocks.isEmpty

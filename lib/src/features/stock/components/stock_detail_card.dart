@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/products/components/add_product.dart';
+import 'package:frontend/src/features/stock/components/settling_stock.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -39,7 +39,7 @@ class StockDetailCard extends StatelessWidget with GetItMixin {
                   constraints: BoxConstraints(minHeight: 600, maxHeight: 620),
                   context: context,
                   builder: (context) {
-                    return AddProductScreen();
+                    return SettlingStock(item: item);
                   },
                 );
               },

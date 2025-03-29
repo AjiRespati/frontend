@@ -42,14 +42,15 @@ class _StockMobileState extends State<StockMobile>
       appBar: AppBar(
         title: Text("Stock"),
         actions: [
-          (watchOnly((StockViewModel x) => x.isBusy))
-              ? SizedBox(
+          if (watchOnly((StockViewModel x) => x.isBusy))
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
                 width: 25,
                 height: 25,
                 child: CircularProgressIndicator(color: Colors.blue),
-              )
-              : SizedBox(),
-          SizedBox(width: 20),
+              ),
+            ),
         ],
         bottom: TabBar(
           labelColor: Colors.blue,

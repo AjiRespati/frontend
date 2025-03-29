@@ -534,10 +534,19 @@ class StockViewModel extends ChangeNotifier {
     required String stockId,
     required String metricId,
   }) async {
-    return await apiService.settlingStock(stockId: stockId, metricId: metricId);
+    isBusy = true;
+
+    bool response = await apiService.settlingStock(
+      stockId: stockId,
+      metricId: metricId,
+    );
+    isBusy = false;
+
+    return response;
   }
 
   Future<bool> getStockHistory({required String status}) async {
+    isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
@@ -549,6 +558,7 @@ class StockViewModel extends ChangeNotifier {
     );
 
     print(stockHistoryTable);
+    isBusy = false;
     return true;
   }
 
