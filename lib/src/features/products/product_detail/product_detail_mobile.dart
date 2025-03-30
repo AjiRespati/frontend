@@ -31,6 +31,17 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
           "Product Detail",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
         ),
+        actions: [
+          if (watchOnly((StockViewModel x) => x.isBusy))
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(color: Colors.blue),
+              ),
+            ),
+        ],
       ),
       body:
           watchOnly((StockViewModel x) => x.productsDetail) == null
@@ -64,26 +75,6 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(width: 10),
-                        AddButton(
-                          size: 20,
-                          message: "Add Product Measurement",
-                          onPressed: () {
-                            showModalBottomSheet(
-                              isScrollControlled: true,
-                              constraints: BoxConstraints(maxHeight: 340),
-                              context: context,
-                              builder: (context) {
-                                return CreateProductMeasurement(
-                                  mainProduct: mainProduct,
-                                  measurements:
-                                      get<StockViewModel>()
-                                          .availableMeasurement,
-                                );
-                              },
-                            );
-                          },
-                        ),
                         SizedBox(width: 20),
                       ],
                     ),
@@ -114,18 +105,52 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                         ),
                       ),
                     ),
+                    SizedBox(height: 2),
                     Text(mainProduct['description']),
                     SizedBox(height: 10),
 
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text("Tambah Jenis Ukuran Unit"),
+                        SizedBox(width: 10),
+                        AddButton(
+                          color: Colors.amber[700],
+                          size: 24,
+                          message: "Add Product Measurement",
+                          onPressed: () {
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              constraints: BoxConstraints(maxHeight: 340),
+                              context: context,
+                              builder: (context) {
+                                return CreateProductMeasurement(
+                                  mainProduct: mainProduct,
+                                  measurements:
+                                      get<StockViewModel>()
+                                          .availableMeasurement,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        SizedBox(width: 5),
+                      ],
+                    ),
+                    SizedBox(height: 5),
                     Expanded(
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height - 320,
                         child: ListView.builder(
                           itemCount:
-                              get<StockViewModel>().productsDetail!.length,
+                              watchOnly(
+                                (StockViewModel x) => x.productsDetail,
+                              )!.length,
                           itemBuilder: (context, index) {
                             var product =
-                                get<StockViewModel>().productsDetail![index];
+                                watchOnly(
+                                  (StockViewModel x) => x.productsDetail,
+                                )![index];
                             return ProductDetailCard(product: product);
                           },
                         ),

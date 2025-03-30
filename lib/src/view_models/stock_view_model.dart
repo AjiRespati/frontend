@@ -435,7 +435,7 @@ class StockViewModel extends ChangeNotifier {
     required String metricType,
     required double price,
   }) async {
-    isLoading = true;
+    isBusy = true;
 
     final resp = await apiService.createMetric(
       context,
@@ -445,22 +445,22 @@ class StockViewModel extends ChangeNotifier {
     );
 
     if (resp) {
-      isLoading = false;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Stock created successfully')));
+      isBusy = false;
+      // ScaffoldMessenger.of(
+      //   context,
+      // ).showSnackBar(SnackBar(content: Text('Stock created successfully')));
     } else {
-      isLoading = false;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to create stock')));
+      isBusy = false;
+      // ScaffoldMessenger.of(
+      //   context,
+      // ).showSnackBar(SnackBar(content: Text('Failed to create stock')));
     }
   }
 
   Future<dynamic> fetchStockByProduct(String productId) async {
-    isLoading = true;
+    isBusy = true;
     stock = await apiService.fetchStockByProduct(productId);
-    isLoading = false;
+    isBusy = false;
     return;
   }
 
@@ -584,8 +584,6 @@ class StockViewModel extends ChangeNotifier {
       metricId: choosenMetricId ?? "",
       status: status,
     );
-
-    print(stockHistoryTable);
 
     isBusy = false;
     return true;

@@ -10,7 +10,10 @@ class DashboardMobile extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Dasboard"), automaticallyImplyLeading: false),
+      appBar: AppBar(
+        title: Text("Dashboard"),
+        automaticallyImplyLeading: false,
+      ),
       body:
           watchOnly((StockViewModel x) => x.commissionData) == null
               ? const Center(child: CircularProgressIndicator())
@@ -54,12 +57,12 @@ class DashboardMobile extends StatelessWidget with GetItMixin {
                         .toDouble(),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/agentDetail');
-                    },
-                    child: const Text('View Agent Details'),
-                  ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     Navigator.pushNamed(context, '/agentDetail');
+                  //   },
+                  //   child: const Text('View Agent Details'),
+                  // ),
                 ],
               ),
       bottomNavigationBar: MobileNavbar(),

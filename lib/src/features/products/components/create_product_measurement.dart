@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 /// measurements is List of "kg", "g", "liter", "bucket", "carton", "box", "pcs".
@@ -158,17 +159,28 @@ class CreateProductMeasurement extends StatelessWidget with GetItMixin {
             //   onChanged: (value) => get<StockViewModel>().description = value,
             // ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                get<StockViewModel>().metricId = mainProduct?['metricId'];
-                get<StockViewModel>().createMetric(
-                  context: context,
-                  productId: mainProduct?['productId'],
-                  metricType: get<StockViewModel>().measurement,
-                  price: get<StockViewModel>().price.toDouble(),
-                );
-              },
-              child: Text('Add Measurement Unit'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GradientElevatedButton(
+                inactiveDelay: Duration.zero,
+                onPressed: () async {
+                  get<StockViewModel>().metricId = mainProduct?['metricId'];
+                  await get<StockViewModel>().createMetric(
+                    context: context,
+                    productId: mainProduct?['productId'],
+                    metricType: get<StockViewModel>().measurement,
+                    price: get<StockViewModel>().price.toDouble(),
+                  );
+
+                  await get<StockViewModel>().fetchProduct(
+                    mainProduct?['productId'],
+                  );
+                },
+                child: Text(
+                  'Add Measurement Unit',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ],
         ),

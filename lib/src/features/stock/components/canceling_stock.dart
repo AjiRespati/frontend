@@ -35,7 +35,6 @@ class _AddProductScreenState extends State<CancelingStock>
 
   @override
   Widget build(BuildContext context) {
-    print(widget.item);
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class SendStock extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -218,7 +219,13 @@ class _SendStockState extends State<SendStock> with GetItStateMixin {
               onChanged: (value) => get<StockViewModel>().description = value,
             ),
             SizedBox(height: 20),
-            ElevatedButton(
+            GradientElevatedButton(
+              gradient: LinearGradient(
+                colors: [Colors.green.shade400, Colors.green.shade900],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              inactiveDelay: Duration.zero,
               onPressed: () async {
                 get<StockViewModel>().metricId =
                     widget.mainProduct?['metricId'];
@@ -229,7 +236,13 @@ class _SendStockState extends State<SendStock> with GetItStateMixin {
                 );
                 get<StockViewModel>().fetchProducts();
               },
-              child: Text('Send Stock'),
+              child: Text(
+                'Send Stock',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
             SizedBox(height: 10),
           ],

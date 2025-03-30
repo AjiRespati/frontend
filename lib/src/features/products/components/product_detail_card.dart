@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/add_stock.dart';
 import 'package:frontend/src/features/stock/components/send_stock.dart';
+import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -24,7 +25,7 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
               children: [
                 Row(
                   children: [
-                    Text("Unit of Measure:  "),
+                    Text("Jenis Ukuran Unit:  "),
                     Text(
                       product['metricType'].toString().toLowerCase(),
                       style: TextStyle(
@@ -38,9 +39,9 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                 SizedBox(height: 5),
                 Row(
                   children: [
-                    Text("Price: "),
+                    Text("Harga awal: "),
                     Text(
-                      "${product['price']}/",
+                      "${formatCurrency(product['price'])} / ",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -59,9 +60,9 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                 ),
                 Row(
                   children: [
-                    Text("Net Price: "),
+                    Text("Harga: "),
                     Text(
-                      "${product['netPrice']}/",
+                      "${formatCurrency(product['netPrice'])} / ",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -135,6 +136,11 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                 SizedBox(
                   width: 120,
                   child: GradientElevatedButton(
+                    gradient: LinearGradient(
+                      colors: [Colors.green.shade300, Colors.green.shade700],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     inactiveDelay: Duration.zero,
                     buttonHeight: 25,
                     onPressed:

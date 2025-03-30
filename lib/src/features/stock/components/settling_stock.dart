@@ -28,7 +28,6 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.item);
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -74,7 +73,7 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
             children: [
               SizedBox(width: 20),
               Text(
-                widget.item['entityType'] + ", " + widget.item['relatedEntity'],
+                "${widget.item['entityType']}, ${widget.item['relatedEntity']}",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ],

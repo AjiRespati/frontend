@@ -5,11 +5,13 @@ class AddButton extends StatelessWidget {
     this.size,
     required this.message,
     required this.onPressed,
+    this.color,
     super.key,
   });
 
   final double? size;
   final String? message;
+  final Color? color;
   final Function() onPressed;
 
   @override
@@ -22,7 +24,7 @@ class AddButton extends StatelessWidget {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             shape: const CircleBorder(),
-            backgroundColor: Colors.lightBlueAccent,
+            backgroundColor: color ?? Colors.lightBlueAccent,
             padding: const EdgeInsets.all(0),
           ),
           onPressed: onPressed,

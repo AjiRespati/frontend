@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/settling_stock.dart';
+import 'package:frontend/src/features/stock/components/stock_detail_card_header.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -31,6 +32,7 @@ class StockDetailCard extends StatelessWidget with GetItMixin {
                 isNew ? Color.fromARGB(65, 240, 105, 148) : Colors.transparent,
           ),
           child: Card(
+            elevation: 3,
             child: InkWell(
               borderRadius: BorderRadius.circular(10),
               onTap:
@@ -51,83 +53,120 @@ class StockDetailCard extends StatelessWidget with GetItMixin {
                       },
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Row(
+                child: Column(
                   children: [
-                    SizedBox(width: 10),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                    StockDetailCardHeader(item: item),
+                    Divider(),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text("Harga Total: "),
+                            Text(
+                              item['stockEvent'] == 'stock_out'
+                                  ? formatCurrency(item['totalNetPrice'] ?? 0)
+                                  : formatCurrency(item['totalPrice'] ?? 0),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                // fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        if (item['stockEvent'] == 'stock_out' &&
+                            item['initialAmount'] != null)
+                          Row(children: [Text("Komisi:")]),
+
+                        if (item['totalSalesShare'] != null)
                           Row(
                             children: [
-                              Text(
-                                formatMonthDay(
-                                  item['createdAt'] ??
-                                      "2000-01-01T01:00:00.204Z",
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                "${item['entityType'] == 'Unknown' ? "Produsen" : item['entityType']}:",
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 20),
-                              Flexible(
+                              SizedBox(width: 30),
+                              Expanded(child: Text("Sales")),
+                              Expanded(
+                                flex: 3,
                                 child: Text(
-                                  "${item['relatedEntity'] == 'N/A' ? "Gracia Factory" : item['relatedEntity']}",
+                                  ": ${formatCurrency(item['totalSalesShare'])}",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 16,
+                                    // fontSize: 16,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Text(
-                            item['stockEvent'] == 'stock_out'
-                                ? "Stock Out"
-                                : "Stock In",
+
+                        if (item['totalSubAgentShare'] != null)
+                          Row(
+                            children: [
+                              SizedBox(width: 30),
+                              Expanded(child: Text("Sub Agent")),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  ": ${formatCurrency(item['totalSubAgentShare'])}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    // fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "${item['amount']}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              color:
-                                  item['stockEvent'] == 'stock_out'
-                                      ? Colors.red
-                                      : Colors.green[600],
-                            ),
+
+                        if (item['totalAgentShare'] != null)
+                          Row(
+                            children: [
+                              SizedBox(width: 30),
+                              Expanded(child: Text("Agent")),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  ": ${formatCurrency(item['totalAgentShare'])}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    // fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Text("Amount"),
-                          Text(
-                            "${item['updateAmount']}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
+
+                        if (item['totalShopShare'] != null)
+                          Row(
+                            children: [
+                              SizedBox(width: 30),
+                              Expanded(child: Text("Toko")),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  ": ${formatCurrency(item['totalShopShare'])}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    // fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        SizedBox(height: 10),
+
+                        if (item['description'] != null)
+                          Row(children: [Text("Keterangan:")]),
+
+                        if (item['description'] != null)
+                          Row(
+                            children: [
+                              SizedBox(width: 30),
+                              Flexible(
+                                child: Text(
+                                  item['description'],
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ],
+                          ),
+                      ],
                     ),
                   ],
                 ),

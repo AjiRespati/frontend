@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 /// measurements is List of "kg", "g", "liter", "bucket", "carton", "box", "pcs".
@@ -77,7 +78,13 @@ class AddStock extends StatelessWidget with GetItMixin {
               onChanged: (value) => get<StockViewModel>().description = value,
             ),
             SizedBox(height: 20),
-            ElevatedButton(
+            GradientElevatedButton(
+              gradient: LinearGradient(
+                colors: [Colors.green.shade400, Colors.green.shade900],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              inactiveDelay: Duration.zero,
               onPressed: () async {
                 get<StockViewModel>().metricId = mainProduct?['metricId'];
                 get<StockViewModel>().stockEvent = 'stock_in';
@@ -87,7 +94,13 @@ class AddStock extends StatelessWidget with GetItMixin {
                 );
                 get<StockViewModel>().fetchProducts();
               },
-              child: Text('Add Stock'),
+              child: Text(
+                'Add Stock',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         ),
