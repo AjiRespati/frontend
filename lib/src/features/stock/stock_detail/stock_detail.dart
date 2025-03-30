@@ -5,7 +5,8 @@ import 'package:frontend/src/utils/responsive_layout.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class StockDetail extends StatefulWidget with GetItStatefulWidgetMixin {
-  StockDetail({super.key});
+  StockDetail({required this.status, super.key});
+  final String status;
 
   @override
   State<StockDetail> createState() => _StockDetailState();
@@ -29,7 +30,7 @@ class _StockDetailState extends State<StockDetail> with GetItStateMixin {
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       desktopLayout: StockDetailDesktop(),
-      mobileLayout: StockDetailMobile(),
+      mobileLayout: StockDetailMobile(status: widget.status),
     );
   }
 }

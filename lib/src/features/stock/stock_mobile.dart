@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/src/features/stock/components/stock_canceled_view.dart';
 import 'package:frontend/src/features/stock/components/stock_processed_view.dart';
 import 'package:frontend/src/features/stock/components/stock_settled_view.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
@@ -19,7 +20,7 @@ class _StockMobileState extends State<StockMobile>
   @override
   void initState() {
     super.initState();
-    _stockTabController = TabController(length: 2, vsync: this);
+    _stockTabController = TabController(length: 3, vsync: this);
     _stockTabController.addListener(() {
       // kalau index tidak berubah berarti swipe.
       if (!_stockTabController.indexIsChanging) {
@@ -76,12 +77,17 @@ class _StockMobileState extends State<StockMobile>
               ),
               text: "Processing",
             ),
+            Tab(icon: Icon(Icons.cancel_outlined), text: "Canceled"),
           ],
         ),
       ),
       body: TabBarView(
         controller: _stockTabController,
-        children: [StockSettledView(), StockProcessedView()],
+        children: [
+          StockSettledView(),
+          StockProcessedView(),
+          StockCanceledView(),
+        ],
       ),
       bottomNavigationBar: MobileNavbar(),
     );

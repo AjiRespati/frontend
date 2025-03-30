@@ -4,7 +4,8 @@ import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class StockDetailMobile extends StatelessWidget with GetItMixin {
-  StockDetailMobile({super.key});
+  StockDetailMobile({required this.status, super.key});
+  final String status;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,11 @@ class StockDetailMobile extends StatelessWidget with GetItMixin {
                 child: CircularProgressIndicator(color: Colors.blue),
               ),
             ),
+          Text(
+            status == 'created' ? "PROCESSING" : status.toUpperCase(),
+            style: _generateStyle(status),
+          ),
+          SizedBox(width: 20),
         ],
       ),
       body:
@@ -39,6 +45,10 @@ class StockDetailMobile extends StatelessWidget with GetItMixin {
                   Text(
                     stocks.first['productName'],
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                  ),
+                  Text(
+                    "(${stocks.first['measurement']})",
+                    style: TextStyle(fontWeight: FontWeight.w700),
                   ),
                   SizedBox(height: 5),
                   stocks.first?['updateAmount'] == null
@@ -56,7 +66,7 @@ class StockDetailMobile extends StatelessWidget with GetItMixin {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height - 155,
+                      height: MediaQuery.of(context).size.height - 175,
                       child: ListView.builder(
                         itemCount: stocks.length,
                         itemBuilder: (context, idx) {
@@ -70,5 +80,17 @@ class StockDetailMobile extends StatelessWidget with GetItMixin {
                 ],
               ),
     );
+  }
+
+  TextStyle _generateStyle(String status) {
+    switch (status) {
+      case 'canceled':
+        return TextStyle(color: Colors.red[800], fontWeight: FontWeight.w700);
+      case 'created':
+        return TextStyle();
+
+      default:
+        return TextStyle(color: Colors.green, fontWeight: FontWeight.w900);
+    }
   }
 }

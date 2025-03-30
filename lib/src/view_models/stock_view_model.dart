@@ -30,6 +30,7 @@ class StockViewModel extends ChangeNotifier {
   dynamic _stock;
   List<dynamic> _stockTable = [];
   List<dynamic> _stockOnProgressTable = [];
+  List<dynamic> _stockOnCanceledTable = [];
   List<dynamic> _stockHistoryTable = [];
   DateTime _dateFromFilter = DateTime.now().subtract(Duration(days: 7));
   DateTime _dateToFilter = DateTime.now();
@@ -256,6 +257,12 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> get stockOnProgressTable => _stockOnProgressTable;
   set stockOnProgressTable(List<dynamic> val) {
     _stockOnProgressTable = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get stockOnCanceledTable => _stockOnCanceledTable;
+  set stockOnCanceledTable(List<dynamic> val) {
+    _stockOnCanceledTable = val;
     notifyListeners();
   }
 
@@ -520,11 +527,18 @@ class StockViewModel extends ChangeNotifier {
       toDate: toDate,
       status: status,
     );
-    if (status == 'settled') {
-      stockTable = response;
-    } else {
-      stockOnProgressTable = response;
+
+    switch (status) {
+      case 'settled':
+        stockTable = response;
+        break;
+      case 'created':
+        stockOnProgressTable = response;
+        break;
+      default:
+        stockOnCanceledTable = response;
     }
+
     isBusy = false;
     return true;
   }
@@ -570,6 +584,8 @@ class StockViewModel extends ChangeNotifier {
       metricId: choosenMetricId ?? "",
       status: status,
     );
+
+    print(stockHistoryTable);
 
     isBusy = false;
     return true;

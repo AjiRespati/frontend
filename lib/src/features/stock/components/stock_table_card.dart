@@ -31,7 +31,13 @@ class StockTableCard extends StatelessWidget with GetItMixin {
           bool resp = await get<StockViewModel>().getStockHistory(
             status: stockStatus,
           );
-          if (resp) Navigator.pushNamed(context, stockDetailRoute);
+          if (resp) {
+            Navigator.pushNamed(
+              context,
+              stockDetailRoute,
+              arguments: stockStatus,
+            );
+          }
         },
         child: SizedBox(
           height: 130,
@@ -135,7 +141,13 @@ class StockTableCard extends StatelessWidget with GetItMixin {
                       bool resp = await get<StockViewModel>().getStockHistory(
                         status: stockStatus,
                       );
-                      if (resp) Navigator.pushNamed(context, stockDetailRoute);
+                      if (resp) {
+                        Navigator.pushNamed(
+                          context,
+                          stockDetailRoute,
+                          arguments: stockStatus,
+                        );
+                      }
                     },
                     icon: Icon(Icons.chevron_right_outlined, size: 40),
                   ),

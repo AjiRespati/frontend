@@ -42,7 +42,7 @@ class AppRouter {
           screen = Stock();
           break;
         case stockDetailRoute:
-          screen = StockDetail();
+          screen = StockDetail(status: arguments);
           break;
         case clientsRoute:
           screen = Clients();
