@@ -108,7 +108,10 @@ class StockTableCard extends StatelessWidget with GetItMixin {
                       children: [
                         Text("Stock On Hand: "),
                         Text(
-                          (stock['latestUpdateAmount'] ?? " N/A").toString(),
+                          stockStatus == 'settled'
+                              ? (stock['latestUpdateAmount'] ?? " N/A")
+                                  .toString()
+                              : " -",
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             color: Colors.green[800],

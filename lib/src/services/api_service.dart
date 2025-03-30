@@ -407,6 +407,60 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> getStockResume({
+    required String fromDate,
+    required String toDate,
+    required String salesId,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/stocks/table/resume'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        'fromDate': fromDate,
+        'toDate': toDate,
+        'salesId': salesId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> getTableBySalesId({
+    required String fromDate,
+    required String toDate,
+    required String salesId,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/stocks/table/salesman'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        'fromDate': fromDate,
+        'toDate': toDate,
+        'salesId': salesId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return [];
+    }
+  }
+
   // TODO: CLIENTS ROUTES
   /// GET /
   /// POST /
