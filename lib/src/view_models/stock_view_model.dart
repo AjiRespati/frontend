@@ -32,6 +32,9 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> _stockOnProgressTable = [];
   List<dynamic> _stockOnCanceledTable = [];
   List<dynamic> _stockHistoryTable = [];
+  dynamic _stockResume;
+  List<dynamic> _salesStockTable = [];
+
   DateTime _dateFromFilter = DateTime.now().subtract(Duration(days: 7));
   DateTime _dateToFilter = DateTime.now();
   String? _choosenMetricId;
@@ -275,6 +278,18 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> get stockHistoryTable => _stockHistoryTable;
   set stockHistoryTable(List<dynamic> val) {
     _stockHistoryTable = val;
+    notifyListeners();
+  }
+
+  dynamic get stockResume => _stockResume;
+  set stockResume(dynamic val) {
+    _stockResume = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get salesStockTable => _salesStockTable;
+  set salesStockTable(List<dynamic> val) {
+    _salesStockTable = val;
     notifyListeners();
   }
 
@@ -583,6 +598,36 @@ class StockViewModel extends ChangeNotifier {
       toDate: toDate,
       metricId: choosenMetricId ?? "",
       status: status,
+    );
+
+    isBusy = false;
+    return true;
+  }
+
+  Future<bool> getStockResume({required String salesId}) async {
+    isBusy = true;
+    String fromDate = generateDateString(dateFromFilter);
+    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+
+    stockResume = await apiService.getStockResume(
+      fromDate: fromDate,
+      toDate: toDate,
+      salesId: salesId,
+    );
+
+    isBusy = false;
+    return true;
+  }
+
+  Future<bool> getTableBySalesId({required String salesId}) async {
+    isBusy = true;
+    String fromDate = generateDateString(dateFromFilter);
+    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+
+    salesStockTable = await apiService.getTableBySalesId(
+      fromDate: fromDate,
+      toDate: toDate,
+      salesId: salesId,
     );
 
     isBusy = false;

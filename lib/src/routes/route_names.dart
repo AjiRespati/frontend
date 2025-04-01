@@ -9,4 +9,5 @@ const String addProductsRoute = "/AddProducts";
 const String stockRoute = "/Stock";
 const String stockDetailRoute = "/Stock/Detail";
 const String clientsRoute = "/Clients";
+const String clientDetailRoute = "/Clients/Detail";
 const String settingsRoute = "/Settings";

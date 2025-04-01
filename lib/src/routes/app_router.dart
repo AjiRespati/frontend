@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/src/features/clients/client_detail/client_detail.dart';
 import 'package:frontend/src/features/clients/clients.dart';
 import 'package:frontend/src/features/dashboard/dashboard.dart';
 import 'package:frontend/src/features/products/components/add_product.dart';
@@ -46,6 +47,9 @@ class AppRouter {
           break;
         case clientsRoute:
           screen = Clients();
+          break;
+        case clientDetailRoute:
+          screen = ClientDetail(item: arguments);
           break;
         case settingsRoute:
           screen = Settings();

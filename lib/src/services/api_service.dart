@@ -407,7 +407,7 @@ class ApiService {
     }
   }
 
-  Future<List<dynamic>> getStockResume({
+  Future<dynamic> getStockResume({
     required String fromDate,
     required String toDate,
     required String salesId,
@@ -430,7 +430,7 @@ class ApiService {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      return [];
+      return null;
     }
   }
 
