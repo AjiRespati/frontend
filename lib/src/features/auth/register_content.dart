@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
-import 'package:frontend/src/features/auth/components/login_button.dart';
+import 'package:frontend/src/features/auth/components/confirm_password.dart';
+import 'package:frontend/src/features/auth/components/email_register.dart';
 import 'package:frontend/src/features/auth/components/login_password.dart';
 import 'package:frontend/src/features/auth/components/login_title.dart';
-import 'package:frontend/src/features/auth/components/login_username.dart';
+import 'package:frontend/src/features/auth/components/name_register.dart';
+import 'package:frontend/src/features/auth/components/phone_register.dart';
+import 'package:frontend/src/features/auth/components/register_button.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
-class LoginContent extends StatelessWidget with GetItMixin {
-  LoginContent({super.key});
+class RegisterContent extends StatelessWidget with GetItMixin {
+  RegisterContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,23 +26,29 @@ class LoginContent extends StatelessWidget with GetItMixin {
         : Column(
           children: [
             const SizedBox(height: 20),
-            const LoginTitle(title: ApplicationInfo.appName),
+            const LoginTitle(title: "Register ${ApplicationInfo.appName}"),
             const SizedBox(height: 20),
-            LoginUsername(),
+            EmailRegister(),
             const SizedBox(height: 20),
             LoginPassword(),
             const SizedBox(height: 20),
-            LoginButton(),
+            ConfirmPassword(),
+            const SizedBox(height: 20),
+            NameRegister(),
+            const SizedBox(height: 20),
+            PhoneRegister(),
+            const SizedBox(height: 20),
+            RegisterButton(),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
                   onPressed: () {
-                    get<SystemViewModel>().isLoginView = false;
+                    get<SystemViewModel>().isLoginView = true;
                   },
                   child: Text(
-                    "Register",
+                    "Login",
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.blue,

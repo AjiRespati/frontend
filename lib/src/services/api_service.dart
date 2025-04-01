@@ -41,6 +41,28 @@ class ApiService {
     return false;
   }
 
+  Future<dynamic> self(String refreshToken) async {
+    String? token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/self'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({"refreshToken": refreshToken}),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) return [];
+      return fetchProducts();
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return null;
+    }
+  }
+
   Future<bool> logout(String refreshToken) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('accessToken');
@@ -61,11 +83,23 @@ class ApiService {
     return false;
   }
 
-  Future<bool> register(String username, String password) async {
+  Future<bool> register({
+    required String username,
+    required String password,
+    required String name,
+    required String phone,
+    required String email,
+  }) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/register'),
       headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"username": username, "password": password}),
+      body: jsonEncode({
+        "username": username,
+        "password": password,
+        "name": name,
+        "phone": phone,
+        "email": email,
+      }),
     );
     return response.statusCode < 400;
   }

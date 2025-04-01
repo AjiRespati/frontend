@@ -10,12 +10,23 @@ class SystemViewModel extends ChangeNotifier {
   final ApiService apiService = ApiService();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _isBusy = false;
+  bool _isLoginView = true;
+
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmpasswordController =
+      TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController levelController = TextEditingController();
   bool _showPassword = false;
   int _currentPageIndex = 0;
   List<String> pageLabels = ["Home", "Products", "Stock", "Sales"];
   // List<String> pageLabels = ["Home", "Stock", "Products", "Sales", "Setting"];
+
+  dynamic _user;
 
   //====================//
   //  GETTER n SETTER   //
@@ -24,6 +35,12 @@ class SystemViewModel extends ChangeNotifier {
   bool get isBusy => _isBusy;
   set isBusy(bool val) {
     _isBusy = val;
+    notifyListeners();
+  }
+
+  bool get isLoginView => _isLoginView;
+  set isLoginView(bool val) {
+    _isLoginView = val;
     notifyListeners();
   }
 
@@ -36,6 +53,12 @@ class SystemViewModel extends ChangeNotifier {
   int get currentPageIndex => _currentPageIndex;
   set currentPageIndex(int val) {
     _currentPageIndex = val;
+    notifyListeners();
+  }
+
+  dynamic get user => _user;
+  set user(dynamic val) {
+    _user = val;
     notifyListeners();
   }
 
@@ -75,13 +98,44 @@ class SystemViewModel extends ChangeNotifier {
       passwordController.text,
     );
     if (isLogin) {
+      Navigator.pushReplacementNamed(context, dashboardRoute);
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? refreshToken = prefs.getString('refreshToken');
       usernameController.text = "";
       passwordController.text = "";
-      Navigator.pushReplacementNamed(context, dashboardRoute);
+
+      user = await apiService.self(refreshToken ?? "-");
     } else {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Invalid credentials")));
     }
+  }
+
+  Future<bool> logout({required BuildContext context}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? refreshToken = prefs.getString('refreshToken');
+    bool isLogout = await apiService.logout(refreshToken ?? "");
+    prefs.remove('refreshToken');
+    prefs.remove('accessToken');
+
+    return isLogout;
+  }
+
+  void self() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? refreshToken = prefs.getString('refreshToken');
+    user = await apiService.self(refreshToken ?? "-");
+  }
+
+  Future<bool> register() async {
+    return await apiService.register(
+      username: emailController.text,
+      password: passwordController.text,
+      name: nameController.text,
+      phone: phoneController.text,
+      email: emailController.text,
+    );
   }
 }

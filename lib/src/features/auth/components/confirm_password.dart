@@ -5,14 +5,14 @@ import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginPassword extends StatelessWidget with GetItMixin {
-  LoginPassword({super.key});
+class ConfirmPassword extends StatelessWidget with GetItMixin {
+  ConfirmPassword({super.key});
 
   @override
   Widget build(BuildContext context) {
     watchOnly((SystemViewModel x) => x.showPassword);
     return TextFormField(
-      controller: get<SystemViewModel>().passwordController,
+      controller: get<SystemViewModel>().confirmpasswordController,
       obscureText: !get<SystemViewModel>().showPassword,
       onEditingComplete: () {
         get<SystemViewModel>().onLogin(context: context);
@@ -21,9 +21,9 @@ class LoginPassword extends StatelessWidget with GetItMixin {
         log('tapped');
       },
       decoration: InputDecoration(
-        hintText: "Password",
+        hintText: "Confirm Password",
         hintStyle: GoogleFonts.inter(fontSize: 12),
-        label: Text("Password", style: GoogleFonts.inter(fontSize: 12)),
+        label: Text("Confirm Password", style: GoogleFonts.inter(fontSize: 12)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
         prefixIcon: const Icon(Icons.lock, size: 20),
@@ -40,10 +40,14 @@ class LoginPassword extends StatelessWidget with GetItMixin {
           },
         ),
       ),
-      autovalidateMode: AutovalidateMode.onUnfocus,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Password can't be empty";
+          return "Confirm Password can't be empty";
+        } else if (watchOnly(
+          (SystemViewModel x) => x.passwordController.text != value,
+        )) {
+          return "Confirm password not match.";
         }
 
         return null;

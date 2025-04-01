@@ -30,6 +30,7 @@ dependencies:
   universal_platform: ^1.1.0
   http_parser: ^4.1.2
   flutter_corner_banner: ^1.0.1
+  email_validator: ^3.0.0
 
 dev_dependencies:
   flutter_test:
