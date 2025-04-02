@@ -10,29 +10,63 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    dynamic user = watchOnly((SystemViewModel x) => x.user);
-    print(user);
+    dynamic user = watchOnly((SystemViewModel x) => x.level);
+    SystemViewModel model = get<SystemViewModel>();
     return Scaffold(
       appBar: AppBar(title: Text("Settings")),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Text("Username: " + user?['username'] ?? " -"),
-            Text("Level: ${user?['level'] ?? 0}"),
-
-            GradientElevatedButton(
-              onPressed: () async {
-                bool isLogout = await get<SystemViewModel>().logout(
-                  context: context,
-                );
-                if (isLogout) {
-                  Navigator.pushReplacementNamed(context, signInRoute);
-                }
-              },
-              child: Text("Logout"),
-            ),
-          ],
-        ),
+        child:
+            user != null
+                ? Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 30),
+                      Text("Username: ${model.username}"),
+                      Text("Level: ${model.level ?? 0}"),
+                      SizedBox(height: 30),
+                      Divider(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, userManagementRoute);
+                        },
+                        child: Row(
+                          children: [
+                            Text("User Management"),
+                            Spacer(),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  userManagementRoute,
+                                );
+                              },
+                              icon: Icon(Icons.chevron_right_rounded, size: 30),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(),
+                      SizedBox(height: 200),
+                      GradientElevatedButton(
+                        onPressed: () async {
+                          bool isLogout = await get<SystemViewModel>().logout(
+                            context: context,
+                          );
+                          if (isLogout) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              signInRoute,
+                            );
+                          }
+                        },
+                        child: Text("Logout"),
+                      ),
+                    ],
+                  ),
+                )
+                : SizedBox(),
         // child:
         //     user != null
         //         ? Column(

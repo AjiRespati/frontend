@@ -11,3 +11,4 @@ const String stockDetailRoute = "/Stock/Detail";
 const String clientsRoute = "/Clients";
 const String clientDetailRoute = "/Clients/Detail";
 const String settingsRoute = "/Settings";
+const String userManagementRoute = "/UserManagement";

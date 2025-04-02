@@ -28,6 +28,13 @@ class SystemViewModel extends ChangeNotifier {
 
   dynamic _user;
 
+  String? _username;
+  String? _name;
+  String? _email;
+  String? _phone;
+  String? _address;
+  int? _level;
+
   //====================//
   //  GETTER n SETTER   //
   //====================//
@@ -59,6 +66,42 @@ class SystemViewModel extends ChangeNotifier {
   dynamic get user => _user;
   set user(dynamic val) {
     _user = val;
+    notifyListeners();
+  }
+
+  String? get username => _username;
+  set username(String? val) {
+    _username = val;
+    notifyListeners();
+  }
+
+  String? get name => _name;
+  set name(String? val) {
+    _name = val;
+    notifyListeners();
+  }
+
+  String? get email => _email;
+  set email(String? val) {
+    _email = val;
+    notifyListeners();
+  }
+
+  String? get phone => _phone;
+  set phone(String? val) {
+    _phone = val;
+    notifyListeners();
+  }
+
+  String? get address => _address;
+  set address(String? val) {
+    _address = val;
+    notifyListeners();
+  }
+
+  int? get level => _level;
+  set level(int? val) {
+    _level = val;
     notifyListeners();
   }
 
@@ -127,6 +170,13 @@ class SystemViewModel extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? refreshToken = prefs.getString('refreshToken');
     user = await apiService.self(refreshToken ?? "-");
+    name = user['name'];
+    username = user['username'];
+    email = user['email'];
+    phone = user['phone'];
+    address = user['address'];
+    // level = user['level'];
+    level = 4;
   }
 
   Future<bool> register() async {
