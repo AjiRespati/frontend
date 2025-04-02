@@ -123,6 +123,28 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getAllUser() async {
+    String? token = await _getToken();
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/auth/users'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) return null;
+      return getAllUser();
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return null;
+    }
+  }
+
   // TODO: PRODUCTS ROUTES
   /// GET /
   /// POST /

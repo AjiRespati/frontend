@@ -9,7 +9,7 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     int? level = watchOnly((SystemViewModel x) => x.level);
-
+    print(level);
     switch (level) {
       case 4:
         return NavigationBar(

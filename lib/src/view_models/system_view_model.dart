@@ -27,6 +27,7 @@ class SystemViewModel extends ChangeNotifier {
   // List<String> pageLabels = ["Home", "Stock", "Products", "Sales", "Setting"];
 
   dynamic _user;
+  List<dynamic> _users = [];
 
   String? _username;
   String? _name;
@@ -66,6 +67,12 @@ class SystemViewModel extends ChangeNotifier {
   dynamic get user => _user;
   set user(dynamic val) {
     _user = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get users => _users;
+  set users(List<dynamic> val) {
+    _users = val;
     notifyListeners();
   }
 
@@ -187,5 +194,12 @@ class SystemViewModel extends ChangeNotifier {
       phone: phoneController.text,
       email: emailController.text,
     );
+  }
+
+  Future<bool> getAllUser() async {
+    var response = await apiService.getAllUser();
+
+    users = response;
+    return true;
   }
 }
