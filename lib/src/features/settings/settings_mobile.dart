@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
@@ -27,28 +29,39 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                       Text("Level: ${model.level ?? 0}"),
                       SizedBox(height: 30),
                       Divider(),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, userManagementRoute);
-                        },
-                        child: Row(
-                          children: [
-                            Text("User Management"),
-                            Spacer(),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  userManagementRoute,
-                                );
-                              },
-                              icon: Icon(Icons.chevron_right_rounded, size: 30),
-                            ),
-                          ],
+                      if ((model.level ?? 0) > 4)
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, userManagementRoute);
+                          },
+                          child: Row(
+                            children: [
+                              Text("User Management"),
+                              Spacer(),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    userManagementRoute,
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.chevron_right_rounded,
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                      if ((model.level ?? 0) > 4) Divider(),
+                      SizedBox(
+                        height:
+                            MediaQuery.of(context).size.height -
+                                        (model.level ?? 0) >
+                                    4
+                                ? 500
+                                : 600,
                       ),
-                      Divider(),
-                      SizedBox(height: 200),
                       GradientElevatedButton(
                         onPressed: () async {
                           bool isLogout = await get<SystemViewModel>().logout(
@@ -67,33 +80,6 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                   ),
                 )
                 : SizedBox(),
-        // child:
-        //     user != null
-        //         ? Column(
-        //           children: [
-        //             Text(user?['username'] ?? " -"),
-
-        //           ],
-        //         )
-        //         : SizedBox(child: Column(
-        //           children: [
-        //               GradientElevatedButton(
-        //                 onPressed: () async {
-        //                   bool isLogout = await get<SystemViewModel>().logout(
-        //                     context: context,
-        //                   );
-        //                   if (isLogout) {
-        //                     Navigator.pushReplacementNamed(
-        //                       context,
-        //                       signInRoute,
-        //                     );
-        //                   }
-        //                 },
-        //                 child: Text("Logout"),
-        //               ),
-
-        //           ],
-        //         ),),
       ),
       bottomNavigationBar: MobileNavbar(),
     );

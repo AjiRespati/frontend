@@ -68,9 +68,9 @@ class UserTableCard extends StatelessWidget with GetItMixin {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Role/Level: "),
+                        Text("Level/Role: "),
                         Text(
-                          "${user['levelDesc']} - ${user['level'].toString()}",
+                          "${user['level'].toString()} - ${user['levelDesc'] ?? "Basic"}",
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             color: Colors.green[800],
@@ -110,10 +110,10 @@ class UserTableCard extends StatelessWidget with GetItMixin {
                       children: [
                         Text("Status: "),
                         Text(
-                          user['status'].toString().toUpperCase(),
+                          user['status'].toUpperCase(),
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
-                            color: Colors.green[800],
+                            color: _generateColor(user['status'].toUpperCase()),
                             fontSize: 16,
                           ),
                         ),
@@ -164,5 +164,16 @@ class UserTableCard extends StatelessWidget with GetItMixin {
         ),
       ),
     );
+  }
+
+  Color _generateColor(String status) {
+    switch (status) {
+      case "NEW":
+        return Colors.amber.shade800;
+      case "ACTIVE":
+        return Colors.green.shade700;
+      default:
+        return Colors.red.shade600;
+    }
   }
 }
