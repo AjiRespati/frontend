@@ -25,6 +25,14 @@ class SystemViewModel extends ChangeNotifier {
   int _currentPageIndex = 0;
   List<String> pageLabels = ["Home", "Products", "Stock", "Sales"];
   // List<String> pageLabels = ["Home", "Stock", "Products", "Sales", "Setting"];
+  List<String> levelList = [
+    "Basic",
+    "Sales",
+    "Sub Agent",
+    "Agent",
+    "Admin",
+    "Owner",
+  ];
 
   dynamic _user;
   List<dynamic> _users = [];
@@ -182,8 +190,7 @@ class SystemViewModel extends ChangeNotifier {
     email = user['email'];
     phone = user['phone'];
     address = user['address'];
-    // level = user['level'];
-    level = 4;
+    level = user['level'];
   }
 
   Future<bool> register() async {
@@ -201,5 +208,13 @@ class SystemViewModel extends ChangeNotifier {
 
     users = response;
     return true;
+  }
+
+  Future<bool> updateUser({
+    required String id,
+    required int? level,
+    required String? status,
+  }) async {
+    return apiService.updateUser(id: id, level: level, status: status);
   }
 }

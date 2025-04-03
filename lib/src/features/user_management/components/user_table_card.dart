@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:frontend/application_info.dart';
+import 'package:frontend/src/features/user_management/components/update_level_content.dart';
+import 'package:frontend/src/features/user_management/components/update_status_content.dart';
+import 'package:frontend/src/widgets/copy_to_clipboard.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class UserTableCard extends StatelessWidget with GetItMixin {
@@ -11,7 +13,6 @@ class UserTableCard extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    String imageUrl = ApplicationInfo.baseUrl + (user['name'] ?? '');
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
@@ -45,14 +46,31 @@ class UserTableCard extends StatelessWidget with GetItMixin {
                             fontSize: 16,
                           ),
                         ),
+                        SizedBox(width: 20),
+                        CopyToClipboard(user['email'], isMobile: true),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Phone: "),
+                        Text(
+                          user['phone'] ?? " N/A",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                        CopyToClipboard(user['phone'], isMobile: true),
                       ],
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Level: "),
+                        Text("Role/Level: "),
                         Text(
-                          user['level'].toString(),
+                          "${user['levelDesc']} - ${user['level'].toString()}",
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             color: Colors.green[800],
@@ -65,7 +83,23 @@ class UserTableCard extends StatelessWidget with GetItMixin {
                           width: 25,
                           child: InkWell(
                             borderRadius: BorderRadius.circular(18),
-                            onTap: () {},
+                            onTap: () {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                constraints: BoxConstraints(
+                                  minHeight: 400,
+                                  maxHeight: 420,
+                                ),
+                                context: context,
+                                builder: (context) {
+                                  return UpdateLevelContent(
+                                    id: user['id'],
+                                    username: user['username'],
+                                    level: user['level'],
+                                  );
+                                },
+                              );
+                            },
                             child: Icon(Icons.edit_rounded, size: 18),
                           ),
                         ),
@@ -76,7 +110,7 @@ class UserTableCard extends StatelessWidget with GetItMixin {
                       children: [
                         Text("Status: "),
                         Text(
-                          user['status'].toString(),
+                          user['status'].toString().toUpperCase(),
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             color: Colors.green[800],
@@ -89,7 +123,23 @@ class UserTableCard extends StatelessWidget with GetItMixin {
                           width: 25,
                           child: InkWell(
                             borderRadius: BorderRadius.circular(18),
-                            onTap: () {},
+                            onTap: () {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                constraints: BoxConstraints(
+                                  minHeight: 400,
+                                  maxHeight: 420,
+                                ),
+                                context: context,
+                                builder: (context) {
+                                  return UpdateStatusContent(
+                                    id: user['id'],
+                                    username: user['username'],
+                                    oldStatus: user['status'],
+                                  );
+                                },
+                              );
+                            },
                             child: Icon(Icons.edit_rounded, size: 18),
                           ),
                         ),

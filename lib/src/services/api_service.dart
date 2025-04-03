@@ -145,6 +145,36 @@ class ApiService {
     }
   }
 
+  Future<bool> updateUser({
+    required String id,
+    required int? level,
+    required String? status,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/auth/update/user/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({'level': level, 'status': status}),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        return false;
+      } else {
+        return updateUser(id: id, level: level, status: status);
+      }
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // TODO: PRODUCTS ROUTES
   /// GET /
   /// POST /

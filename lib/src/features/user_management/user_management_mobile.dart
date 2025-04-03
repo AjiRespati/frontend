@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/user_management/components/user_table_card.dart';
-import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -11,6 +10,7 @@ class UserManagementMobile extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    watchOnly((SystemViewModel x) => x.users);
     return Scaffold(
       appBar: AppBar(
         title: Text("User Management"),
@@ -27,7 +27,13 @@ class UserManagementMobile extends StatelessWidget with GetItMixin {
         ],
       ),
       body:
-          watchOnly((SystemViewModel x) => x.users).isEmpty
+          watchOnly((SystemViewModel x) => x.isBusy)
+              ? SizedBox(
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(color: Colors.blue),
+              )
+              : watchOnly((SystemViewModel x) => x.users).isEmpty
               ? Text("user not found")
               : Padding(
                 padding: const EdgeInsets.all(8.0),
