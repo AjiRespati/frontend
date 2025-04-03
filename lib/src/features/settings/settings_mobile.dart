@@ -29,7 +29,7 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                       Text("Level: ${model.level ?? 0}"),
                       SizedBox(height: 30),
                       Divider(),
-                      if ((model.level ?? 0) > 4)
+                      if ((model.level ?? 0) > 3)
                         InkWell(
                           onTap: () {
                             Navigator.pushNamed(context, userManagementRoute);
@@ -53,7 +53,7 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                             ],
                           ),
                         ),
-                      if ((model.level ?? 0) > 4) Divider(),
+                      if ((model.level ?? 0) > 3) Divider(),
                       SizedBox(
                         height:
                             MediaQuery.of(context).size.height -
