@@ -26,6 +26,7 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                     children: [
                       SizedBox(height: 30),
                       Text("Username: ${model.username}"),
+                      Text("Name: ${model.name}"),
                       Text("Level: ${model.level ?? 0}"),
                       SizedBox(height: 30),
                       Divider(),
@@ -54,13 +55,35 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                           ),
                         ),
                       if ((model.level ?? 0) > 3) Divider(),
+                      if ((model.level ?? 0) > 3)
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, freezersRoute);
+                          },
+                          child: Row(
+                            children: [
+                              Text("Freezer Management"),
+                              Spacer(),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, freezersRoute);
+                                },
+                                icon: Icon(
+                                  Icons.chevron_right_rounded,
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      if ((model.level ?? 0) > 3) Divider(),
                       SizedBox(
                         height:
                             MediaQuery.of(context).size.height -
                                         (model.level ?? 0) >
                                     4
-                                ? 440
-                                : 600,
+                                ? 340
+                                : 500,
                       ),
                       GradientElevatedButton(
                         onPressed: () async {
