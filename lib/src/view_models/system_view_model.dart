@@ -43,6 +43,9 @@ class SystemViewModel extends ChangeNotifier {
   String? _phone;
   String? _address;
   int? _level;
+  String? _salesId;
+  String? _subAgentId;
+  String? _agentId;
 
   //====================//
   //  GETTER n SETTER   //
@@ -120,6 +123,24 @@ class SystemViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? get salesId => _salesId;
+  set salesId(String? val) {
+    _salesId = val;
+    notifyListeners();
+  }
+
+  String? get subAgentId => _subAgentId;
+  set subAgentId(String? val) {
+    _subAgentId = val;
+    notifyListeners();
+  }
+
+  String? get agentId => _agentId;
+  set agentId(String? val) {
+    _agentId = val;
+    notifyListeners();
+  }
+
   //====================//
   //       METHOD       //
   //====================//
@@ -191,6 +212,9 @@ class SystemViewModel extends ChangeNotifier {
     phone = user['phone'];
     address = user['address'];
     level = user['level'];
+    salesId = user['salesId'];
+    subAgentId = user['subAgentId'];
+    agentId = user['agentId'];
   }
 
   Future<bool> register() async {

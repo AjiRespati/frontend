@@ -59,7 +59,7 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                             MediaQuery.of(context).size.height -
                                         (model.level ?? 0) >
                                     4
-                                ? 500
+                                ? 440
                                 : 600,
                       ),
                       GradientElevatedButton(

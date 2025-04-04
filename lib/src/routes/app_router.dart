@@ -5,6 +5,7 @@ import 'package:frontend/src/features/dashboard/dashboard.dart';
 import 'package:frontend/src/features/products/components/add_product.dart';
 import 'package:frontend/src/features/products/product_detail/product_detail.dart';
 import 'package:frontend/src/features/settings/settings.dart';
+import 'package:frontend/src/features/shops/shops.dart';
 import 'package:frontend/src/features/stock/stock.dart';
 import 'package:frontend/src/features/stock/stock_detail/stock_detail.dart';
 import 'package:frontend/src/features/user_management/user_management.dart';
@@ -57,6 +58,9 @@ class AppRouter {
           break;
         case userManagementRoute:
           screen = UserManagement();
+          break;
+        case shopsRoute:
+          screen = Shops();
           break;
         default:
           screen = const NotFoundPage();

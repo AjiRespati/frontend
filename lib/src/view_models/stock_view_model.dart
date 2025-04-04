@@ -59,6 +59,8 @@ class StockViewModel extends ChangeNotifier {
   int _clientTabIndex = 0;
   int _stockTabIndex = 0;
 
+  List<dynamic> _shops = [];
+
   //====================//
   //  GETTER n SETTER   //
   //====================//
@@ -302,6 +304,12 @@ class StockViewModel extends ChangeNotifier {
   DateTime get dateToFilter => _dateToFilter;
   set dateToFilter(DateTime val) {
     _dateToFilter = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get shops => _shops;
+  set shops(List<dynamic> val) {
+    _shops = val;
     notifyListeners();
   }
 
@@ -630,7 +638,43 @@ class StockViewModel extends ChangeNotifier {
       salesId: salesId,
     );
 
+    print(salesStockTable);
+
     isBusy = false;
+    return true;
+  }
+
+  Future<bool> createShop({
+    required String salesId,
+    required String name,
+    required String address,
+    required String phone,
+    required String? email,
+    required String? imageUrl,
+    required String? coordinates,
+  }) async {
+    isBusy = true;
+    final resp = await apiService.createShop(
+      salesId: salesId,
+      name: name,
+      address: address,
+      phone: phone,
+      email: email,
+      imageUrl: imageUrl,
+      coordinates: coordinates,
+    );
+
+    if (resp) {
+      isBusy = false;
+      return true;
+    } else {
+      isBusy = false;
+      return false;
+    }
+  }
+
+  Future<bool> getShopsBySales({required String salesId}) async {
+    shops = await apiService.getAllShopsBySales(salesId: salesId);
     return true;
   }
 

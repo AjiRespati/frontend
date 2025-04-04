@@ -324,7 +324,7 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       fetchProduct(productId);
       Navigator.pop(context);
       return true;
@@ -390,7 +390,7 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       Navigator.pop(context);
       return true;
     } else {
@@ -573,7 +573,7 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return true;
     } else {
       return false;
@@ -620,7 +620,7 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return true;
     } else {
       return false;
@@ -667,7 +667,7 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return true;
     } else {
       return false;
@@ -679,6 +679,98 @@ class ApiService {
 
     final response = await http.get(
       Uri.parse('$baseUrl/agents'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return [];
+    }
+  }
+
+  // TODO: SHOP ROUTES
+  /// GET
+  /// POST
+
+  Future<bool> createShop({
+    required String salesId,
+    required String name,
+    required String address,
+    required String phone,
+    required String? email,
+    required String? imageUrl,
+    required String? coordinates,
+  }) async {
+    String? token = await _getToken();
+    // { name, image, address, coordinates, phone, email, updateBy }
+    final response = await http.post(
+      Uri.parse('$baseUrl/shops'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        'salesId': salesId,
+        'name': name,
+        'address': address,
+        'phone': phone,
+        'email': email,
+        'image': imageUrl,
+        'coordinates': coordinates,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // Future<bool> getShopsBySales({
+  //   required String salesId,
+  //   required String name,
+  //   required String address,
+  //   required String phone,
+  //   required String? email,
+  //   required String? imageUrl,
+  //   required String? coordinates,
+  // }) async {
+  //   String? token = await _getToken();
+  //   // { name, image, address, coordinates, phone, email, updateBy }
+  //   final response = await http.post(
+  //     Uri.parse('$baseUrl/shops'),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       "Authorization": "Bearer $token",
+  //     },
+  //     body: jsonEncode({
+  //       'salesId': salesId,
+  //       'name': name,
+  //       'address': address,
+  //       'phone': phone,
+  //       'email': email,
+  //       'image': imageUrl,
+  //       'coordinates': coordinates,
+  //     }),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
+  Future<List<dynamic>> getAllShopsBySales({required String salesId}) async {
+    String? token = await _getToken();
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/shops/$salesId'),
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",

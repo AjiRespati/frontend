@@ -109,7 +109,7 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
                 Navigator.pushNamed(context, stockRoute);
                 break;
               case 3:
-                Navigator.pushNamed(context, clientsRoute);
+                Navigator.pushNamed(context, shopsRoute);
                 break;
               default:
                 Navigator.pushNamed(context, settingsRoute);
@@ -131,7 +131,7 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
             ),
             NavigationDestination(
               icon: Icon(Icons.store_rounded),
-              label: "Clients",
+              label: "Toko",
             ),
             NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
           ],
