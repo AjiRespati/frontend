@@ -719,17 +719,21 @@ class StockViewModel extends ChangeNotifier {
     required BuildContext context,
     required String salesId,
   }) async {
+    isBusy = true;
     shops = await apiService.getAllShopsBySales(
       context: context,
       salesId: salesId,
     );
     print(shops.first);
+    isBusy = false;
     return true;
   }
 
   Future<bool> getAllShops({required BuildContext context}) async {
+    isBusy = true;
     shops = await apiService.getAllShops(context: context);
     print(shops.first);
+    isBusy = false;
     return true;
   }
 
@@ -784,9 +788,11 @@ class StockViewModel extends ChangeNotifier {
   }
 
   Future<bool> getAllFrezer(BuildContext context) async {
+    isBusy = true;
     freezers = await apiService.getAllFreezer(context);
 
     idleFreezers = freezers.where((el) => el['status'] == 'idle').toList();
+    isBusy = false;
 
     return true;
   }
