@@ -2,8 +2,8 @@
 
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:frontend/src/routes/route_names.dart';
 
 import '../../application_info.dart';
@@ -147,6 +147,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return null;
     }
   }
@@ -184,6 +194,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return true;
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return false;
     }
   }
@@ -209,6 +229,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return null;
     }
   }
@@ -231,6 +261,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return [];
     }
   }
@@ -327,6 +367,16 @@ class ApiService {
       if (response.body.contains("Invalid token")) {
         return json.decode(response.body);
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.red.shade400,
+            content: Text(
+              jsonDecode(response.body)['error'] ??
+                  "Kesalahan system, hubungi pengembang aplikasi",
+            ),
+          ),
+        );
         throw Exception('Failed to fetch commission data');
       }
     }
@@ -368,6 +418,16 @@ class ApiService {
       Navigator.pop(context);
       return true;
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return false;
     }
   }
@@ -397,6 +457,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return null;
     }
   }
@@ -457,6 +527,16 @@ class ApiService {
       Navigator.pop(context);
       return true;
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return false;
     }
   }
@@ -495,6 +575,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return [];
     }
   }
@@ -535,6 +625,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return [];
     }
   }
@@ -569,6 +669,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return true;
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return false;
     }
   }
@@ -603,6 +713,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return true;
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return false;
     }
   }
@@ -643,6 +763,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return null;
     }
   }
@@ -683,6 +813,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return [];
     }
   }
@@ -730,6 +870,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return true;
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return false;
     }
   }
@@ -791,6 +941,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return true;
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return false;
     }
   }
@@ -816,6 +976,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return [];
     }
   }
@@ -859,6 +1029,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return true;
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return false;
     }
   }
@@ -884,6 +1064,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return [];
     }
   }
@@ -940,6 +1130,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return true;
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return false;
     }
   }
@@ -968,6 +1168,16 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return [];
     }
   }
@@ -997,7 +1207,70 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return [];
+    }
+  }
+
+  Future<bool> addFrezer({
+    required BuildContext context,
+    required String name,
+    required String capacity,
+    required String serialNumber,
+    required String? coordinates,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/refrigerators'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        'name': name,
+        'capacity': capacity,
+        'serialNumber': serialNumber,
+        'coordinates': coordinates,
+      }),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return addFrezer(
+        context: context,
+        name: name,
+        capacity: capacity,
+        serialNumber: serialNumber,
+        coordinates: coordinates,
+      );
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return false;
     }
   }
 }

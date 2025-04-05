@@ -27,8 +27,8 @@ class ClientCard extends StatelessWidget with GetItMixin {
               salesId: item['id'],
             );
 
-            print(get<StockViewModel>().stockResume);
-            print(get<StockViewModel>().salesStockTable);
+            // print(get<StockViewModel>().stockResume);
+            // print(get<StockViewModel>().salesStockTable);
             Navigator.pushNamed(context, clientDetailRoute, arguments: item);
           },
           child: SizedBox(

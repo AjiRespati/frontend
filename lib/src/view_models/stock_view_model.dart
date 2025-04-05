@@ -60,6 +60,7 @@ class StockViewModel extends ChangeNotifier {
   int _stockTabIndex = 0;
 
   List<dynamic> _shops = [];
+  List<dynamic> _freezers = [];
 
   //====================//
   //  GETTER n SETTER   //
@@ -310,6 +311,12 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> get shops => _shops;
   set shops(List<dynamic> val) {
     _shops = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get freezers => _freezers;
+  set freezers(List<dynamic> val) {
+    _freezers = val;
     notifyListeners();
   }
 
@@ -664,7 +671,7 @@ class StockViewModel extends ChangeNotifier {
       salesId: salesId,
     );
 
-    print(salesStockTable);
+    // print(salesStockTable);
 
     isBusy = false;
     return true;
@@ -709,6 +716,39 @@ class StockViewModel extends ChangeNotifier {
       context: context,
       salesId: salesId,
     );
+    print(shops.first);
+    return true;
+  }
+
+  // { name, capacity, serialNumber, coordinates, shopId, status, deliveryDate, deliveryBy }
+  Future<bool> addRefrigerator({
+    required BuildContext context,
+    required String name,
+    required String capacity,
+    required String serialNumber,
+    required String? coordinates,
+  }) async {
+    isBusy = true;
+    final resp = await apiService.addFrezer(
+      context: context,
+      name: name,
+      capacity: capacity,
+      serialNumber: serialNumber,
+      coordinates: coordinates,
+    );
+
+    if (resp) {
+      isBusy = false;
+      return true;
+    } else {
+      isBusy = false;
+      return false;
+    }
+  }
+
+  Future<bool> getAllFrezer(BuildContext context) async {
+    freezers = await apiService.getAllFreezer(context);
+
     return true;
   }
 

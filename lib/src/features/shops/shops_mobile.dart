@@ -35,7 +35,12 @@ class ShopsMobile extends StatelessWidget with GetItMixin {
                 constraints: BoxConstraints(maxHeight: 540),
                 context: context,
                 builder: (context) {
-                  return AddShop();
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: SingleChildScrollView(child: AddShop()),
+                  );
                 },
               );
             },
@@ -53,7 +58,6 @@ class ShopsMobile extends StatelessWidget with GetItMixin {
                   (kIsWeb ? 5 : 50),
               child: ListView.builder(
                 itemCount: get<StockViewModel>().shops.length,
-
                 itemBuilder: (context, index) {
                   return ShopTableCard(
                     isMobile: true,

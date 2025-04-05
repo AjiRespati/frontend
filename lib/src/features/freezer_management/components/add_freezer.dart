@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/services/api_service.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
-import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -16,27 +15,19 @@ class AddFreezer extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _AddFreezerState extends State<AddFreezer> with GetItStateMixin {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _capacityController = TextEditingController();
+  final TextEditingController _serialNumberController = TextEditingController();
   final ApiService apiService = ApiService();
 
   void _submit() async {
-    String salesId = get<SystemViewModel>().salesId ?? "-";
-    await get<StockViewModel>().createShop(
+    await get<StockViewModel>().addRefrigerator(
       context: context,
-      salesId: salesId,
       name: _nameController.text,
-      address: _addressController.text,
-      phone: _phoneController.text,
-      email: _emailController.text.isEmpty ? null : _emailController.text,
-      imageUrl: null,
+      capacity: _capacityController.text,
+      serialNumber: _serialNumberController.text,
       coordinates: null,
     );
-    await get<StockViewModel>().getShopsBySales(
-      context: context,
-      salesId: salesId,
-    );
+    await get<StockViewModel>().getAllFrezer(context);
 
     Navigator.pop(context);
   }
@@ -57,36 +48,11 @@ class _AddFreezerState extends State<AddFreezer> with GetItStateMixin {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           SizedBox(height: 4),
-
-          // ✅ Client Type Dropdown
-          // DropdownButtonFormField<String>(
-          //   value: _selectedClient,
-          //   onChanged: (newValue) {
-          //     setState(() {
-          //       _selectedClient = newValue!;
-          //     });
-          //   },
-          //   items:
-          //       _clientType.map((metric) {
-          //         return DropdownMenuItem(value: metric, child: Text(metric));
-          //       }).toList(),
-          //   decoration: InputDecoration(
-          //     labelText: "Client Type",
-          //     labelStyle: TextStyle(
-          //       fontWeight: FontWeight.w600,
-          //       color: Colors.red[600],
-          //     ),
-          //   ),
-          //   style: TextStyle(
-          //     fontWeight: FontWeight.bold,
-          //     color: Colors.red[700],
-          //   ),
-          // ),
           SizedBox(height: 10),
 
           TextFormField(
             controller: _nameController,
-            decoration: InputDecoration(labelText: "Nama Toko"),
+            decoration: InputDecoration(labelText: "Merek Freezer: "),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return "Harus diisi";
@@ -97,9 +63,8 @@ class _AddFreezerState extends State<AddFreezer> with GetItStateMixin {
           ),
           SizedBox(height: 4),
           TextFormField(
-            controller: _addressController,
-            maxLines: 3,
-            decoration: InputDecoration(labelText: "Alamat"),
+            controller: _capacityController,
+            decoration: InputDecoration(labelText: "Kapasitas"),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return "Harus diisi";
@@ -110,8 +75,8 @@ class _AddFreezerState extends State<AddFreezer> with GetItStateMixin {
           ),
           SizedBox(height: 4),
           TextFormField(
-            controller: _phoneController,
-            decoration: InputDecoration(labelText: "Telepon"),
+            controller: _serialNumberController,
+            decoration: InputDecoration(labelText: "Serial Number"),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return "Harus diisi";
@@ -119,18 +84,6 @@ class _AddFreezerState extends State<AddFreezer> with GetItStateMixin {
               return null;
             },
             autovalidateMode: AutovalidateMode.always,
-          ),
-          SizedBox(height: 4),
-          TextFormField(
-            controller: _emailController,
-            decoration: InputDecoration(labelText: "Email"),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Harus diisi";
-              }
-              return null;
-            },
-            autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           SizedBox(height: 40),
           Stack(
@@ -139,7 +92,7 @@ class _AddFreezerState extends State<AddFreezer> with GetItStateMixin {
                 inactiveDelay: Duration.zero,
                 onPressed: _submit,
                 child: Text(
-                  "Tambah Toko",
+                  "Tambah Freezer",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,

@@ -4,21 +4,16 @@ import 'package:flutter/material.dart';
 
 import 'package:get_it_mixin/get_it_mixin.dart';
 
-class ShopTableCard extends StatelessWidget with GetItMixin {
-  ShopTableCard({
-    super.key,
-    required this.stockStatus,
-    required this.isMobile,
-    required this.shop,
-  });
+class FreezerTableCard extends StatelessWidget with GetItMixin {
+  FreezerTableCard({super.key, required this.isMobile, required this.freezer});
 
-  final Map<String, dynamic> shop;
+  final Map<String, dynamic> freezer;
   final bool isMobile;
-  final String stockStatus;
 
   @override
   Widget build(BuildContext context) {
     // String imageUrl = ApplicationInfo.baseUrl + (stock['image'] ?? '');
+    print(freezer);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
@@ -72,7 +67,7 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                     Row(
                       children: [
                         Text(
-                          shop['name'] ?? " N/A",
+                          freezer['name'] ?? " N/A",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -80,7 +75,7 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                     Row(
                       children: [
                         Text(
-                          shop['address'] ?? " N/A",
+                          freezer['serialNumber'] ?? " N/A",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -88,7 +83,7 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                     Row(
                       children: [
                         Text(
-                          shop['phone'] ?? " N/A",
+                          freezer['capacity'] ?? " N/A",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -96,15 +91,11 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                     Row(
                       children: [
                         Text(
-                          "Freezer: ",
+                          "Status: ",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          shop['Refrigerator'] == null
-                              ? " N/A"
-                              : shop['Refrigerator']
-                              ? " N/A"
-                              : shop['Refrigerator'][0]['status'],
+                          (freezer['status'] ?? "N/A").toUpperCase(),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
