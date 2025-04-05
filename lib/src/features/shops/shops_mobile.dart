@@ -62,7 +62,6 @@ class ShopsMobile extends StatelessWidget with GetItMixin {
                   return ShopTableCard(
                     isMobile: true,
                     shop: get<StockViewModel>().shops[index],
-                    stockStatus: 'settled',
                   );
                 },
               ),

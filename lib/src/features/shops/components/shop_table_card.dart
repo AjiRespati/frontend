@@ -5,16 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ShopTableCard extends StatelessWidget with GetItMixin {
-  ShopTableCard({
-    super.key,
-    required this.stockStatus,
-    required this.isMobile,
-    required this.shop,
-  });
+  ShopTableCard({super.key, required this.isMobile, required this.shop});
 
   final Map<String, dynamic> shop;
   final bool isMobile;
-  final String stockStatus;
 
   @override
   Widget build(BuildContext context) {

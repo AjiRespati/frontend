@@ -720,6 +720,12 @@ class StockViewModel extends ChangeNotifier {
     return true;
   }
 
+  Future<bool> getAllShops({required BuildContext context}) async {
+    shops = await apiService.getAllShops(context: context);
+    print(shops.first);
+    return true;
+  }
+
   // { name, capacity, serialNumber, coordinates, shopId, status, deliveryDate, deliveryBy }
   Future<bool> addRefrigerator({
     required BuildContext context,

@@ -58,6 +58,36 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                       if ((model.level ?? 0) > 3)
                         InkWell(
                           onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              shopsRoute,
+                              arguments: true,
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Text("Shop Management"),
+                              Spacer(),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    shopsRoute,
+                                    arguments: true,
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.chevron_right_rounded,
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      if ((model.level ?? 0) > 3) Divider(),
+                      if ((model.level ?? 0) > 3)
+                        InkWell(
+                          onTap: () {
                             Navigator.pushNamed(context, freezersRoute);
                           },
                           child: Row(

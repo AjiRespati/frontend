@@ -61,7 +61,7 @@ class AppRouter {
           screen = UserManagement();
           break;
         case shopsRoute:
-          screen = Shops();
+          screen = Shops(isAllShop: arguments);
           break;
         case freezersRoute:
           screen = Freezer();

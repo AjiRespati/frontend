@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:frontend/src/features/freezer_management/components/update_freezer.dart';
 
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -19,18 +20,21 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
       elevation: 2,
       child: InkWell(
         onTap: () async {
-          // // get<StockViewModel>().choosenMetricId = stock['metricId'];
-          // bool resp = await get<StockViewModel>().getStockHistory(
-          //   context: context,
-          //   status: stockStatus,
-          // );
-          // if (resp) {
-          //   Navigator.pushNamed(
-          //     context,
-          //     stockDetailRoute,
-          //     arguments: stockStatus,
-          //   );
-          // }
+          showModalBottomSheet(
+            isScrollControlled: true,
+            constraints: BoxConstraints(maxHeight: 640),
+            context: context,
+            builder: (context) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: SingleChildScrollView(
+                  child: UpdateFreezer(freezer: freezer),
+                ),
+              );
+            },
+          );
         },
         child: SizedBox(
           height: 130,
@@ -96,7 +100,10 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
                         ),
                         Text(
                           (freezer['status'] ?? "N/A").toUpperCase(),
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: statusColor(freezer['status']),
+                          ),
                         ),
                       ],
                     ),
@@ -161,17 +168,21 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
                 children: [
                   IconButton(
                     onPressed: () async {
-                      // get<StockViewModel>().choosenMetricId = stock['metricId'];
-                      // bool resp = await get<StockViewModel>().getStockHistory(
-                      //   status: stockStatus,
-                      // );
-                      // if (resp) {
-                      //   Navigator.pushNamed(
-                      //     context,
-                      //     stockDetailRoute,
-                      //     arguments: stockStatus,
-                      //   );
-                      // }
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        constraints: BoxConstraints(maxHeight: 640),
+                        context: context,
+                        builder: (context) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: SingleChildScrollView(
+                              child: UpdateFreezer(freezer: freezer),
+                            ),
+                          );
+                        },
+                      );
                     },
                     icon: Icon(Icons.chevron_right_outlined, size: 40),
                   ),
@@ -183,5 +194,21 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
         ),
       ),
     );
+  }
+
+  // "idle", "active", "broken", "wasted"
+  Color statusColor(String status) {
+    switch (status) {
+      case 'idle':
+        return Colors.amberAccent.shade700;
+      case 'active':
+        return Colors.green.shade700;
+      case 'broken':
+        return Colors.red.shade700;
+      case 'wasted':
+        return Colors.blueGrey.shade900;
+      default:
+        return Colors.black;
+    }
   }
 }

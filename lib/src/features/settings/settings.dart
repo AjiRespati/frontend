@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/settings/settings_desktop.dart';
 import 'package:frontend/src/features/settings/settings_mobile.dart';
 import 'package:frontend/src/utils/responsive_layout.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -17,6 +18,9 @@ class _SettingsState extends State<Settings> with GetItStateMixin {
   void initState() {
     super.initState();
     get<SystemViewModel>().self(context);
+    get<SystemViewModel>().getAllUser(context);
+    get<StockViewModel>().getAllFrezer(context);
+    get<StockViewModel>().getAllShops(context: context);
   }
 
   @override

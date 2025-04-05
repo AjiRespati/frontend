@@ -1182,6 +1182,41 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> getAllShops({required BuildContext context}) async {
+    String? token = await _getToken();
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/shops'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getAllShops(context: context);
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return [];
+    }
+  }
+
   // TODO: FREEZER ROUTES
   /// GET
   /// POST

@@ -7,7 +7,8 @@ import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class Shops extends StatefulWidget with GetItStatefulWidgetMixin {
-  Shops({super.key});
+  Shops({required this.isAllShop, super.key});
+  final bool? isAllShop;
 
   @override
   State<Shops> createState() => _ShopsState();
@@ -18,8 +19,22 @@ class _ShopsState extends State<Shops> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      String salesId = get<SystemViewModel>().salesId ?? "";
-      get<StockViewModel>().getShopsBySales(context: context, salesId: salesId);
+      if (widget.isAllShop != true) {
+        get<SystemViewModel>().salesId;
+        get<SystemViewModel>().subAgentId;
+        get<SystemViewModel>().agentId;
+
+        String? id =
+            get<SystemViewModel>().salesId ??
+            (get<SystemViewModel>().subAgentId ??
+                (get<SystemViewModel>().agentId));
+
+        String salesId = id ?? "";
+        get<StockViewModel>().getShopsBySales(
+          context: context,
+          salesId: salesId,
+        );
+      }
     });
   }
 
