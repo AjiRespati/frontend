@@ -1217,6 +1217,70 @@ class ApiService {
     }
   }
 
+  Future<bool> updateShop({
+    required BuildContext context,
+    required String? id,
+    required String? name,
+    required String? image,
+    required String? address,
+    required String? coordinates,
+    required String? phone,
+    required String? email,
+    required String? status,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/shops/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        'name': name,
+        'image': image,
+        'address': address,
+        'coordinates': coordinates,
+        'phone': phone,
+        'email': email,
+        'status': status,
+      }),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return updateShop(
+        id: id,
+        context: context,
+        name: name,
+        image: image,
+        address: address,
+        coordinates: coordinates,
+        phone: phone,
+        email: email,
+        status: status,
+      );
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return false;
+    }
+  }
+
   // TODO: FREEZER ROUTES
   /// GET
   /// POST
@@ -1291,6 +1355,52 @@ class ApiService {
         capacity: capacity,
         serialNumber: serialNumber,
         coordinates: coordinates,
+      );
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return false;
+    }
+  }
+
+  Future<bool> updateFreezerShop({
+    required BuildContext context,
+    required String id,
+    required String shopId,
+    required String status,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/refrigerators/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({'shopId': shopId, 'status': status}),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return updateFreezerShop(
+        context: context,
+        id: id,
+        shopId: shopId,
+        status: status,
       );
     } else if (response.statusCode == 200) {
       return true;

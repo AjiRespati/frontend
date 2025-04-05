@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/freezer_management/freezer_desktop.dart';
-import 'package:frontend/src/features/freezer_management/freezer_mobile.dart';
+import 'package:frontend/src/features/freezer/freezer_desktop.dart';
+import 'package:frontend/src/features/freezer/freezer_mobile.dart';
 import 'package:frontend/src/utils/responsive_layout.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 

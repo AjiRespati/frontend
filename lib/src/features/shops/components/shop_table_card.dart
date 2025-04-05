@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:frontend/src/features/shops/components/update_shop.dart';
 
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -18,18 +19,20 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
       elevation: 2,
       child: InkWell(
         onTap: () async {
-          // // get<StockViewModel>().choosenMetricId = stock['metricId'];
-          // bool resp = await get<StockViewModel>().getStockHistory(
-          //   context: context,
-          //   status: stockStatus,
-          // );
-          // if (resp) {
-          //   Navigator.pushNamed(
-          //     context,
-          //     stockDetailRoute,
-          //     arguments: stockStatus,
-          //   );
-          // }
+          print(shop);
+          showModalBottomSheet(
+            isScrollControlled: true,
+            constraints: BoxConstraints(maxHeight: 640),
+            context: context,
+            builder: (context) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: SingleChildScrollView(child: UpdateShop(shop: shop)),
+              );
+            },
+          );
         },
         child: SizedBox(
           height: 130,
@@ -59,7 +62,7 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
               //   ),
               // ),
               SizedBox(width: 10),
-              Flexible(
+              Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -73,9 +76,13 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                     ),
                     Row(
                       children: [
-                        Text(
-                          shop['address'] ?? " N/A",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Flexible(
+                          child: Text(
+                            maxLines: 2,
+                            shop['address'] ?? " N/A",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
@@ -90,68 +97,58 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                     Row(
                       children: [
                         Text(
-                          "Freezer: ",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          shop['Refrigerator'] == null
-                              ? " N/A"
-                              : shop['Refrigerator']
-                              ? " N/A"
-                              : shop['Refrigerator'][0]['status'],
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          (shop['status'] ?? " N/A").toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: statusColor(shop['status'] ?? " N/A"),
+                          ),
                         ),
                       ],
                     ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 30),
+                    Text(
+                      "Freezer:",
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      height: 80,
+                      child: ListView.builder(
+                        itemCount:
+                            shop['Refrigerators'] == null
+                                ? 0
+                                : shop['Refrigerators'].length,
+                        itemBuilder: (context, index) {
+                          var item = shop['Refrigerators'][index];
+                          return Row(
+                            children: [
+                              Text("${item['name']} (${item['serialNumber']})"),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+
                     // Row(
                     //   children: [
-                    //     Text("Unit: "),
                     //     Text(
-                    //       stock['metricName'] ?? " N/A",
-                    //       style: TextStyle(
-                    //         fontWeight: FontWeight.bold,
-                    //         color: Colors.blue,
-                    //         fontSize: 16,
-                    //       ),
+                    //       "Freezer: ",
+                    //       style: TextStyle(fontWeight: FontWeight.bold),
                     //     ),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Text("Stock In: "),
-                    //     Text((stock['totalStockIn'] ?? " N/A").toString()),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Text("Stock Out: "),
-                    //     Text((stock['totalStockOut'] ?? " N/A").toString()),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Text("Stock On Hand: "),
                     //     Text(
-                    //       stockStatus == 'settled'
-                    //           ? (stock['latestUpdateAmount'] ?? " N/A")
-                    //               .toString()
-                    //           : " -",
-                    //       style: TextStyle(
-                    //         fontWeight: FontWeight.w900,
-                    //         color: Colors.green[800],
-                    //         fontSize: 16,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Text("Last Update: "),
-                    //     Text(
-                    //       formatDateString(
-                    //         (stock['lastStockUpdate'] ??
-                    //             "2000-01-01T01:00:00.204Z"),
-                    //       ),
+                    //       shop['Refrigerators'] == null
+                    //           ? " N/A"
+                    //           : shop['Refrigerators'].length == 0
+                    //           ? " N/A"
+                    //           : shop['Refrigerators'][0]['status'],
+                    //       style: TextStyle(fontWeight: FontWeight.bold),
                     //     ),
                     //   ],
                     // ),
@@ -164,17 +161,21 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                 children: [
                   IconButton(
                     onPressed: () async {
-                      // get<StockViewModel>().choosenMetricId = stock['metricId'];
-                      // bool resp = await get<StockViewModel>().getStockHistory(
-                      //   status: stockStatus,
-                      // );
-                      // if (resp) {
-                      //   Navigator.pushNamed(
-                      //     context,
-                      //     stockDetailRoute,
-                      //     arguments: stockStatus,
-                      //   );
-                      // }
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        constraints: BoxConstraints(maxHeight: 640),
+                        context: context,
+                        builder: (context) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: SingleChildScrollView(
+                              child: UpdateShop(shop: shop),
+                            ),
+                          );
+                        },
+                      );
                     },
                     icon: Icon(Icons.chevron_right_outlined, size: 40),
                   ),
@@ -186,5 +187,24 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
         ),
       ),
     );
+  }
+
+  Color statusColor(String status) {
+    switch (status) {
+      case 'idle':
+        return Colors.amberAccent.shade700;
+      case 'active':
+        return Colors.green.shade700;
+      case 'inactive':
+        return Colors.red.shade400;
+      case 'broken':
+        return Colors.red.shade700;
+      case 'repairing':
+        return Colors.red.shade400;
+      case 'wasted':
+        return Colors.blueGrey.shade900;
+      default:
+        return Colors.black;
+    }
   }
 }

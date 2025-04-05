@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/clients/client_detail/client_detail.dart';
 import 'package:frontend/src/features/clients/clients.dart';
 import 'package:frontend/src/features/dashboard/dashboard.dart';
-import 'package:frontend/src/features/freezer_management/freezer.dart';
+import 'package:frontend/src/features/freezer/freezer.dart';
 import 'package:frontend/src/features/products/components/add_product.dart';
 import 'package:frontend/src/features/products/product_detail/product_detail.dart';
 import 'package:frontend/src/features/settings/settings.dart';

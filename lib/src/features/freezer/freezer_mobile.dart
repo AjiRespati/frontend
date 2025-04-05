@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/freezer_management/components/add_freezer.dart';
-import 'package:frontend/src/features/freezer_management/components/freezer_table_card.dart';
+import 'package:frontend/src/features/freezer/components/add_freezer.dart';
+import 'package:frontend/src/features/freezer/components/freezer_table_card.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/add_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';

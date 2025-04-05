@@ -112,8 +112,8 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                             MediaQuery.of(context).size.height -
                                         (model.level ?? 0) >
                                     4
-                                ? 340
-                                : 500,
+                                ? 300
+                                : 450,
                       ),
                       GradientElevatedButton(
                         onPressed: () async {
@@ -127,7 +127,13 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                             );
                           }
                         },
-                        child: Text("Logout"),
+                        child: Text(
+                          "Logout",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ],
                   ),

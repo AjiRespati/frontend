@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/freezer_management/components/update_freezer.dart';
+import 'package:frontend/src/features/freezer/components/update_freezer.dart';
 
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -40,31 +40,8 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
           height: 130,
           child: Row(
             children: [
-              // SizedBox(
-              //   width: 110,
-              //   height: 90,
-              //   child: ClipRRect(
-              //     borderRadius: const BorderRadius.vertical(
-              //       top: Radius.circular(10),
-              //       bottom: Radius.circular(10),
-              //     ),
-              //     child:
-              //         stock['image'] != null
-              //             ? Image.network(
-              //               imageUrl,
-              //               width: double.infinity,
-              //               fit: BoxFit.cover,
-              //               errorBuilder:
-              //                   (context, error, stackTrace) => const Icon(
-              //                     Icons.image_not_supported,
-              //                     size: 50,
-              //                   ),
-              //             )
-              //             : const Icon(Icons.image, size: 50),
-              //   ),
-              // ),
               SizedBox(width: 10),
-              Flexible(
+              Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -162,6 +139,36 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
                   ],
                 ),
               ),
+              SizedBox(width: 10),
+              Expanded(
+                child:
+                    freezer['Shop'] != null
+                        ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    freezer['Shop']['name'],
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  freezer['Shop']['address'],
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                        : SizedBox(),
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -205,6 +212,8 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
         return Colors.green.shade700;
       case 'broken':
         return Colors.red.shade700;
+      case 'repairing':
+        return Colors.red.shade400;
       case 'wasted':
         return Colors.blueGrey.shade900;
       default:

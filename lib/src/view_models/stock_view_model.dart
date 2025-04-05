@@ -61,6 +61,7 @@ class StockViewModel extends ChangeNotifier {
 
   List<dynamic> _shops = [];
   List<dynamic> _freezers = [];
+  List<dynamic> _idleFreezers = [];
 
   //====================//
   //  GETTER n SETTER   //
@@ -317,6 +318,12 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> get freezers => _freezers;
   set freezers(List<dynamic> val) {
     _freezers = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get idleFreezers => _idleFreezers;
+  set idleFreezers(List<dynamic> val) {
+    _idleFreezers = val;
     notifyListeners();
   }
 
@@ -726,6 +733,30 @@ class StockViewModel extends ChangeNotifier {
     return true;
   }
 
+  Future<bool> updateShop({
+    required BuildContext context,
+    required String? id,
+    required String? name,
+    required String? image,
+    required String? address,
+    required String? coordinates,
+    required String? phone,
+    required String? email,
+    required String? status,
+  }) async {
+    return await apiService.updateShop(
+      context: context,
+      id: id,
+      name: name,
+      image: image,
+      address: address,
+      coordinates: coordinates,
+      phone: phone,
+      email: email,
+      status: status,
+    );
+  }
+
   // { name, capacity, serialNumber, coordinates, shopId, status, deliveryDate, deliveryBy }
   Future<bool> addRefrigerator({
     required BuildContext context,
@@ -755,7 +786,23 @@ class StockViewModel extends ChangeNotifier {
   Future<bool> getAllFrezer(BuildContext context) async {
     freezers = await apiService.getAllFreezer(context);
 
+    idleFreezers = freezers.where((el) => el['status'] == 'idle').toList();
+
     return true;
+  }
+
+  Future<bool> updateFreezerShop({
+    required BuildContext context,
+    required String id,
+    required String shopId,
+    required String status,
+  }) async {
+    return await apiService.updateFreezerShop(
+      context: context,
+      id: id,
+      shopId: shopId,
+      status: status,
+    );
   }
 
   String generateDateString(DateTime time) {
