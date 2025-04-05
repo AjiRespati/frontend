@@ -119,6 +119,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
 
   void _submitSalesman() async {
     bool success = await apiService.createSalesman(
+      context: context,
       name: _nameController.text,
       address: _addressController.text,
       phone: _phoneController.text,
@@ -137,6 +138,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
 
   void _submitSubAgent() async {
     bool success = await apiService.createSubAgent(
+      context: context,
       name: _nameController.text,
       address: _addressController.text,
       phone: _phoneController.text,
@@ -144,7 +146,10 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
     );
 
     if (success) {
-      await get<StockViewModel>().fetchSubAgents(isInitial: false);
+      await get<StockViewModel>().fetchSubAgents(
+        context: context,
+        isInitial: false,
+      );
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(
@@ -155,6 +160,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
 
   void _submitAgent() async {
     bool success = await apiService.createAgent(
+      context: context,
       name: _nameController.text,
       address: _addressController.text,
       phone: _phoneController.text,
@@ -162,7 +168,10 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
     );
 
     if (success) {
-      await get<StockViewModel>().fetchAgents(isInitial: false);
+      await get<StockViewModel>().fetchAgents(
+        context: context,
+        isInitial: false,
+      );
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(

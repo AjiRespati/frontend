@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:frontend/src/routes/route_names.dart';
 
 import '../../application_info.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +18,25 @@ class ApiService {
   Future<String?> _getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('accessToken');
+  }
+
+  Future<String?> refreshAccessToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? refreshToken = prefs.getString('refreshToken');
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/refresh'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"refreshToken": refreshToken}),
+    );
+
+    if (response.statusCode < 400) {
+      String newAccessToken = jsonDecode(response.body)['accessToken'];
+      await prefs.setString('accessToken', newAccessToken);
+      return newAccessToken;
+    } else {
+      return null;
+    }
   }
 
   /// AUTH ROUTES
@@ -41,7 +61,7 @@ class ApiService {
     return false;
   }
 
-  Future<dynamic> self(String refreshToken) async {
+  Future<dynamic> self(BuildContext context, String refreshToken) async {
     String? token = await _getToken();
     final response = await http.post(
       Uri.parse('$baseUrl/auth/self'),
@@ -52,10 +72,12 @@ class ApiService {
       body: jsonEncode({"refreshToken": refreshToken}),
     );
 
-    if (response.statusCode == 401) {
+    if (response.statusCode == 403) {
       token = await refreshAccessToken();
-      if (token == null) return [];
-      return fetchProducts();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return null;
+      }
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -104,26 +126,7 @@ class ApiService {
     return response.statusCode < 400;
   }
 
-  Future<String?> refreshAccessToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? refreshToken = prefs.getString('refreshToken');
-
-    final response = await http.post(
-      Uri.parse('$baseUrl/auth/refresh'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"refreshToken": refreshToken}),
-    );
-
-    if (response.statusCode < 400) {
-      String newAccessToken = jsonDecode(response.body)['accessToken'];
-      await prefs.setString('accessToken', newAccessToken);
-      return newAccessToken;
-    } else {
-      return null;
-    }
-  }
-
-  Future<dynamic> getAllUser() async {
+  Future<dynamic> getAllUser(BuildContext context) async {
     String? token = await _getToken();
 
     final response = await http.get(
@@ -136,8 +139,11 @@ class ApiService {
 
     if (response.statusCode == 401) {
       token = await refreshAccessToken();
-      if (token == null) return null;
-      return getAllUser();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return null;
+      }
+      return getAllUser(context);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -146,6 +152,7 @@ class ApiService {
   }
 
   Future<bool> updateUser({
+    required BuildContext context,
     required String id,
     required int? level,
     required String? status,
@@ -164,9 +171,15 @@ class ApiService {
     if (response.statusCode == 401) {
       token = await refreshAccessToken();
       if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
         return false;
       } else {
-        return updateUser(id: id, level: level, status: status);
+        return updateUser(
+          context: context,
+          id: id,
+          level: level,
+          status: status,
+        );
       }
     } else if (response.statusCode == 200) {
       return true;
@@ -178,7 +191,7 @@ class ApiService {
   // TODO: PRODUCTS ROUTES
   /// GET /
   /// POST /
-  Future<dynamic> fetchProduct(String productId) async {
+  Future<dynamic> fetchProduct(BuildContext context, String productId) async {
     String? token = await _getToken();
 
     final response = await http.get(
@@ -188,8 +201,11 @@ class ApiService {
 
     if (response.statusCode == 401) {
       token = await refreshAccessToken();
-      if (token == null) return null;
-      return fetchProduct(productId);
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return null;
+      }
+      return fetchProduct(context, productId);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -197,7 +213,7 @@ class ApiService {
     }
   }
 
-  Future<List<dynamic>> fetchProducts() async {
+  Future<List<dynamic>> fetchProducts(BuildContext context) async {
     String? token = await _getToken();
 
     final response = await http.get(
@@ -207,8 +223,11 @@ class ApiService {
 
     if (response.statusCode == 401) {
       token = await refreshAccessToken();
-      if (token == null) return [];
-      return fetchProducts();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return fetchProducts(context);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -217,15 +236,20 @@ class ApiService {
   }
 
   // ✅ Create Product API with Image Upload
-  Future<bool> createProduct(
-    String name,
-    String description,
-    String metric,
-    double price,
-    Uint8List? imageWeb,
-    XFile? imageDevice,
-  ) async {
-    String? token = await _getToken();
+  Future<bool> createProduct({
+    required BuildContext context,
+    required String name,
+    required String description,
+    required String metric,
+    required double price,
+    required Uint8List? imageWeb,
+    required XFile? imageDevice,
+  }) async {
+    String? token = await refreshAccessToken();
+    if (token == null) {
+      Navigator.pushNamed(context, signInRoute);
+    }
+
     var request = http.MultipartRequest("POST", Uri.parse('$baseUrl/products'));
     request.headers['Authorization'] = "Bearer $token";
     request.fields["name"] = name;
@@ -289,7 +313,15 @@ class ApiService {
       Uri.parse('$baseUrl/dashboard/commissionSummary'),
       headers: {"Authorization": "Bearer $token"},
     );
-    if (response.statusCode == 200) {
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return {};
+      }
+      return fetchCommissionSummary(context: context);
+    } else if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
       if (response.body.contains("Invalid token")) {
@@ -324,8 +356,15 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 200) {
-      fetchProduct(productId);
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return createMetric(context, productId, metricType, price);
+    } else if (response.statusCode == 200) {
+      fetchProduct(context, productId);
       Navigator.pop(context);
       return true;
     } else {
@@ -337,7 +376,10 @@ class ApiService {
   /// GET /
   /// POST /
 
-  Future<dynamic> fetchStockByProduct(String productId) async {
+  Future<dynamic> fetchStockByProduct(
+    BuildContext context,
+    String productId,
+  ) async {
     String? token = await _getToken();
 
     final response = await http.get(
@@ -347,8 +389,11 @@ class ApiService {
 
     if (response.statusCode == 401) {
       token = await refreshAccessToken();
-      if (token == null) return null;
-      return fetchStockByProduct(productId);
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return null;
+      }
+      return fetchStockByProduct(context, productId);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -390,7 +435,25 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return createStock(
+        context: context,
+        metricId: metricId,
+        stockEvent: stockEvent,
+        amount: amount,
+        salesId: salesId,
+        subAgentId: subAgentId,
+        agentId: agentId,
+        shopId: shopId,
+        status: status,
+        description: description,
+      );
+    } else if (response.statusCode == 200) {
       Navigator.pop(context);
       return true;
     } else {
@@ -400,6 +463,7 @@ class ApiService {
 
   /// Date String yyyy-mm-dd, 2025-03-01
   Future<List<dynamic>> getStockTable({
+    required BuildContext context,
     required String fromDate,
     required String toDate,
     required String status,
@@ -416,7 +480,19 @@ class ApiService {
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getStockTable(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+        status: status,
+      );
+    } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       return [];
@@ -425,6 +501,7 @@ class ApiService {
 
   /// Date String yyyy-mm-dd, 2025-03-01
   Future<List<dynamic>> getStockHistoryTable({
+    required BuildContext context,
     required String fromDate,
     required String toDate,
     required String metricId,
@@ -442,7 +519,20 @@ class ApiService {
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getStockHistoryTable(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+        metricId: metricId,
+        status: status,
+      );
+    } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       return [];
@@ -450,6 +540,7 @@ class ApiService {
   }
 
   Future<bool> settlingStock({
+    required BuildContext context,
     required String stockId,
     required String metricId,
   }) async {
@@ -464,7 +555,18 @@ class ApiService {
       body: jsonEncode({'id': stockId, 'metricId': metricId}),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return settlingStock(
+        context: context,
+        stockId: stockId,
+        metricId: metricId,
+      );
+    } else if (response.statusCode == 200) {
       return true;
     } else {
       return false;
@@ -472,6 +574,7 @@ class ApiService {
   }
 
   Future<bool> cancelingStock({
+    required BuildContext context,
     required String stockId,
     required String description,
   }) async {
@@ -486,7 +589,18 @@ class ApiService {
       body: jsonEncode({'id': stockId, 'description': description}),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return cancelingStock(
+        context: context,
+        stockId: stockId,
+        description: description,
+      );
+    } else if (response.statusCode == 200) {
       return true;
     } else {
       return false;
@@ -494,6 +608,7 @@ class ApiService {
   }
 
   Future<dynamic> getStockResume({
+    required BuildContext context,
     required String fromDate,
     required String toDate,
     required String salesId,
@@ -513,7 +628,19 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return null;
+      }
+      return getStockResume(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+        salesId: salesId,
+      );
+    } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       return null;
@@ -521,6 +648,7 @@ class ApiService {
   }
 
   Future<List<dynamic>> getTableBySalesId({
+    required BuildContext context,
     required String fromDate,
     required String toDate,
     required String salesId,
@@ -540,7 +668,19 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getTableBySalesId(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+        salesId: salesId,
+      );
+    } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       return [];
@@ -552,6 +692,7 @@ class ApiService {
   /// POST /
 
   Future<bool> createSalesman({
+    required BuildContext context,
     required String name,
     required String address,
     required String phone,
@@ -573,7 +714,20 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return createSalesman(
+        context: context,
+        name: name,
+        address: address,
+        phone: phone,
+        email: email,
+      );
+    } else if (response.statusCode == 200) {
       return true;
     } else {
       return false;
@@ -599,6 +753,7 @@ class ApiService {
   }
 
   Future<bool> createSubAgent({
+    required BuildContext context,
     required String name,
     required String address,
     required String phone,
@@ -620,14 +775,27 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return createSubAgent(
+        context: context,
+        name: name,
+        address: address,
+        phone: phone,
+        email: email,
+      );
+    } else if (response.statusCode == 200) {
       return true;
     } else {
       return false;
     }
   }
 
-  Future<List<dynamic>> getSubAgents() async {
+  Future<List<dynamic>> getSubAgents(BuildContext context) async {
     String? token = await _getToken();
 
     final response = await http.get(
@@ -638,7 +806,14 @@ class ApiService {
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getSubAgents(context);
+    } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       return [];
@@ -646,6 +821,7 @@ class ApiService {
   }
 
   Future<bool> createAgent({
+    required BuildContext context,
     required String name,
     required String address,
     required String phone,
@@ -667,14 +843,27 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return createAgent(
+        context: context,
+        name: name,
+        address: address,
+        phone: phone,
+        email: email,
+      );
+    } else if (response.statusCode == 200) {
       return true;
     } else {
       return false;
     }
   }
 
-  Future<List<dynamic>> getAgents() async {
+  Future<List<dynamic>> getAgents(BuildContext context) async {
     String? token = await _getToken();
 
     final response = await http.get(
@@ -685,7 +874,14 @@ class ApiService {
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getAgents(context);
+    } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       return [];
@@ -697,6 +893,7 @@ class ApiService {
   /// POST
 
   Future<bool> createShop({
+    required BuildContext context,
     required String salesId,
     required String name,
     required String address,
@@ -724,49 +921,33 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return createShop(
+        context: context,
+        salesId: salesId,
+        name: name,
+        address: address,
+        phone: phone,
+        email: email,
+        imageUrl: imageUrl,
+        coordinates: coordinates,
+      );
+    } else if (response.statusCode == 200) {
       return true;
     } else {
       return false;
     }
   }
 
-  // Future<bool> getShopsBySales({
-  //   required String salesId,
-  //   required String name,
-  //   required String address,
-  //   required String phone,
-  //   required String? email,
-  //   required String? imageUrl,
-  //   required String? coordinates,
-  // }) async {
-  //   String? token = await _getToken();
-  //   // { name, image, address, coordinates, phone, email, updateBy }
-  //   final response = await http.post(
-  //     Uri.parse('$baseUrl/shops'),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       "Authorization": "Bearer $token",
-  //     },
-  //     body: jsonEncode({
-  //       'salesId': salesId,
-  //       'name': name,
-  //       'address': address,
-  //       'phone': phone,
-  //       'email': email,
-  //       'image': imageUrl,
-  //       'coordinates': coordinates,
-  //     }),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
-  Future<List<dynamic>> getAllShopsBySales({required String salesId}) async {
+  Future<List<dynamic>> getAllShopsBySales({
+    required BuildContext context,
+    required String salesId,
+  }) async {
     String? token = await _getToken();
 
     final response = await http.get(
@@ -777,7 +958,43 @@ class ApiService {
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getAllShopsBySales(context: context, salesId: salesId);
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return [];
+    }
+  }
+
+  // TODO: FREEZER ROUTES
+  /// GET
+  /// POST
+
+  Future<List<dynamic>> getAllFreezer(BuildContext context) async {
+    String? token = await _getToken();
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/refrigerators'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getAllFreezer(context);
+    } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       return [];

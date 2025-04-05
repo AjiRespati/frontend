@@ -329,9 +329,9 @@ class StockViewModel extends ChangeNotifier {
     }
   }
 
-  fetchProducts() async {
+  fetchProducts(BuildContext context) async {
     isLoading = true;
-    List<dynamic> datas = await apiService.fetchProducts();
+    List<dynamic> datas = await apiService.fetchProducts(context);
     Set<String> productIds = {};
     List<dynamic> data = [];
 
@@ -345,9 +345,9 @@ class StockViewModel extends ChangeNotifier {
     isLoading = false;
   }
 
-  Future<dynamic> fetchProduct(String productId) async {
+  Future<dynamic> fetchProduct(BuildContext context, String productId) async {
     isLoading = true;
-    dynamic data = await apiService.fetchProduct(productId);
+    dynamic data = await apiService.fetchProduct(context, productId);
     productsDetail = data;
     List<String> usedMetric = [];
     if (productsDetail != null) {
@@ -480,9 +480,12 @@ class StockViewModel extends ChangeNotifier {
     }
   }
 
-  Future<dynamic> fetchStockByProduct(String productId) async {
+  Future<dynamic> fetchStockByProduct(
+    BuildContext context,
+    String productId,
+  ) async {
     isBusy = true;
-    stock = await apiService.fetchStockByProduct(productId);
+    stock = await apiService.fetchStockByProduct(context, productId);
     isBusy = false;
     return;
   }
@@ -505,9 +508,12 @@ class StockViewModel extends ChangeNotifier {
     return;
   }
 
-  fetchSubAgents({required bool isInitial}) async {
+  fetchSubAgents({
+    required BuildContext context,
+    required bool isInitial,
+  }) async {
     isLoading = true;
-    subAgents = await apiService.getSubAgents();
+    subAgents = await apiService.getSubAgents(context);
     List<String> names = [];
     for (var element in subAgents) {
       names.add(element['name']);
@@ -523,9 +529,9 @@ class StockViewModel extends ChangeNotifier {
     return;
   }
 
-  fetchAgents({required bool isInitial}) async {
+  fetchAgents({required BuildContext context, required bool isInitial}) async {
     isLoading = true;
-    agents = await apiService.getAgents();
+    agents = await apiService.getAgents(context);
     List<String> names = [];
     for (var element in agents) {
       names.add(element['name']);
@@ -540,12 +546,16 @@ class StockViewModel extends ChangeNotifier {
     return;
   }
 
-  Future<bool> getStockTable({required String status}) async {
+  Future<bool> getStockTable({
+    required BuildContext context,
+    required String status,
+  }) async {
     isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
     List<dynamic> response = await apiService.getStockTable(
+      context: context,
       fromDate: fromDate,
       toDate: toDate,
       status: status,
@@ -567,12 +577,14 @@ class StockViewModel extends ChangeNotifier {
   }
 
   Future<bool> settlingStock({
+    required BuildContext context,
     required String stockId,
     required String metricId,
   }) async {
     isBusy = true;
 
     bool response = await apiService.settlingStock(
+      context: context,
       stockId: stockId,
       metricId: metricId,
     );
@@ -582,12 +594,14 @@ class StockViewModel extends ChangeNotifier {
   }
 
   Future<bool> cancelingStock({
+    required BuildContext context,
     required String stockId,
     required String description,
   }) async {
     isBusy = true;
 
     bool response = await apiService.cancelingStock(
+      context: context,
       stockId: stockId,
       description: description,
     );
@@ -596,12 +610,16 @@ class StockViewModel extends ChangeNotifier {
     return response;
   }
 
-  Future<bool> getStockHistory({required String status}) async {
+  Future<bool> getStockHistory({
+    required BuildContext context,
+    required String status,
+  }) async {
     isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
     stockHistoryTable = await apiService.getStockHistoryTable(
+      context: context,
       fromDate: fromDate,
       toDate: toDate,
       metricId: choosenMetricId ?? "",
@@ -612,12 +630,16 @@ class StockViewModel extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> getStockResume({required String salesId}) async {
+  Future<bool> getStockResume({
+    required BuildContext context,
+    required String salesId,
+  }) async {
     isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
     stockResume = await apiService.getStockResume(
+      context: context,
       fromDate: fromDate,
       toDate: toDate,
       salesId: salesId,
@@ -627,12 +649,16 @@ class StockViewModel extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> getTableBySalesId({required String salesId}) async {
+  Future<bool> getTableBySalesId({
+    required BuildContext context,
+    required String salesId,
+  }) async {
     isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
     salesStockTable = await apiService.getTableBySalesId(
+      context: context,
       fromDate: fromDate,
       toDate: toDate,
       salesId: salesId,
@@ -645,6 +671,7 @@ class StockViewModel extends ChangeNotifier {
   }
 
   Future<bool> createShop({
+    required BuildContext context,
     required String salesId,
     required String name,
     required String address,
@@ -655,6 +682,7 @@ class StockViewModel extends ChangeNotifier {
   }) async {
     isBusy = true;
     final resp = await apiService.createShop(
+      context: context,
       salesId: salesId,
       name: name,
       address: address,
@@ -673,8 +701,14 @@ class StockViewModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> getShopsBySales({required String salesId}) async {
-    shops = await apiService.getAllShopsBySales(salesId: salesId);
+  Future<bool> getShopsBySales({
+    required BuildContext context,
+    required String salesId,
+  }) async {
+    shops = await apiService.getAllShopsBySales(
+      context: context,
+      salesId: salesId,
+    );
     return true;
   }
 

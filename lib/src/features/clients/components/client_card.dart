@@ -18,8 +18,14 @@ class ClientCard extends StatelessWidget with GetItMixin {
       child: Card(
         child: InkWell(
           onTap: () async {
-            await get<StockViewModel>().getStockResume(salesId: item['id']);
-            await get<StockViewModel>().getTableBySalesId(salesId: item['id']);
+            await get<StockViewModel>().getStockResume(
+              context: context,
+              salesId: item['id'],
+            );
+            await get<StockViewModel>().getTableBySalesId(
+              context: context,
+              salesId: item['id'],
+            );
 
             print(get<StockViewModel>().stockResume);
             print(get<StockViewModel>().salesStockTable);

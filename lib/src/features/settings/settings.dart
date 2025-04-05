@@ -16,7 +16,7 @@ class _SettingsState extends State<Settings> with GetItStateMixin {
   @override
   void initState() {
     super.initState();
-    get<SystemViewModel>().self();
+    get<SystemViewModel>().self(context);
   }
 
   @override

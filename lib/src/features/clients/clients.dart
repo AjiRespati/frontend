@@ -18,8 +18,8 @@ class _ClientsState extends State<Clients> with GetItStateMixin {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       get<StockViewModel>().fetchSalesmen(isInitial: true);
-      get<StockViewModel>().fetchSubAgents(isInitial: true);
-      get<StockViewModel>().fetchAgents(isInitial: true);
+      get<StockViewModel>().fetchSubAgents(context: context, isInitial: true);
+      get<StockViewModel>().fetchAgents(context: context, isInitial: true);
     });
   }
 

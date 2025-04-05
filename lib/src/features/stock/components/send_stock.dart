@@ -232,9 +232,10 @@ class _SendStockState extends State<SendStock> with GetItStateMixin {
                 get<StockViewModel>().stockEvent = 'stock_out';
                 await get<StockViewModel>().createStock(context: context);
                 await get<StockViewModel>().fetchProduct(
+                  context,
                   widget.mainProduct?['productId'],
                 );
-                get<StockViewModel>().fetchProducts();
+                get<StockViewModel>().fetchProducts(context);
               },
               child: Text(
                 'Send Stock',

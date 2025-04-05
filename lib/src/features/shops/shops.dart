@@ -19,7 +19,7 @@ class _ShopsState extends State<Shops> with GetItStateMixin {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       String salesId = get<SystemViewModel>().salesId ?? "";
-      get<StockViewModel>().getShopsBySales(salesId: salesId);
+      get<StockViewModel>().getShopsBySales(context: context, salesId: salesId);
     });
   }
 

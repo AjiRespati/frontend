@@ -39,7 +39,10 @@ class StockProcessedView extends StatelessWidget with GetItMixin {
                 inactiveDelay: Duration.zero,
                 buttonHeight: 34,
                 onPressed: () {
-                  get<StockViewModel>().getStockTable(status: 'created');
+                  get<StockViewModel>().getStockTable(
+                    context: context,
+                    status: 'created',
+                  );
                 },
                 child: Icon(Icons.search, color: Colors.white, size: 30),
               ),

@@ -184,7 +184,7 @@ class SystemViewModel extends ChangeNotifier {
       usernameController.text = "";
       passwordController.text = "";
 
-      user = await apiService.self(refreshToken ?? "-");
+      user = await apiService.self(context, refreshToken ?? "-");
     } else {
       ScaffoldMessenger.of(
         context,
@@ -202,10 +202,10 @@ class SystemViewModel extends ChangeNotifier {
     return isLogout;
   }
 
-  void self() async {
+  void self(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? refreshToken = prefs.getString('refreshToken');
-    user = await apiService.self(refreshToken ?? "-");
+    user = await apiService.self(context, refreshToken ?? "-");
     name = user['name'];
     username = user['username'];
     email = user['email'];
@@ -227,18 +227,24 @@ class SystemViewModel extends ChangeNotifier {
     );
   }
 
-  Future<bool> getAllUser() async {
-    var response = await apiService.getAllUser();
+  Future<bool> getAllUser(BuildContext context) async {
+    var response = await apiService.getAllUser(context);
 
     users = response;
     return true;
   }
 
   Future<bool> updateUser({
+    required BuildContext context,
     required String id,
     required int? level,
     required String? status,
   }) async {
-    return apiService.updateUser(id: id, level: level, status: status);
+    return apiService.updateUser(
+      context: context,
+      id: id,
+      level: level,
+      status: status,
+    );
   }
 }

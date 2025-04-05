@@ -17,10 +17,10 @@ class _ProductsState extends State<Products> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      get<StockViewModel>().fetchProducts();
+      get<StockViewModel>().fetchProducts(context);
       get<StockViewModel>().fetchSalesmen(isInitial: true);
-      get<StockViewModel>().fetchSubAgents(isInitial: true);
-      get<StockViewModel>().fetchAgents(isInitial: true);
+      get<StockViewModel>().fetchSubAgents(context: context, isInitial: true);
+      get<StockViewModel>().fetchAgents(context: context, isInitial: true);
     });
   }
 

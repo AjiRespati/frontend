@@ -18,7 +18,7 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      get<SystemViewModel>().self();
+      get<SystemViewModel>().self(context);
       get<StockViewModel>().fetchCommissionData(context: context);
     });
   }

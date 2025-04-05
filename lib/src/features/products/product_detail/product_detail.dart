@@ -16,7 +16,7 @@ class ProductDetail extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _ProductDetailState extends State<ProductDetail> with GetItStateMixin {
   _setup() async {
-    get<StockViewModel>().fetchProduct(widget.productId);
+    get<StockViewModel>().fetchProduct(context, widget.productId);
     // get<StockViewModel>().fetchStockByProduct(widget.productId);
   }
 

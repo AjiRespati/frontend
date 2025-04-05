@@ -125,6 +125,7 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                   ),
                   onPressed: () async {
                     bool success = await get<StockViewModel>().settlingStock(
+                      context: context,
                       stockId: widget.item['stockId'],
                       metricId: get<StockViewModel>().choosenMetricId ?? "",
                     );

@@ -29,6 +29,7 @@ class StockTableCard extends StatelessWidget with GetItMixin {
         onTap: () async {
           get<StockViewModel>().choosenMetricId = stock['metricId'];
           bool resp = await get<StockViewModel>().getStockHistory(
+            context: context,
             status: stockStatus,
           );
           if (resp) {
@@ -142,6 +143,7 @@ class StockTableCard extends StatelessWidget with GetItMixin {
                     onPressed: () async {
                       get<StockViewModel>().choosenMetricId = stock['metricId'];
                       bool resp = await get<StockViewModel>().getStockHistory(
+                        context: context,
                         status: stockStatus,
                       );
                       if (resp) {

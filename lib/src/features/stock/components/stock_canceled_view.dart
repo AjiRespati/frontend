@@ -39,7 +39,10 @@ class StockCanceledView extends StatelessWidget with GetItMixin {
                 inactiveDelay: Duration.zero,
                 buttonHeight: 34,
                 onPressed: () {
-                  get<StockViewModel>().getStockTable(status: 'canceled');
+                  get<StockViewModel>().getStockTable(
+                    context: context,
+                    status: 'canceled',
+                  );
                 },
                 child: Icon(Icons.search, color: Colors.white, size: 30),
               ),

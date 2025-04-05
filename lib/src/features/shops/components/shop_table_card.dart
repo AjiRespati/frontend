@@ -27,6 +27,7 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
         onTap: () async {
           // get<StockViewModel>().choosenMetricId = stock['metricId'];
           bool resp = await get<StockViewModel>().getStockHistory(
+            context: context,
             status: stockStatus,
           );
           if (resp) {

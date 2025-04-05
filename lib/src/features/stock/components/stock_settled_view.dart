@@ -39,7 +39,10 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                 inactiveDelay: Duration.zero,
                 buttonHeight: 34,
                 onPressed: () {
-                  get<StockViewModel>().getStockTable(status: 'settled');
+                  get<StockViewModel>().getStockTable(
+                    context: context,
+                    status: 'settled',
+                  );
                 },
                 child: Icon(Icons.search, color: Colors.white, size: 30),
               ),

@@ -74,11 +74,12 @@ class _UpdateLevelContentState extends State<UpdateLevelContent>
                 inactiveDelay: Duration.zero,
                 onPressed: () async {
                   await get<SystemViewModel>().updateUser(
+                    context: context,
                     id: widget.id,
                     level: levelChoosenInt,
                     status: null,
                   );
-                  await get<SystemViewModel>().getAllUser();
+                  await get<SystemViewModel>().getAllUser(context);
                   Navigator.pop(context);
                 },
                 child: Text(

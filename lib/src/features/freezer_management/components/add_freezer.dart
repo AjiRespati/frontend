@@ -24,6 +24,7 @@ class _AddFreezerState extends State<AddFreezer> with GetItStateMixin {
   void _submit() async {
     String salesId = get<SystemViewModel>().salesId ?? "-";
     await get<StockViewModel>().createShop(
+      context: context,
       salesId: salesId,
       name: _nameController.text,
       address: _addressController.text,
@@ -32,7 +33,10 @@ class _AddFreezerState extends State<AddFreezer> with GetItStateMixin {
       imageUrl: null,
       coordinates: null,
     );
-    await get<StockViewModel>().getShopsBySales(salesId: salesId);
+    await get<StockViewModel>().getShopsBySales(
+      context: context,
+      salesId: salesId,
+    );
 
     Navigator.pop(context);
   }

@@ -17,7 +17,7 @@ class _UserManagementState extends State<UserManagement> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      get<SystemViewModel>().getAllUser();
+      get<SystemViewModel>().getAllUser(context);
     });
   }
 

@@ -52,16 +52,17 @@ class _AddProductScreenState extends State<AddProductScreen>
   // ✅ Submit Form
   void _submit() async {
     bool success = await apiService.createProduct(
-      _nameController.text,
-      _descriptionController.text,
-      _selectedMetric,
-      double.parse(_priceController.text),
-      _imageWeb,
-      _imageMobile,
+      context: context,
+      name: _nameController.text,
+      description: _descriptionController.text,
+      metric: _selectedMetric,
+      price: double.parse(_priceController.text),
+      imageWeb: _imageWeb,
+      imageDevice: _imageMobile,
     );
 
     if (success) {
-      await get<StockViewModel>().fetchProducts();
+      await get<StockViewModel>().fetchProducts(context);
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(

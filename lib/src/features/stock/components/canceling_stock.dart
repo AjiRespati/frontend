@@ -131,6 +131,7 @@ class _AddProductScreenState extends State<CancelingStock>
                   inactiveDelay: Durations.short1,
                   onPressed: () async {
                     bool success = await get<StockViewModel>().cancelingStock(
+                      context: context,
                       stockId: widget.item['stockId'],
                       description: _descriptionController.text,
                     );

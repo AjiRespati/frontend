@@ -17,9 +17,9 @@ class _StockState extends State<Stock> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      get<StockViewModel>().getStockTable(status: 'created');
-      get<StockViewModel>().getStockTable(status: 'settled');
-      get<StockViewModel>().getStockTable(status: 'canceled');
+      get<StockViewModel>().getStockTable(context: context, status: 'created');
+      get<StockViewModel>().getStockTable(context: context, status: 'settled');
+      get<StockViewModel>().getStockTable(context: context, status: 'canceled');
     });
   }
 
