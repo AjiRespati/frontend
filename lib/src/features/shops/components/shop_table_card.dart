@@ -63,6 +63,7 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
               // ),
               SizedBox(width: 10),
               Expanded(
+                flex: 6,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -108,50 +109,71 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                   ],
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: 5),
               Expanded(
+                flex: 7,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: 30),
-                    Text(
-                      "Freezer:",
-                      style: TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    SizedBox(
-                      height: 80,
-                      child: ListView.builder(
-                        itemCount:
-                            shop['Refrigerators'] == null
-                                ? 0
-                                : shop['Refrigerators'].length,
-                        itemBuilder: (context, index) {
-                          var item = shop['Refrigerators'][index];
-                          return Row(
-                            children: [
-                              Text("${item['name']} (${item['serialNumber']})"),
-                            ],
-                          );
-                        },
+                    SizedBox(height: 15),
+                    if (shop['Salesman'] != null)
+                      Row(children: [Text("Sales:")]),
+                    if (shop['Salesman'] != null)
+                      Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Text(
+                            shop['Salesman']['name'],
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                    if (shop['SubAgent'] != null)
+                      Row(children: [Text("Sub Agent:")]),
+                    if (shop['SubAgent'] != null)
+                      Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Text(
+                            shop['SubAgent']['name'],
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                    if (shop['Agent'] != null) Row(children: [Text("Agent:")]),
+                    if (shop['Agent'] != null)
+                      Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Text(
+                            shop['Agent']['name'],
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                    Row(children: [Text("Freezer:")]),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: SizedBox(
+                        height: 55,
+                        child: ListView.builder(
+                          itemCount:
+                              shop['Refrigerators'] == null
+                                  ? 0
+                                  : shop['Refrigerators'].length,
+                          itemBuilder: (context, index) {
+                            var item = shop['Refrigerators'][index];
+                            return Row(
+                              children: [
+                                Text(
+                                  "${item['name']} (${item['serialNumber']})",
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     ),
-
-                    // Row(
-                    //   children: [
-                    //     Text(
-                    //       "Freezer: ",
-                    //       style: TextStyle(fontWeight: FontWeight.bold),
-                    //     ),
-                    //     Text(
-                    //       shop['Refrigerators'] == null
-                    //           ? " N/A"
-                    //           : shop['Refrigerators'].length == 0
-                    //           ? " N/A"
-                    //           : shop['Refrigerators'][0]['status'],
-                    //       style: TextStyle(fontWeight: FontWeight.bold),
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),
@@ -181,7 +203,6 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                   ),
                 ],
               ),
-              SizedBox(width: 10),
             ],
           ),
         ),
