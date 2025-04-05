@@ -285,7 +285,7 @@ class ApiService {
     required Uint8List? imageWeb,
     required XFile? imageDevice,
   }) async {
-    String? token = await refreshAccessToken();
+    String? token = await _getToken();
     if (token == null) {
       Navigator.pushNamed(context, signInRoute);
     }
@@ -325,7 +325,7 @@ class ApiService {
     }
 
     var response = await request.send();
-    return response.statusCode == 201;
+    return response.statusCode == 200;
   }
 
   // ✅ Pick Image for Mobile (Gallery & Camera)

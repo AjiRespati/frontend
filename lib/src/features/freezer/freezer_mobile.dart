@@ -25,6 +25,9 @@ class FreezerMobile extends StatelessWidget with GetItMixin {
                 child: CircularProgressIndicator(color: Colors.blue),
               ),
             ),
+          SizedBox(width: 5),
+          Text("Add Freezer"),
+          SizedBox(width: 5),
           AddButton(
             size: 32,
             message: "Tambah Toko",

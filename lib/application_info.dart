@@ -22,12 +22,12 @@ class ApplicationInfo {
   static const thirdColor = Colors.amber;
 
   static const measurements = [
-    "kg",
-    "g",
-    "liter",
-    "bucket",
+    // "kg",
+    // "g",
     "carton",
-    "box",
-    "pcs",
+    "liter",
+    // "bucket",
+    // "box",
+    // "pcs",
   ];
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/shops/components/add_shop.dart';
 import 'package:frontend/src/features/shops/components/shop_table_card.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/add_button.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -26,25 +27,27 @@ class ShopsMobile extends StatelessWidget with GetItMixin {
                 child: CircularProgressIndicator(color: Colors.blue),
               ),
             ),
-          AddButton(
-            size: 32,
-            message: "Tambah Toko",
-            onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                constraints: BoxConstraints(maxHeight: 540),
-                context: context,
-                builder: (context) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom,
-                    ),
-                    child: SingleChildScrollView(child: AddShop()),
-                  );
-                },
-              );
-            },
-          ),
+          if (0 < (get<SystemViewModel>().level ?? 0) &&
+              (get<SystemViewModel>().level ?? 0) < 4)
+            AddButton(
+              size: 32,
+              message: "Tambah Toko",
+              onPressed: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  constraints: BoxConstraints(maxHeight: 540),
+                  context: context,
+                  builder: (context) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                      ),
+                      child: SingleChildScrollView(child: AddShop()),
+                    );
+                  },
+                );
+              },
+            ),
           SizedBox(width: 20),
         ],
       ),

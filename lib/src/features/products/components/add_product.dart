@@ -22,7 +22,7 @@ class _AddProductScreenState extends State<AddProductScreen>
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  String _selectedMetric = "pcs"; // ✅ Default metric
+  String _selectedMetric = "carton"; // ✅ Default metric
   final ApiService apiService = ApiService();
 
   XFile? _imageMobile;

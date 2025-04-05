@@ -107,13 +107,32 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                           ),
                         ),
                       if ((model.level ?? 0) > 3) Divider(),
+                      if ((model.level ?? 0) > 3)
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, productsRoute);
+                          },
+                          child: Row(
+                            children: [
+                              Text("Product Management"),
+                              Spacer(),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, productsRoute);
+                                },
+                                icon: Icon(
+                                  Icons.chevron_right_rounded,
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      if ((model.level ?? 0) > 3) Divider(),
                       SizedBox(
                         height:
                             MediaQuery.of(context).size.height -
-                                        (model.level ?? 0) >
-                                    4
-                                ? 300
-                                : 450,
+                            ((model.level ?? 0) > 3 ? 700 : 550),
                       ),
                       GradientElevatedButton(
                         onPressed: () async {
