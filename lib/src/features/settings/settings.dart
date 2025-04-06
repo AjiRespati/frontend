@@ -17,13 +17,15 @@ class _SettingsState extends State<Settings> with GetItStateMixin {
   @override
   void initState() {
     super.initState();
-    get<SystemViewModel>().self(context);
 
-    if ((get<SystemViewModel>().level ?? 0) > 3) {
-      get<SystemViewModel>().getAllUser(context);
-      get<StockViewModel>().getAllFrezer(context);
-      get<StockViewModel>().getAllShops(context: context);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      get<SystemViewModel>().self(context);
+      if ((get<SystemViewModel>().level ?? 0) > 3) {
+        get<SystemViewModel>().getAllUser(context);
+        get<StockViewModel>().getAllFrezer(context);
+        get<StockViewModel>().getAllShops(context: context);
+      }
+    });
   }
 
   @override

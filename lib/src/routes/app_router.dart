@@ -9,6 +9,7 @@ import 'package:frontend/src/features/settings/settings.dart';
 import 'package:frontend/src/features/shops/shops.dart';
 import 'package:frontend/src/features/stock/stock.dart';
 import 'package:frontend/src/features/stock/stock_detail/stock_detail.dart';
+import 'package:frontend/src/features/transactions/transaction.dart';
 import 'package:frontend/src/features/user_management/user_management.dart';
 import '../features/auth/login_screen.dart';
 import '../features/products/products.dart';
@@ -65,6 +66,9 @@ class AppRouter {
           break;
         case freezersRoute:
           screen = Freezer();
+          break;
+        case transactionsRoute:
+          screen = Transaction();
           break;
         default:
           screen = const NotFoundPage();

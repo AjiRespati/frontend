@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
+import 'package:frontend/src/models/product_transaction.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/services/api_service.dart';
 import 'package:intl/intl.dart';
@@ -45,6 +46,12 @@ class StockViewModel extends ChangeNotifier {
   List<String> measurements = ApplicationInfo.measurements;
   List<String> _availableMeasurement = [];
   int _price = 0;
+
+  List<ProductTransaction> _newTransactions = [];
+  double _sumTransactions = 0;
+  int _sumProducts = 0;
+  int _sumItems = 0;
+  dynamic _reloadBuy;
 
   String _client = 'salesman';
   final List<String> _clients = ['salesman', 'subAgent', "agent"];
@@ -94,6 +101,36 @@ class StockViewModel extends ChangeNotifier {
   List<String> get availableMeasurement => _availableMeasurement;
   set availableMeasurement(List<String> val) {
     _availableMeasurement = val;
+    notifyListeners();
+  }
+
+  List<ProductTransaction> get newTransactions => _newTransactions;
+  set newTransactions(List<ProductTransaction> val) {
+    _newTransactions = val;
+    notifyListeners();
+  }
+
+  dynamic get reloadBuy => _reloadBuy;
+  set reloadBuy(dynamic val) {
+    _reloadBuy = val;
+    notifyListeners();
+  }
+
+  double get sumTransactions => _sumTransactions;
+  set sumTransactions(double val) {
+    _sumTransactions = val;
+    notifyListeners();
+  }
+
+  int get sumProducts => _sumProducts;
+  set sumProducts(int val) {
+    _sumProducts = val;
+    notifyListeners();
+  }
+
+  int get sumItems => _sumItems;
+  set sumItems(int val) {
+    _sumItems = val;
     notifyListeners();
   }
 
@@ -345,17 +382,18 @@ class StockViewModel extends ChangeNotifier {
 
   fetchProducts(BuildContext context) async {
     isLoading = true;
-    List<dynamic> datas = await apiService.fetchProducts(context);
-    Set<String> productIds = {};
-    List<dynamic> data = [];
+    // List<dynamic> datas = await apiService.fetchProducts(context);
+    // Set<String> productIds = {};
+    // List<dynamic> data = [];
 
-    for (var el in datas) {
-      if (productIds.add(el['productId'])) {
-        data.add(el);
-      }
-    }
-    products = data;
+    // for (var el in datas) {
+    //   if (productIds.add(el['productId'])) {
+    //     data.add(el);
+    //   }
+    // }
+    // products = data;
 
+    products = await apiService.fetchProducts(context);
     isLoading = false;
   }
 
@@ -414,6 +452,7 @@ class StockViewModel extends ChangeNotifier {
     }
   }
 
+  //TODO: Jual Beli stock.
   Future<void> createStock({
     required BuildContext context,
     // required String? salesName,
@@ -809,6 +848,50 @@ class StockViewModel extends ChangeNotifier {
       shopId: shopId,
       status: status,
     );
+  }
+
+  addProductTransaction(ProductTransaction val) {
+    // Find the index of an existing transaction with the same productId
+    // Returns -1 if no matching element is found.
+    int existingIndex = _newTransactions.indexWhere(
+      (el) => el.productId == val.productId,
+    );
+
+    if (existingIndex != -1) {
+      // --- Product already exists: Update the existing transaction ---
+      // Get the item at the found index
+      ProductTransaction existingItem = _newTransactions[existingIndex];
+
+      // Update the amount and total price of the EXISTING item
+      existingItem.productAmount += val.productAmount; // Use += for clarity
+      existingItem.totalPrice += val.totalPrice; // Use += for clarity
+
+      // Update overall summaries ONLY with the amounts from the *newly added portion* (val)
+      _sumTransactions += val.totalPrice;
+      _sumItems += val.productAmount;
+      // _sumProducts (number of unique lines) doesn't change here
+    } else {
+      // --- Product does not exist: Add the new transaction ---
+      _newTransactions.add(val);
+
+      // Update overall summaries with the amounts from the *new* transaction (val)
+      _sumTransactions += val.totalPrice;
+      _sumItems += val.productAmount;
+      // _sumProducts (number of unique lines) increases because we added a new line
+      // This will be updated below based on final list length.
+    }
+    // Update the total product count (number of lines in the transaction list)
+    // This should reflect the number of unique products added so far.
+    _sumProducts = _newTransactions.length;
+
+    // Notify listeners ONCE after all updates are done
+    notifyListeners();
+
+    // _newTransactions.add(val);
+    // _sumTransactions = _sumTransactions + val.totalPrice;
+    // _sumProducts = _newTransactions.length;
+    // _sumItems = _sumItems + val.productAmount;
+    // notifyListeners();
   }
 
   String generateDateString(DateTime time) {

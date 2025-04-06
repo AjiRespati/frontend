@@ -19,7 +19,7 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
                 Navigator.pushNamed(context, dashboardRoute);
                 break;
               case 1:
-                Navigator.pushNamed(context, productsRoute);
+                Navigator.pushNamed(context, transactionsRoute);
                 break;
               case 2:
                 Navigator.pushNamed(context, stockRoute);
@@ -38,8 +38,8 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
           destinations: [
             NavigationDestination(icon: Icon(Icons.home), label: "Dashboard"),
             NavigationDestination(
-              icon: Icon(Icons.factory_rounded),
-              label: "Products",
+              icon: Icon(Icons.sell_outlined),
+              label: "Buy/Sell",
             ),
             NavigationDestination(
               icon: Icon(Icons.shopping_cart_checkout_rounded),
@@ -61,7 +61,7 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
                 Navigator.pushNamed(context, dashboardRoute);
                 break;
               case 1:
-                Navigator.pushNamed(context, productsRoute);
+                Navigator.pushNamed(context, transactionsRoute);
                 break;
               case 2:
                 Navigator.pushNamed(context, stockRoute);
@@ -80,8 +80,8 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
           destinations: [
             NavigationDestination(icon: Icon(Icons.home), label: "Dashboard"),
             NavigationDestination(
-              icon: Icon(Icons.factory_rounded),
-              label: "Products",
+              icon: Icon(Icons.sell_outlined),
+              label: "Buy/Sell",
             ),
             NavigationDestination(
               icon: Icon(Icons.shopping_cart_checkout_rounded),
@@ -94,7 +94,37 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
             NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
           ],
         );
-      case 1:
+      case 0:
+        return NavigationBar(
+          onDestinationSelected: (value) {
+            get<SystemViewModel>().currentPageIndex = value;
+            switch (value) {
+              case 0:
+                Navigator.pushNamed(context, transactionsRoute);
+                break;
+              case 1:
+                Navigator.pushNamed(context, clientsRoute);
+                break;
+              default:
+                Navigator.pushNamed(context, settingsRoute);
+                break;
+            }
+          },
+          selectedIndex: get<SystemViewModel>().currentPageIndex,
+          destinations: [
+            NavigationDestination(
+              icon: Icon(Icons.sell_outlined),
+              label: "Sell",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.store_rounded),
+              label: "Clients",
+            ),
+            NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
+          ],
+        );
+
+      default:
         return NavigationBar(
           onDestinationSelected: (value) {
             get<SystemViewModel>().currentPageIndex = value;
@@ -103,7 +133,7 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
                 Navigator.pushNamed(context, dashboardRoute);
                 break;
               case 1:
-                Navigator.pushNamed(context, productsRoute);
+                Navigator.pushNamed(context, transactionsRoute);
                 break;
               case 2:
                 Navigator.pushNamed(context, stockRoute);
@@ -122,8 +152,8 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
           destinations: [
             NavigationDestination(icon: Icon(Icons.home), label: "Dashboard"),
             NavigationDestination(
-              icon: Icon(Icons.factory_rounded),
-              label: "Products",
+              icon: Icon(Icons.sell_outlined),
+              label: "Sell",
             ),
             NavigationDestination(
               icon: Icon(Icons.shopping_cart_checkout_rounded),
@@ -132,36 +162,6 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
             NavigationDestination(
               icon: Icon(Icons.store_rounded),
               label: "Toko",
-            ),
-            NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
-          ],
-        );
-
-      default:
-        return NavigationBar(
-          onDestinationSelected: (value) {
-            get<SystemViewModel>().currentPageIndex = value;
-            switch (value) {
-              case 0:
-                Navigator.pushNamed(context, productsRoute);
-                break;
-              case 1:
-                Navigator.pushNamed(context, clientsRoute);
-                break;
-              default:
-                Navigator.pushNamed(context, settingsRoute);
-                break;
-            }
-          },
-          selectedIndex: get<SystemViewModel>().currentPageIndex,
-          destinations: [
-            NavigationDestination(
-              icon: Icon(Icons.factory_rounded),
-              label: "Products",
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.store_rounded),
-              label: "Clients",
             ),
             NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
           ],
