@@ -4,13 +4,15 @@ import 'gradient_elevated_button.dart';
 class RemoveButton extends StatelessWidget {
   const RemoveButton({
     this.size,
-    this.toolTip,
+    required this.toolTip,
+    required this.title,
     required this.onPressed,
     super.key,
   });
 
   final double? size;
   final String? toolTip;
+  final String title;
   final Function() onPressed;
 
   @override
@@ -29,67 +31,73 @@ class RemoveButton extends StatelessWidget {
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) => SizedBox(
-                height: 100,
-                child: AlertDialog(
-                  backgroundColor: Colors.white,
-                  title: const Text('Remove GV'),
-                  content: Row(
-                    children: [
-                      Text(
-                        toolTip ?? "",
-                        style: const TextStyle(fontSize: 16),
+              builder:
+                  (context) => SizedBox(
+                    height: 100,
+                    child: AlertDialog(
+                      backgroundColor: Colors.white,
+                      title: Text(title, overflow: TextOverflow.ellipsis),
+                      content: Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              toolTip ?? "",
+                              maxLines: 3,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                      actions: [
+                        SizedBox(
+                          width: 100,
+                          child: GradientElevatedButton(
+                            inactiveDelay: Duration.zero,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.lightBlue.shade400,
+                                Colors.blueAccent,
+                              ],
+                            ),
+                            buttonHeight: 25,
+                            onPressed: () {
+                              Navigator.pop(context, false);
+                            },
+                            child: const Text(
+                              'Batal',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: GradientElevatedButton(
+                            inactiveDelay: Duration.zero,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.redAccent.shade100,
+                                Colors.redAccent.shade700,
+                              ],
+                            ),
+                            buttonHeight: 25,
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                            child: const Text(
+                              'Hapus',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  actions: [
-                    SizedBox(
-                      width: 100,
-                      child: GradientElevatedButton(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.lightBlue.shade400,
-                            Colors.blueAccent,
-                          ],
-                        ),
-                        buttonHeight: 25,
-                        onPressed: () {
-                          Navigator.pop(context, false);
-                        },
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      child: GradientElevatedButton(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.redAccent.shade100,
-                            Colors.redAccent.shade700,
-                          ],
-                        ),
-                        buttonHeight: 25,
-                        onPressed: () {
-                          Navigator.pop(context, true);
-                        },
-                        child: const Text(
-                          'Remove',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ).then((value) {
               if (value == true) {
                 onPressed();

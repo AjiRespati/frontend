@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
 import 'package:frontend/src/models/product_transaction.dart';
@@ -883,15 +884,40 @@ class StockViewModel extends ChangeNotifier {
     // Update the total product count (number of lines in the transaction list)
     // This should reflect the number of unique products added so far.
     _sumProducts = _newTransactions.length;
-
-    // Notify listeners ONCE after all updates are done
     notifyListeners();
+  }
 
-    // _newTransactions.add(val);
-    // _sumTransactions = _sumTransactions + val.totalPrice;
-    // _sumProducts = _newTransactions.length;
-    // _sumItems = _sumItems + val.productAmount;
-    // notifyListeners();
+  void removeProductTransactionById(String productIdToRemove) async {
+    // Find the index of the item with the matching productId
+    int indexToRemove = _newTransactions.indexWhere(
+      (el) => el.productId == productIdToRemove,
+    );
+
+    // Proceed only if an item with that ID was found (index is not -1)
+    if (indexToRemove != -1) {
+      // Get the item *before* removing it to access its values for subtraction
+      ProductTransaction itemBeingRemoved = _newTransactions[indexToRemove];
+
+      // Subtract its values from the summaries
+      _sumTransactions -= itemBeingRemoved.totalPrice;
+      _sumItems -= itemBeingRemoved.productAmount;
+
+      // Remove the item from the list using its index
+      _newTransactions.removeAt(indexToRemove);
+
+      // Update the count of unique product lines
+      _sumProducts = _newTransactions.length;
+      await Future.delayed(Durations.short1);
+
+      // Notify listeners
+      notifyListeners();
+    } else {
+      if (kDebugMode) {
+        print(
+          "Warning: Attempted to remove item by ID '$productIdToRemove', but it wasn't found.",
+        );
+      }
+    }
   }
 
   String generateDateString(DateTime time) {

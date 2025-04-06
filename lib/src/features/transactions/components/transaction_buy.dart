@@ -6,6 +6,7 @@ import 'package:frontend/src/features/transactions/components/buy_product.dart';
 import 'package:frontend/src/models/product_transaction.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/widgets/buttons/remove_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class TransactionBuy extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -91,7 +92,31 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Product: ${item.productDetail['productName']}"),
+                          Row(
+                            children: [
+                              Text(
+                                "Product: ${item.productDetail['productName']}",
+                              ),
+                              Spacer(),
+                              RemoveButton(
+                                size: 22,
+                                title: "${item.productDetail['productName']}",
+                                toolTip:
+                                    "Apakah anda yakin akan menghapus product ini?",
+                                onPressed: () async {
+                                  get<StockViewModel>()
+                                      .removeProductTransactionById(
+                                        item.productDetail['productId'],
+                                      );
+                                  get<StockViewModel>().reloadBuy =
+                                      item.productDetail;
+                                  await Future.delayed(Durations.short1);
+                                  get<StockViewModel>().reloadBuy = null;
+                                },
+                              ),
+                              // RemoveButton(onPressed: () {}),
+                            ],
+                          ),
                           Text(
                             "Harga: ${formatCurrency(item.price)} / ${item.productDetail['metricType']}",
                           ),
