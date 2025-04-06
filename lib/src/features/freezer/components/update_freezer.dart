@@ -51,7 +51,7 @@ class _UpdateFreezerState extends State<UpdateFreezer> with GetItStateMixin {
   @override
   void initState() {
     super.initState();
-    print(widget.freezer);
+    // print(widget.freezer);
     oldStatus = widget.freezer["status"].toString().toUpperCase();
     _selectedShop = widget.freezer['Shop'];
   }
@@ -123,7 +123,7 @@ class _UpdateFreezerState extends State<UpdateFreezer> with GetItStateMixin {
               // Callback when an item is selected
               setState(() {
                 _selectedShop = newValue;
-                print("Selected shop: $_selectedShop");
+                // print("Selected shop: $_selectedShop");
               });
             },
             selectedItem: _selectedShop, // The currently selected item

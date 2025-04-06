@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/transactions/components/transaction_buy.dart';
+import 'package:frontend/src/features/transactions/components/transaction_sell_client.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -14,6 +16,7 @@ class TransactionMobile extends StatefulWidget with GetItStatefulWidgetMixin {
 class _TransactionMobileState extends State<TransactionMobile>
     with GetItStateMixin, SingleTickerProviderStateMixin {
   late TabController _transactionTabController;
+  int _level = 0;
 
   @override
   void initState() {
@@ -25,13 +28,14 @@ class _TransactionMobileState extends State<TransactionMobile>
         get<StockViewModel>().stockTabIndex = _transactionTabController.index;
       }
     });
+    _level = (get<SystemViewModel>().level ?? 0);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Buy&Sell"),
+        title: Text(_level < 4 ? "Penjualan" : "Buy & Sell"),
         actions: [
           if (watchOnly((StockViewModel x) => x.isBusy))
             Padding(
@@ -43,24 +47,30 @@ class _TransactionMobileState extends State<TransactionMobile>
               ),
             ),
         ],
-        bottom: TabBar(
-          labelColor: Colors.blue.shade800,
-          unselectedLabelColor: Colors.grey.shade600,
-          controller: _transactionTabController,
-          indicatorColor: Colors.blue.shade700,
-          indicatorSize: TabBarIndicatorSize.label,
-          indicatorWeight: 5,
-          labelStyle: TextStyle(fontWeight: FontWeight.w500),
-          tabs: [
-            Tab(icon: Icon(Icons.check), text: "Buy"),
-            Tab(icon: Icon(Icons.cancel_outlined), text: "Sell"),
-          ],
-        ),
+        bottom:
+            _level < 4
+                ? null
+                : TabBar(
+                  labelColor: Colors.blue.shade800,
+                  unselectedLabelColor: Colors.grey.shade600,
+                  controller: _transactionTabController,
+                  indicatorColor: Colors.blue.shade700,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  indicatorWeight: 5,
+                  labelStyle: TextStyle(fontWeight: FontWeight.w500),
+                  tabs: [
+                    Tab(icon: Icon(Icons.check), text: "Buy"),
+                    Tab(icon: Icon(Icons.cancel_outlined), text: "Sell"),
+                  ],
+                ),
       ),
-      body: TabBarView(
-        controller: _transactionTabController,
-        children: [TransactionBuy(), Container(color: Colors.green)],
-      ),
+      body:
+          _level < 4
+              ? TransactionSellClient()
+              : TabBarView(
+                controller: _transactionTabController,
+                children: [TransactionBuy(), Container(color: Colors.green)],
+              ),
       bottomNavigationBar: MobileNavbar(),
     );
   }

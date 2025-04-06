@@ -19,7 +19,7 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
       elevation: 2,
       child: InkWell(
         onTap: () async {
-          print(shop);
+          // print(shop);
           showModalBottomSheet(
             isScrollControlled: true,
             constraints: BoxConstraints(maxHeight: 640),

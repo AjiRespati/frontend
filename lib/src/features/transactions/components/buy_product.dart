@@ -16,7 +16,6 @@ class BuyProduct extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    print(mainProduct);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -26,6 +25,10 @@ class BuyProduct extends StatelessWidget with GetItMixin {
             Text(
               mainProduct?['productName'] ?? "N/A",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            ),
+            Text(
+              "Stock: ${(mainProduct?['totalStock'] ?? 0).toString()} $measurement",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             SizedBox(height: 20),
             Row(children: [Text("Harga:")]),
@@ -96,20 +99,6 @@ class BuyProduct extends StatelessWidget with GetItMixin {
                 get<StockViewModel>().stockAmount = 0;
                 get<StockViewModel>().productsDetail = null;
                 Navigator.pop(context);
-
-                // int productCount =
-                //     (mainProduct?["price"] ?? 0) *
-                //     (watchOnly((StockViewModel x) => x.stockAmount));
-                // Navigator.pop(context, productCount);
-
-                // get<StockViewModel>().metricId = mainProduct?['metricId'];
-                // get<StockViewModel>().stockEvent = 'stock_in';
-                // await get<StockViewModel>().createStock(context: context);
-                // await get<StockViewModel>().fetchProduct(
-                //   context,
-                //   mainProduct?['productId'],
-                // );
-                // get<StockViewModel>().fetchProducts(context);
               },
               child: Text(
                 'Add Product',

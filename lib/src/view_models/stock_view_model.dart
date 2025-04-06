@@ -741,13 +741,21 @@ class StockViewModel extends ChangeNotifier {
   Future<bool> getShopsBySales({
     required BuildContext context,
     required String salesId,
+    bool? isActive,
   }) async {
     isBusy = true;
     shops = await apiService.getAllShopsBySales(
       context: context,
       salesId: salesId,
     );
-    print(shops.first);
+
+    if (isActive == true) {
+      shops.removeWhere((shop) {
+        // The test function: return true if the item should be removed
+        return shop['status'] == 'inactive';
+      });
+    }
+
     isBusy = false;
     return true;
   }
@@ -755,7 +763,7 @@ class StockViewModel extends ChangeNotifier {
   Future<bool> getAllShops({required BuildContext context}) async {
     isBusy = true;
     shops = await apiService.getAllShops(context: context);
-    print(shops.first);
+    // print(shops.first);
     isBusy = false;
     return true;
   }

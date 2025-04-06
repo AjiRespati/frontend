@@ -55,7 +55,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
   @override
   void initState() {
     super.initState();
-    print(widget.shop);
+    // print(widget.shop);
     oldStatus = widget.shop["status"].toString().toUpperCase();
   }
 
@@ -126,7 +126,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
               // Callback when an item is selected
               setState(() {
                 _selectedFrezer = newValue;
-                print("Selected shop: $_selectedFrezer");
+                // print("Selected shop: $_selectedFrezer");
               });
             },
             selectedItem: _selectedFrezer, // The currently selected item

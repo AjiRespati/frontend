@@ -14,7 +14,7 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     // String imageUrl = ApplicationInfo.baseUrl + (stock['image'] ?? '');
-    print(freezer);
+    // print(freezer);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,

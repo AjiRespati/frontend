@@ -16,7 +16,9 @@ class _LoginScreenState extends State<LoginScreen> with GetItStateMixin {
   @override
   void initState() {
     super.initState();
-    get<SystemViewModel>().checkSession(context: context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      get<SystemViewModel>().checkSession(context: context);
+    });
   }
 
   @override
