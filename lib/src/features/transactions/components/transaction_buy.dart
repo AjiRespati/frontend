@@ -206,8 +206,19 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
           ),
           SizedBox(height: 15),
           GradientElevatedButton(
-            onPressed: () {},
-            child: Text("Buat Pembelian"),
+            onPressed: () async {
+              await get<StockViewModel>().buyProducts(context: context);
+              get<StockViewModel>().reloadBuy = "reload";
+              await Future.delayed(Durations.short1);
+              get<StockViewModel>().reloadBuy = null;
+            },
+            child: Text(
+              "Buat Pembelian",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           SizedBox(height: 5),
         ],

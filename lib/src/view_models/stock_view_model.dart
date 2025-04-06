@@ -454,55 +454,38 @@ class StockViewModel extends ChangeNotifier {
   }
 
   //TODO: Jual Beli stock.
-  Future<void> createStock({
-    required BuildContext context,
-    // required String? salesName,
-    // required String? subAgentName,
-    // required String? agentName,
-    // required String? shopName,
-  }) async {
-    isLoading = true;
-    if (stockEvent == 'stock_out') {
-      _generateClientId();
-    } else {
-      salesId = null;
-      subAgentId = null;
-      agentId = null;
-    }
+  Future<void> createStock({required BuildContext context}) async {
+    try {
+      isLoading = true;
+      if (stockEvent == 'stock_out') {
+        _generateClientId();
+      } else {
+        salesId = null;
+        subAgentId = null;
+        agentId = null;
+      }
 
-    final resp = await apiService.createStock(
-      context: context,
-      metricId: metricId,
-      stockEvent: stockEvent,
-      amount: stockAmount,
-      salesId: salesId,
-      subAgentId: subAgentId,
-      agentId: agentId,
-      shopId: shopId,
-      status: status,
-      description: description,
-    );
+      final resp = await apiService.createStock(
+        context: context,
+        metricId: metricId,
+        stockEvent: stockEvent,
+        amount: stockAmount,
+        salesId: salesId,
+        subAgentId: subAgentId,
+        agentId: agentId,
+        shopId: shopId,
+        status: status,
+        description: description,
+      );
 
-    if (resp) {
+      if (resp) {
+        isLoading = false;
+      } else {
+        isLoading = false;
+      }
+    } catch (e) {
+      print(e);
       isLoading = false;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          backgroundColor: Colors.green,
-          content: Text(
-            '${stockEvent == 'stock_out' ? "Send " : "Add "}stock, created successfully',
-          ),
-        ),
-      );
-    } else {
-      isLoading = false;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          backgroundColor: Colors.red,
-          content: Text('Failed to create stock'),
-        ),
-      );
     }
   }
 
@@ -918,6 +901,155 @@ class StockViewModel extends ChangeNotifier {
         );
       }
     }
+  }
+
+  String _submissionStatusMessage = ''; // Optional: For detailed feedback
+
+  Future<bool> buyProducts({required BuildContext context}) async {
+    if (isBusy || _newTransactions.isEmpty) {
+      // Prevent concurrent submissions or submitting an empty list
+      return false;
+    }
+    isBusy = true;
+    // Work on a copy in case the original list is modified elsewhere unexpectedly,
+    // although UI should typically be blocked during submission.
+    List<ProductTransaction> transactionsToProcess = List.from(
+      _newTransactions,
+    );
+    List<Map<String, dynamic>> failedPurchases =
+        []; // To store info about failures
+
+    bool allSucceeded = true;
+
+    try {
+      // Process transactions sequentially
+      for (var transaction in transactionsToProcess) {
+        try {
+          // --- Call the actual API method for one item ---
+
+          // await _performSinglePurchaseApiCall(transaction);
+          // If it doesn't throw, assume success for this item
+
+          // metricId stockEvent stockAmount status
+          metricId = transaction.productDetail['metricId'];
+          stockEvent = 'stock_in';
+          stockAmount = transaction.productAmount;
+          status = 'created';
+
+          await createStock(context: context);
+          if (kDebugMode) {
+            print("Successfully purchased: ${transaction.productId}");
+          }
+        } catch (e) {
+          // --- Handle failure for this specific item ---
+          allSucceeded = false;
+          if (kDebugMode) {
+            print("Failed purchase for ${transaction.productId}: $e");
+          }
+          failedPurchases.add({
+            'productId': transaction.productId,
+            // Consider adding product name if available
+            'amount': transaction.productAmount,
+            'error': e.toString(), // Store error message
+          });
+
+          // --- Decision: Stop on first error? ---
+          // Option 1: Stop processing immediately on first failure
+          // throw Exception("Purchase failed for ${transaction.productId}. Stopping.");
+
+          // Option 2: Continue processing remaining items (implemented here)
+          // Just record the failure and continue the loop
+        }
+      } // End of loop
+
+      // --- Process Results After Loop ---
+      if (allSucceeded) {
+        _submissionStatusMessage = "All purchases submitted successfully!";
+        // Clear the list only if everything succeeded
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.green,
+            content: Text('"Add stock success'),
+          ),
+        );
+        clearNewTransactions(); // This already calls notifyListeners()
+      } else {
+        _submissionStatusMessage =
+            "Purchase submission completed with ${failedPurchases.length} failure(s).";
+        // Decide if you want to remove successful items or leave the list as is
+        // For simplicity here, we leave the list unchanged if there were failures,
+        // allowing the user to potentially retry or remove failed items.
+        // You could implement logic to remove only successful items if desired.
+        int successCount =
+            transactionsToProcess.length - failedPurchases.length;
+        _submissionStatusMessage =
+            "Partial success: $successCount items purchased, ${failedPurchases.length} failed.";
+
+        // --- Logic to remove successful items ---
+        // 1. Get the set of product IDs that failed
+        Set<String> failedProductIds =
+            failedPurchases.map((f) => f['productId'] as String).toSet();
+
+        // 2. Modify the *original* list (_newTransactions) in place.
+        // Keep only the elements whose productId is present in the failed set.
+        _newTransactions.retainWhere(
+          (tx) => failedProductIds.contains(tx.productId),
+        );
+
+        // 3. Recalculate the summary totals based on the remaining (failed) items
+        _recalculateSummaries();
+        // --- End modification ---
+      }
+    } catch (e) {
+      // Catch any unexpected error during the overall process (like the rethrow from Option 1 above)
+      allSucceeded = false;
+      _submissionStatusMessage =
+          "An unexpected error occurred during purchase submission: $e";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+          content: Text('Failed to create stock'),
+        ),
+      );
+      if (kDebugMode) {
+        print(_submissionStatusMessage);
+      }
+    } finally {
+      // --- Ensure loading state is reset ---
+      isBusy = false;
+      notifyListeners(); // Notify UI about loading state and potential message change
+    }
+
+    // You might want to expose 'failedPurchases' list via a getter if UI needs details
+    return allSucceeded;
+  }
+
+  // Method to clear transactions and reset sums (potentially called by submitPurchases)
+  void clearNewTransactions() {
+    _newTransactions.clear();
+    _sumTransactions = 0.0;
+    _sumProducts = 0;
+    _sumItems = 0;
+    // Don't notifyListeners here if called from submitPurchases's finally block
+    // Let the caller (submitPurchases) handle the final notification.
+    // If called directly from UI, uncomment the line below:
+    // notifyListeners();
+  }
+
+  /// --- NEW: Helper to recalculate summaries from the current _newTransactions list ---
+  void _recalculateSummaries() {
+    double newSumTransactions = 0.0;
+    int newSumItems = 0;
+    for (var tx in _newTransactions) {
+      newSumTransactions += tx.totalPrice;
+      newSumItems += tx.productAmount;
+    }
+    _sumTransactions = newSumTransactions;
+    _sumItems = newSumItems;
+    _sumProducts = _newTransactions.length;
+    // Do NOT call notifyListeners here, the caller should handle it.
   }
 
   String generateDateString(DateTime time) {

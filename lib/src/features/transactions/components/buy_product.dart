@@ -112,7 +112,7 @@ class BuyProduct extends StatelessWidget with GetItMixin {
                 // get<StockViewModel>().fetchProducts(context);
               },
               child: Text(
-                'Add Stock',
+                'Add Product',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
