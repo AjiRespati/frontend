@@ -9,13 +9,22 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 
 /// measurements is List of "kg", "g", "liter", "bucket", "carton", "box", "pcs".
 class BuyProduct extends StatelessWidget with GetItMixin {
-  BuyProduct({required this.measurement, required this.mainProduct, super.key});
+  BuyProduct({
+    required this.measurement,
+    required this.mainProduct,
+    required this.stockEvent,
+    required this.shopId,
+    super.key,
+  });
 
   final dynamic mainProduct;
   final String measurement;
+  final String stockEvent;
+  final String? shopId;
 
   @override
   Widget build(BuildContext context) {
+    print(shopId);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -48,6 +57,7 @@ class BuyProduct extends StatelessWidget with GetItMixin {
                 SizedBox(width: 15),
                 Expanded(
                   child: TextFormField(
+                    autofocus: true,
                     decoration: InputDecoration(isDense: true),
                     keyboardType: TextInputType.number,
                     onChanged:
@@ -59,7 +69,19 @@ class BuyProduct extends StatelessWidget with GetItMixin {
                 SizedBox(width: 10),
                 Expanded(child: Text(measurement)),
                 SizedBox(width: 10),
-                Expanded(flex: 5, child: SizedBox()),
+                Expanded(
+                  flex: 5,
+                  child:
+                      get<StockViewModel>().stockAmount < 1
+                          ? Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              "Jumlah product harus diisi",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          )
+                          : SizedBox(),
+                ),
               ],
             ),
             SizedBox(height: 20),
@@ -82,26 +104,33 @@ class BuyProduct extends StatelessWidget with GetItMixin {
               ),
               inactiveDelay: Duration.zero,
               onPressed: () async {
-                ProductTransaction val = ProductTransaction(
-                  productId: mainProduct?["productId"],
-                  productAmount: get<StockViewModel>().stockAmount,
-                  productDetail: mainProduct,
-                  price: (mainProduct?["price"] ?? 0).toDouble(),
-                  totalPrice:
-                      ((mainProduct?["price"] ?? 0) *
-                              (watchOnly((StockViewModel x) => x.stockAmount)))
-                          .toDouble(),
-                );
-                get<StockViewModel>().addProductTransaction(val);
-                get<StockViewModel>().reloadBuy = mainProduct;
-                await Future.delayed(Durations.short1);
-                get<StockViewModel>().reloadBuy = null;
-                get<StockViewModel>().stockAmount = 0;
-                get<StockViewModel>().productsDetail = null;
-                Navigator.pop(context);
+                if (get<StockViewModel>().stockAmount == 0) {
+                } else {
+                  ProductTransaction val = ProductTransaction(
+                    productId: mainProduct?["productId"],
+                    shopId: shopId,
+                    productAmount: get<StockViewModel>().stockAmount,
+                    productDetail: mainProduct,
+                    price: (mainProduct?["price"] ?? 0).toDouble(),
+                    totalPrice:
+                        ((mainProduct?["price"] ?? 0) *
+                                (watchOnly(
+                                  (StockViewModel x) => x.stockAmount,
+                                )))
+                            .toDouble(),
+                    stockEvent: stockEvent,
+                  );
+                  get<StockViewModel>().addProductTransaction(val);
+                  get<StockViewModel>().reloadBuy = mainProduct;
+                  await Future.delayed(Durations.short1);
+                  get<StockViewModel>().reloadBuy = null;
+                  get<StockViewModel>().stockAmount = 0;
+                  get<StockViewModel>().productsDetail = null;
+                  Navigator.pop(context);
+                }
               },
               child: Text(
-                'Add Product',
+                'Tambah Product',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,

@@ -3,9 +3,11 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/transactions/components/buy_product.dart';
+import 'package:frontend/src/models/product_transaction.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
+import 'package:frontend/src/widgets/buttons/remove_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class TransactionSellClient extends StatefulWidget
@@ -18,14 +20,19 @@ class TransactionSellClient extends StatefulWidget
 
 class _TransactionSellClientState extends State<TransactionSellClient>
     with GetItStateMixin {
+  late StockViewModel viewModel;
   dynamic _selectedProduct;
   String? _selectedId;
+  dynamic _selectedShop;
+  String? _selectedShopId;
   dynamic _productDetail;
 
   _onSelect() async {
     await get<StockViewModel>().fetchProduct(context, _selectedId ?? "-");
 
     _productDetail = get<StockViewModel>().productsDetail?[0];
+
+    await Future.delayed(Durations.short3);
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -35,6 +42,8 @@ class _TransactionSellClientState extends State<TransactionSellClient>
         return BuyProduct(
           measurement: _productDetail['metricType'].toString().toLowerCase(),
           mainProduct: _productDetail,
+          stockEvent: 'stock_out',
+          shopId: _selectedShopId,
         );
       },
     ).then((value) async {
@@ -45,16 +54,31 @@ class _TransactionSellClientState extends State<TransactionSellClient>
     });
   }
 
+  _onSelectShop() async {
+    print(_selectedShop);
+    print(_selectedShopId);
+    get<StockViewModel>().clearNewTransactions(isFromUI: true);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = get<StockViewModel>();
+  }
+
   @override
   Widget build(BuildContext context) {
     watchOnly((StockViewModel x) => x.reloadBuy);
-    print(get<StockViewModel>().shops);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          Text("Resume Penjualan"),
+          Text("Pemesanan"),
           Text(formatDateFromYearToDay(DateTime.now())),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text(_selectedShop?['name'] ?? " ")],
+          ),
           SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -76,8 +100,134 @@ class _TransactionSellClientState extends State<TransactionSellClient>
               SizedBox(width: 13),
             ],
           ),
-          Spacer(),
+
+          Expanded(
+            // height: MediaQuery.of(context).size.height - 530,
+            child: ListView.builder(
+              // shrinkWrap: true,
+              // physics: NeverScrollableScrollPhysics(),
+              itemCount: get<StockViewModel>().newTransactions.length,
+              itemBuilder: (context, index) {
+                ProductTransaction item =
+                    get<StockViewModel>().newTransactions[index];
+                return Card(
+                  elevation: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "Product: ${item.productDetail['productName']}",
+                            ),
+                            Spacer(),
+                            RemoveButton(
+                              size: 22,
+                              title: "${item.productDetail['productName']}",
+                              toolTip:
+                                  "Apakah anda yakin akan menghapus product ini?",
+                              onPressed: () async {
+                                get<StockViewModel>()
+                                    .removeProductTransactionById(
+                                      item.productDetail['productId'],
+                                    );
+                                get<StockViewModel>().reloadBuy =
+                                    item.productDetail;
+                                await Future.delayed(Durations.short1);
+                                get<StockViewModel>().reloadBuy = null;
+                              },
+                            ),
+                            // RemoveButton(onPressed: () {}),
+                          ],
+                        ),
+                        Text(
+                          "Harga: ${formatCurrency(item.price)} / ${item.productDetail['metricType']}",
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Jumlah: ${item.productAmount}"),
+                            Text(formatCurrency(item.totalPrice)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
           Divider(),
+
+          SizedBox(height: 5),
+
+          Row(children: [Text("Pilih Toko")]),
+          DropdownSearch<dynamic>(
+            decoratorProps: DropDownDecoratorProps(
+              baseStyle: const TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ), // Style for text inside the closed dropdown
+            ),
+            popupProps: PopupProps.menu(
+              // Or .dialog(), .modalBottomSheet(), .menu()
+              showSearchBox: true,
+              searchFieldProps: TextFieldProps(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  hintText: "Cari toko...",
+                ),
+                cursorColor: Theme.of(context).primaryColor,
+              ),
+              itemBuilder: _customPopupItemBuilder,
+            ),
+            // *** Core properties (mostly unchanged in how they are used) ***
+            items:
+                (filter, loadProps) =>
+                    get<StockViewModel>().shops, // The list of items
+            onChanged: (dynamic newValue) {
+              // Callback when an item is selected
+              setState(() {
+                _selectedShop = newValue;
+                _selectedShopId = newValue['id'];
+              });
+
+              _onSelectShop();
+            },
+            selectedItem: _selectedShop, // The currently selected item
+            // *** Optional: Customize the display of the selected item when closed ***
+            // This builder is still valid at the top level
+            dropdownBuilder: (context, selectedItem) {
+              if (selectedItem == null) {
+                // Use hint style from decoration if available and item is null
+                final hintStyle =
+                    Theme.of(context).inputDecorationTheme.hintStyle ??
+                    TextStyle(color: Colors.grey[600]);
+                return Text("Pilih toko", style: hintStyle);
+              }
+              return Text("${selectedItem['name']}");
+            },
+            filterFn: (item, filter) {
+              // Optional: Custom filter logic
+              if (filter.isEmpty) {
+                return true;
+              } // Show all if search is empty
+              // Case-insensitive search
+              return item['name'].toLowerCase().contains(filter.toLowerCase());
+            },
+            compareFn: (item1, item2) => item1['id' == item2['id']],
+          ),
+          SizedBox(height: 15),
 
           SizedBox(height: 5),
 
@@ -147,11 +297,149 @@ class _TransactionSellClientState extends State<TransactionSellClient>
           ),
           SizedBox(height: 15),
           GradientElevatedButton(
+            inactiveDelay: Duration.zero,
             onPressed: () async {
-              await get<StockViewModel>().buyProducts(context: context);
-              get<StockViewModel>().reloadBuy = "reload";
-              await Future.delayed(Durations.short1);
-              get<StockViewModel>().reloadBuy = null;
+              if (_selectedShop == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    showCloseIcon: true,
+                    backgroundColor: Colors.red,
+                    content: Text("Toko harus dipilih"),
+                  ),
+                );
+              } else if (get<StockViewModel>().newTransactions.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    showCloseIcon: true,
+                    backgroundColor: Colors.red,
+                    content: Text("Product harus dipilih"),
+                  ),
+                );
+              } else {
+                final bool? confirmResult = await showDialog(
+                  context: context,
+                  builder:
+                      (context) => SizedBox(
+                        height: 100,
+                        child: AlertDialog(
+                          backgroundColor: Colors.white,
+                          title: Text(
+                            _selectedShop?['name'] ?? " ",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          content: Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  "Lanjutkan ke pemesanan.\nPastikan data-data sudah benar",
+                                  maxLines: 3,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            SizedBox(
+                              width: 100,
+                              child: GradientElevatedButton(
+                                inactiveDelay: Duration.zero,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.lightBlue.shade400,
+                                    Colors.blueAccent,
+                                  ],
+                                ),
+                                buttonHeight: 25,
+                                onPressed: () {
+                                  Navigator.pop(context, false);
+                                },
+                                child: const Text(
+                                  'Batal',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 100,
+                              child: GradientElevatedButton(
+                                inactiveDelay: Duration.zero,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.greenAccent.shade400,
+                                    Colors.greenAccent.shade700,
+                                  ],
+                                ),
+                                buttonHeight: 25,
+                                onPressed: () {
+                                  Navigator.pop(context, true);
+                                },
+                                child: const Text(
+                                  'Pesan',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                );
+
+                // .then((value) async {
+                //   if (value == true) {
+                await get<StockViewModel>().buyProducts(
+                  // context: context,
+                  isAdmin: false,
+                );
+                // get<StockViewModel>().reloadBuy = "reload";
+                // await Future.delayed(Durations.short1);
+                // get<StockViewModel>().reloadBuy = null;
+                // await Future.delayed(Durations.short1);
+                // Navigator.pushNamed(context, stockRoute);
+                //   }
+                // });
+
+                // Check result AFTER dialog closes
+                if (confirmResult == true) {
+                  // Check if widget is still mounted BEFORE starting async work
+                  if (!mounted) return;
+
+                  // Assuming 'viewModel' is your instance of StockViewModel
+                  // Call the async method and wait for it
+                  final bool purchaseSuccess = await viewModel.buyProducts(
+                    // context: context,
+                    isAdmin: false,
+                  );
+
+                  // IMPORTANT: Check if widget is *still* mounted AFTER the await completes
+                  if (!mounted) return;
+
+                  // Show feedback using the widget's context (which is now safe to use)
+                  // Get the message from the ViewModel state which was updated
+                  final String message =
+                      viewModel.submissionStatusMessage.isNotEmpty
+                          ? viewModel.submissionStatusMessage
+                          : (purchaseSuccess
+                              ? 'Success!'
+                              : 'Failed!'); // Fallback message
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(message),
+                      backgroundColor:
+                          purchaseSuccess ? Colors.green : Colors.red,
+                      duration: const Duration(
+                        seconds: 3,
+                      ), // Adjust duration as needed
+                    ),
+                  );
+                }
+              }
             },
             child: Text(
               "Buat Pemesanan",
@@ -191,7 +479,7 @@ class _TransactionSellClientState extends State<TransactionSellClient>
       // You might want to prevent interaction if isDisabled is true,
       // though the dropdown often handles this already.
       child: Text(
-        item['productName'],
+        item['productName'] ?? item['name'],
         style: TextStyle(
           fontSize: 16,
           color: textColor, // Use the determined color

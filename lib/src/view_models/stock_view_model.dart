@@ -454,11 +454,16 @@ class StockViewModel extends ChangeNotifier {
   }
 
   //TODO: Jual Beli stock.
-  Future<void> createStock({required BuildContext context}) async {
+  Future<void> createStock({
+    // required BuildContext context,
+    required bool isAdmin,
+  }) async {
     try {
       isLoading = true;
       if (stockEvent == 'stock_out') {
-        _generateClientId();
+        if (isAdmin) {
+          _generateClientId();
+        }
       } else {
         salesId = null;
         subAgentId = null;
@@ -466,7 +471,7 @@ class StockViewModel extends ChangeNotifier {
       }
 
       final resp = await apiService.createStock(
-        context: context,
+        // context: context,
         metricId: metricId,
         stockEvent: stockEvent,
         amount: stockAmount,
@@ -913,11 +918,22 @@ class StockViewModel extends ChangeNotifier {
 
   String _submissionStatusMessage = ''; // Optional: For detailed feedback
 
-  Future<bool> buyProducts({required BuildContext context}) async {
+  String get submissionStatusMessage => _submissionStatusMessage;
+  set submissionStatusMessage(String val) {
+    _submissionStatusMessage = val;
+    notifyListeners();
+  }
+
+  Future<bool> buyProducts({
+    // required BuildContext context,
+    // required String stockEvent,
+    required bool isAdmin,
+  }) async {
     if (isBusy || _newTransactions.isEmpty) {
       // Prevent concurrent submissions or submitting an empty list
       return false;
     }
+    _submissionStatusMessage = '';
     isBusy = true;
     // Work on a copy in case the original list is modified elsewhere unexpectedly,
     // although UI should typically be blocked during submission.
@@ -940,11 +956,12 @@ class StockViewModel extends ChangeNotifier {
 
           // metricId stockEvent stockAmount status
           metricId = transaction.productDetail['metricId'];
-          stockEvent = 'stock_in';
+          shopId = transaction.shopId;
+          stockEvent = transaction.stockEvent;
           stockAmount = transaction.productAmount;
           status = 'created';
 
-          await createStock(context: context);
+          await createStock(isAdmin: isAdmin);
           if (kDebugMode) {
             print("Successfully purchased: ${transaction.productId}");
           }
@@ -972,16 +989,11 @@ class StockViewModel extends ChangeNotifier {
 
       // --- Process Results After Loop ---
       if (allSucceeded) {
+        clearNewTransactions(
+          isFromUI: null,
+        ); // This already calls notifyListeners()
         _submissionStatusMessage = "All purchases submitted successfully!";
         // Clear the list only if everything succeeded
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            showCloseIcon: true,
-            backgroundColor: Colors.green,
-            content: Text('"Add stock success'),
-          ),
-        );
-        clearNewTransactions(); // This already calls notifyListeners()
       } else {
         _submissionStatusMessage =
             "Purchase submission completed with ${failedPurchases.length} failure(s).";
@@ -1014,13 +1026,6 @@ class StockViewModel extends ChangeNotifier {
       allSucceeded = false;
       _submissionStatusMessage =
           "An unexpected error occurred during purchase submission: $e";
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          backgroundColor: Colors.red,
-          content: Text('Failed to create stock'),
-        ),
-      );
       if (kDebugMode) {
         print(_submissionStatusMessage);
       }
@@ -1035,7 +1040,7 @@ class StockViewModel extends ChangeNotifier {
   }
 
   // Method to clear transactions and reset sums (potentially called by submitPurchases)
-  void clearNewTransactions() {
+  void clearNewTransactions({bool? isFromUI}) {
     _newTransactions.clear();
     _sumTransactions = 0.0;
     _sumProducts = 0;
@@ -1044,6 +1049,9 @@ class StockViewModel extends ChangeNotifier {
     // Let the caller (submitPurchases) handle the final notification.
     // If called directly from UI, uncomment the line below:
     // notifyListeners();
+    if (isFromUI == true) {
+      notifyListeners();
+    }
   }
 
   /// --- NEW: Helper to recalculate summaries from the current _newTransactions list ---

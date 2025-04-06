@@ -19,9 +19,13 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       get<StockViewModel>().fetchProducts(context);
-      get<SystemViewModel>().salesId;
-      get<SystemViewModel>().subAgentId;
-      get<SystemViewModel>().agentId;
+      var user = get<SystemViewModel>().user;
+      get<StockViewModel>().client =
+          (user['levelDesc'] ?? "salesman").toLowerCase();
+
+      get<StockViewModel>().salesId = get<SystemViewModel>().salesId;
+      get<StockViewModel>().subAgentId = get<SystemViewModel>().subAgentId;
+      get<StockViewModel>().agentId = get<SystemViewModel>().agentId;
 
       String? id =
           get<SystemViewModel>().salesId ??

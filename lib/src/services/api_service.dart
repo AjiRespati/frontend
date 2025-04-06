@@ -471,11 +471,8 @@ class ApiService {
     }
   }
 
-  // controller parameters:
-  // metricId, stockEvent, amount, createdBy,
-  // salesId, subAgentId, agentId, shopId, status, description
   Future<bool> createStock({
-    required BuildContext context,
+    // required BuildContext context,
     required String? metricId,
     required String stockEvent,
     required int amount,
@@ -502,17 +499,18 @@ class ApiService {
         'agentId': agentId,
         'status': status,
         'description': description,
+        'shopId': shopId,
       }),
     );
 
     if (response.statusCode == 401) {
       token = await refreshAccessToken();
       if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
+        // Navigator.pushNamed(context, signInRoute);
         return false;
       }
       return createStock(
-        context: context,
+        // context: context,
         metricId: metricId,
         stockEvent: stockEvent,
         amount: amount,
@@ -524,19 +522,19 @@ class ApiService {
         description: description,
       );
     } else if (response.statusCode == 200) {
-      Navigator.pop(context);
+      // Navigator.pop(context);
       return true;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          backgroundColor: Colors.red.shade400,
-          content: Text(
-            jsonDecode(response.body)['error'] ??
-                "Kesalahan system, hubungi pengembang aplikasi",
-          ),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     showCloseIcon: true,
+      //     backgroundColor: Colors.red.shade400,
+      //     content: Text(
+      //       jsonDecode(response.body)['error'] ??
+      //           "Kesalahan system, hubungi pengembang aplikasi",
+      //     ),
+      //   ),
+      // );
       return false;
     }
   }

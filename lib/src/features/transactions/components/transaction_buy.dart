@@ -35,6 +35,8 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
         return BuyProduct(
           measurement: _productDetail['metricType'].toString().toLowerCase(),
           mainProduct: _productDetail,
+          stockEvent: 'stock_in',
+          shopId: null,
         );
       },
     ).then((value) async {
@@ -207,7 +209,10 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
           SizedBox(height: 15),
           GradientElevatedButton(
             onPressed: () async {
-              await get<StockViewModel>().buyProducts(context: context);
+              await get<StockViewModel>().buyProducts(
+                // context: context,
+                isAdmin: true,
+              );
               get<StockViewModel>().reloadBuy = "reload";
               await Future.delayed(Durations.short1);
               get<StockViewModel>().reloadBuy = null;

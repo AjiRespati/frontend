@@ -90,7 +90,10 @@ class AddStock extends StatelessWidget with GetItMixin {
               onPressed: () async {
                 get<StockViewModel>().metricId = mainProduct?['metricId'];
                 get<StockViewModel>().stockEvent = 'stock_in';
-                await get<StockViewModel>().createStock(context: context);
+                await get<StockViewModel>().createStock(
+                  // context: context,
+                  isAdmin: true,
+                );
                 await get<StockViewModel>().fetchProduct(
                   context,
                   mainProduct?['productId'],
