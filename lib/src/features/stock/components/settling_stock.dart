@@ -19,11 +19,13 @@ class SettlingStock extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
   bool _showError = false;
+  bool _isFactory = false;
 
   @override
   void initState() {
     super.initState();
     _showError = false;
+    _isFactory = widget.item['stockEvent'] == 'stock_in';
   }
 
   @override
@@ -58,7 +60,11 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  formatCurrency(widget.item['totalNetPrice']),
+                  formatCurrency(
+                    _isFactory
+                        ? widget.item['totalPrice']
+                        : widget.item['totalNetPrice'],
+                  ),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ],
@@ -66,14 +72,16 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
           ),
           SizedBox(height: 10),
           Text(
-            "Telah dibayarkan oleh:",
+            _isFactory ? "Telah dibayarkan kepada" : "Telah dibayarkan oleh:",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           Row(
             children: [
               SizedBox(width: 20),
               Text(
-                "${widget.item['entityType']}, ${widget.item['relatedEntity']}",
+                _isFactory
+                    ? "Gracia Factory"
+                    : "${widget.item['entityType']}, ${widget.item['relatedEntity']}",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ],
@@ -81,7 +89,9 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
           SizedBox(height: 20),
           Center(
             child: Text(
-              "Pastikan pembayaran telah diterima!",
+              _isFactory
+                  ? "Pastikan product telah diterima"
+                  : "Pastikan pembayaran telah diterima!",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -178,7 +188,9 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Batalkan Pengiriman  ",
+                      _isFactory
+                          ? "Batalkan Pembelian  "
+                          : "Batalkan Penjualan  ",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,

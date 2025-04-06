@@ -25,7 +25,7 @@ class StockDetailCardHeader extends StatelessWidget {
                   ),
                   SizedBox(width: 10),
                   Text(
-                    "${item['entityType'] == 'Unknown' ? "Produsen" : item['entityType']}:",
+                    "${item['entityType'] == 'Unknown' ? "" : item['entityType']}:",
                   ),
                 ],
               ),
