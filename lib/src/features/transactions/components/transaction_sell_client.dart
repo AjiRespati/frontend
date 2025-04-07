@@ -40,7 +40,8 @@ class _TransactionSellClientState extends State<TransactionSellClient>
       context: context,
       builder: (context) {
         return BuyProduct(
-          measurement: _productDetail['metricType'].toString().toLowerCase(),
+          measurement:
+              (_productDetail?['metricType'] ?? "").toString().toLowerCase(),
           mainProduct: _productDetail,
           stockEvent: 'stock_out',
           shopId: _selectedShopId,
@@ -55,8 +56,6 @@ class _TransactionSellClientState extends State<TransactionSellClient>
   }
 
   _onSelectShop() async {
-    print(_selectedShop);
-    print(_selectedShopId);
     get<StockViewModel>().clearNewTransactions(isFromUI: true);
   }
 
