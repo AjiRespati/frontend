@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/src/features/stock/components/stock_client_card.dart';
 import 'package:frontend/src/features/stock/components/stock_table_card.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -11,6 +13,7 @@ class StockSettledView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    print(get<SystemViewModel>().level);
     return Column(
       children: [
         Padding(
@@ -69,11 +72,22 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                   itemCount: get<StockViewModel>().stockTable.length,
 
                   itemBuilder: (context, index) {
-                    return StockTableCard(
-                      isMobile: true,
-                      stock: get<StockViewModel>().stockTable[index],
-                      stockStatus: 'settled',
-                    );
+                    int level = get<SystemViewModel>().level ?? 0;
+                    Map<String, dynamic> stock =
+                        get<StockViewModel>().stockTable[index];
+                    if (level > 3) {
+                      return StockTableCard(
+                        isMobile: true,
+                        stock: stock,
+                        stockStatus: 'settled',
+                      );
+                    } else {
+                      return StockClientCard(
+                        stockStatus: 'settled',
+                        isMobile: true,
+                        stock: stock,
+                      );
+                    }
                   },
                 ),
               ),

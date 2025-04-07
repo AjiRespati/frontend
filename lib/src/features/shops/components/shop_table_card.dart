@@ -165,8 +165,11 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                             var item = shop['Refrigerators'][index];
                             return Row(
                               children: [
-                                Text(
-                                  "${item['name']} (${item['serialNumber']})",
+                                Flexible(
+                                  child: Text(
+                                    "${item['name']} (${item['serialNumber']})",
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ],
                             );
