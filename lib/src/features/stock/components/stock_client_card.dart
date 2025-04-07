@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
+import 'package:frontend/src/utils/helpers.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class StockClientCard extends StatelessWidget with GetItMixin {
@@ -19,11 +21,14 @@ class StockClientCard extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     String imageUrl = ApplicationInfo.baseUrl + (stock['image'] ?? '');
+    int level = get<SystemViewModel>().level ?? 0;
+    int basicPrice = stock['basicPrice'] ?? 0;
+    int finalPrice = level < 3 ? (basicPrice * 2 * 0.8).toInt() : basicPrice;
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
       child: SizedBox(
-        height: 56,
+        height: 70,
         child: Row(
           children: [
             SizedBox(
@@ -87,18 +92,43 @@ class StockClientCard extends StatelessWidget with GetItMixin {
                   //     Text((stock['totalStockOut'] ?? " N/A").toString()),
                   //   ],
                   // ),
+                  stockStatus == 'settled'
+                      ? Row(
+                        children: [
+                          Text("Stock On Hand: "),
+                          Text(
+                            (stock['latestUpdateAmount'] ?? " N/A").toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: Colors.green[800],
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      )
+                      : Row(
+                        children: [
+                          Text("Jumlah: "),
+                          Text(
+                            (stock['totalStockIn'] > 0
+                                    ? stock['totalStockIn']
+                                    : stock['totalStockOut'])
+                                .toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: Colors.green[800],
+                              fontSize: 16,
+                            ),
+                          ),
+                          Text(" ${stock['metricName']}"),
+                        ],
+                      ),
                   Row(
                     children: [
-                      Text("Stock On Hand: "),
+                      Text("Harga total: "),
                       Text(
-                        stockStatus == 'settled'
-                            ? (stock['latestUpdateAmount'] ?? " N/A").toString()
-                            : " -",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: Colors.green[800],
-                          fontSize: 16,
-                        ),
+                        formatCurrency(finalPrice),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),

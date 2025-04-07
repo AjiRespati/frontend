@@ -13,6 +13,7 @@ class StockProcessedView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    print(get<StockViewModel>().stockOnProgressTable);
     return Column(
       children: [
         Padding(
