@@ -130,7 +130,7 @@ class _AddProductScreenState extends State<AddProductScreen>
                       Colors.green[800] ?? Colors.greenAccent,
                     ],
                   ),
-                  inactiveDelay: Duration.zero,
+                  // inactiveDelay: Duration.zero,
                   child: Text(
                     "Upload Image",
                     style: TextStyle(color: Colors.white),

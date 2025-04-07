@@ -86,7 +86,7 @@ class AddStock extends StatelessWidget with GetItMixin {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              inactiveDelay: Duration.zero,
+              // inactiveDelay: Duration.zero,
               onPressed: () async {
                 get<StockViewModel>().metricId = mainProduct?['metricId'];
                 get<StockViewModel>().stockEvent = 'stock_in';

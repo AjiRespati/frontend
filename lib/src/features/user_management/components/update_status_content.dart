@@ -67,7 +67,7 @@ class _UpdateLevelContentState extends State<UpdateStatusContent>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: GradientElevatedButton(
-                inactiveDelay: Duration.zero,
+                // inactiveDelay: Duration.zero,
                 onPressed: () async {
                   await get<SystemViewModel>().updateUser(
                     context: context,

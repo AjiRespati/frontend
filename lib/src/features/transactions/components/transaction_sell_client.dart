@@ -33,7 +33,7 @@ class _TransactionSellClientState extends State<TransactionSellClient>
     _productDetail = get<StockViewModel>().productsDetail?[0];
 
     await Future.delayed(Durations.short3);
-
+    print(_productDetail);
     showModalBottomSheet(
       isScrollControlled: true,
       constraints: BoxConstraints(maxHeight: 540),
@@ -296,7 +296,7 @@ class _TransactionSellClientState extends State<TransactionSellClient>
           ),
           SizedBox(height: 15),
           GradientElevatedButton(
-            inactiveDelay: Duration.zero,
+            // inactiveDelay: Duration.zero,
             onPressed: () async {
               if (_selectedShop == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -304,6 +304,9 @@ class _TransactionSellClientState extends State<TransactionSellClient>
                     showCloseIcon: true,
                     backgroundColor: Colors.red,
                     content: Text("Toko harus dipilih"),
+                    duration: const Duration(
+                      seconds: 3,
+                    ), // Adjust duration as needed
                   ),
                 );
               } else if (get<StockViewModel>().newTransactions.isEmpty) {
@@ -312,6 +315,9 @@ class _TransactionSellClientState extends State<TransactionSellClient>
                     showCloseIcon: true,
                     backgroundColor: Colors.red,
                     content: Text("Product harus dipilih"),
+                    duration: const Duration(
+                      seconds: 3,
+                    ), // Adjust duration as needed
                   ),
                 );
               } else {
@@ -391,10 +397,10 @@ class _TransactionSellClientState extends State<TransactionSellClient>
 
                 // .then((value) async {
                 //   if (value == true) {
-                await get<StockViewModel>().buyProducts(
-                  // context: context,
-                  isAdmin: false,
-                );
+                // await get<StockViewModel>().buyProducts(
+                //   // context: context,
+                //   isAdmin: false,
+                // );
                 // get<StockViewModel>().reloadBuy = "reload";
                 // await Future.delayed(Durations.short1);
                 // get<StockViewModel>().reloadBuy = null;

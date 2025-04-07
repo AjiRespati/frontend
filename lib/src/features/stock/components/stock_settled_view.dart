@@ -39,7 +39,7 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                 },
               ),
               GradientElevatedButton(
-                inactiveDelay: Duration.zero,
+                // inactiveDelay: Duration.zero,
                 buttonHeight: 34,
                 onPressed: () {
                   get<StockViewModel>().getStockTable(

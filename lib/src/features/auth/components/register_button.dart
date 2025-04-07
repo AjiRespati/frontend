@@ -14,13 +14,14 @@ class RegisterButton extends StatelessWidget with GetItMixin {
       width: double.infinity,
       height: 44,
       child: GradientElevatedButton(
-        inactiveDelay: Duration.zero,
+        // inactiveDelay: Duration.zero,
         onPressed: () async {
           await get<SystemViewModel>().register();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               backgroundColor: Colors.green,
               content: Text("Register Success"),
+              duration: Duration(seconds: 3), // Adjust duration as needed
             ),
           );
           get<SystemViewModel>().passwordController.text = "";

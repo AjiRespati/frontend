@@ -52,7 +52,7 @@ class RemoveButton extends StatelessWidget {
                         SizedBox(
                           width: 100,
                           child: GradientElevatedButton(
-                            inactiveDelay: Duration.zero,
+                            // inactiveDelay: Duration.zero,
                             gradient: LinearGradient(
                               colors: [
                                 Colors.lightBlue.shade400,
@@ -75,7 +75,7 @@ class RemoveButton extends StatelessWidget {
                         SizedBox(
                           width: 100,
                           child: GradientElevatedButton(
-                            inactiveDelay: Duration.zero,
+                            // inactiveDelay: Duration.zero,
                             gradient: LinearGradient(
                               colors: [
                                 Colors.redAccent.shade100,

@@ -136,7 +136,7 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
           Stack(
             children: [
               GradientElevatedButton(
-                inactiveDelay: Duration.zero,
+                // inactiveDelay: Duration.zero,
                 onPressed: _submit,
                 child: Text(
                   "Tambah Toko",

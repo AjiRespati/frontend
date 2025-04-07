@@ -164,7 +164,7 @@ class CreateProductMeasurement extends StatelessWidget with GetItMixin {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: GradientElevatedButton(
-                inactiveDelay: Duration.zero,
+                // inactiveDelay: Duration.zero,
                 onPressed: () async {
                   get<StockViewModel>().metricId = mainProduct?['metricId'];
                   await get<StockViewModel>().createMetric(

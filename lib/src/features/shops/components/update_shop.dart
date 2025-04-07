@@ -175,7 +175,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
           Stack(
             children: [
               GradientElevatedButton(
-                inactiveDelay: Duration.zero,
+                // inactiveDelay: Duration.zero,
                 onPressed: _submit,
                 child: Text(
                   "Update Freezer",

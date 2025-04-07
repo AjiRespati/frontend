@@ -227,7 +227,7 @@ class _SendStockState extends State<SendStock> with GetItStateMixin {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              inactiveDelay: Duration.zero,
+              // inactiveDelay: Duration.zero,
               onPressed: () async {
                 get<StockViewModel>().metricId =
                     widget.mainProduct?['metricId'];

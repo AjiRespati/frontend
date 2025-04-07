@@ -102,7 +102,7 @@ class _AddProductScreenState extends State<CancelingStock>
               SizedBox(
                 width: 120,
                 child: GradientElevatedButton(
-                  inactiveDelay: Duration.zero,
+                  // inactiveDelay: Duration.zero,
                   gradient: LinearGradient(
                     colors: [Colors.red.shade700, Colors.red.shade400],
                     begin: Alignment.topLeft,

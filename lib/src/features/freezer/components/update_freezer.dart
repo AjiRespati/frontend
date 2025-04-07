@@ -32,6 +32,7 @@ class _UpdateFreezerState extends State<UpdateFreezer> with GetItStateMixin {
           showCloseIcon: true,
           backgroundColor: Colors.red.shade400,
           content: Text("Kesalahan system, Toko tidak dikenali"),
+          duration: const Duration(seconds: 3), // Adjust duration as needed
         ),
       );
     } else {
@@ -170,7 +171,7 @@ class _UpdateFreezerState extends State<UpdateFreezer> with GetItStateMixin {
           Stack(
             children: [
               GradientElevatedButton(
-                inactiveDelay: Duration.zero,
+                // inactiveDelay: Duration.zero,
                 onPressed: _submit,
                 child: Text(
                   "Update Freezer",

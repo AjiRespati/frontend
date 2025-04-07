@@ -89,7 +89,7 @@ class _AddFreezerState extends State<AddFreezer> with GetItStateMixin {
           Stack(
             children: [
               GradientElevatedButton(
-                inactiveDelay: Duration.zero,
+                // inactiveDelay: Duration.zero,
                 onPressed: _submit,
                 child: Text(
                   "Tambah Freezer",

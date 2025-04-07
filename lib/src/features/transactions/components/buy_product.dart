@@ -25,6 +25,7 @@ class BuyProduct extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     print(shopId);
+    var client = get<StockViewModel>().client;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -45,7 +46,7 @@ class BuyProduct extends StatelessWidget with GetItMixin {
               children: [
                 SizedBox(width: 15),
                 Text(
-                  "${formatCurrency(mainProduct?["price"] ?? 0)} / $measurement ",
+                  "${formatCurrency(_generatePrice(mainProduct, client))} / $measurement ",
                 ),
               ],
             ),
@@ -90,7 +91,7 @@ class BuyProduct extends StatelessWidget with GetItMixin {
               children: [
                 SizedBox(width: 15),
                 Text(
-                  "${formatCurrency((mainProduct?["price"] ?? 0) * (watchOnly((StockViewModel x) => x.stockAmount)))} / $measurement ",
+                  "${formatCurrency((_generatePrice(mainProduct, client)) * (watchOnly((StockViewModel x) => x.stockAmount)))} / $measurement ",
                 ),
               ],
             ),
@@ -102,7 +103,7 @@ class BuyProduct extends StatelessWidget with GetItMixin {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              inactiveDelay: Duration.zero,
+              // inactiveDelay: Duration.zero,
               onPressed: () async {
                 if (get<StockViewModel>().stockAmount == 0) {
                 } else {
@@ -111,9 +112,9 @@ class BuyProduct extends StatelessWidget with GetItMixin {
                     shopId: shopId,
                     productAmount: get<StockViewModel>().stockAmount,
                     productDetail: mainProduct,
-                    price: (mainProduct?["price"] ?? 0).toDouble(),
+                    price: (_generatePrice(mainProduct, client)).toDouble(),
                     totalPrice:
-                        ((mainProduct?["price"] ?? 0) *
+                        ((_generatePrice(mainProduct, client)) *
                                 (watchOnly(
                                   (StockViewModel x) => x.stockAmount,
                                 )))
@@ -141,5 +142,17 @@ class BuyProduct extends StatelessWidget with GetItMixin {
         ),
       ),
     );
+  }
+
+  double _generatePrice(dynamic mainProduct, String client) {
+    switch (client) {
+      case "agent":
+        return (mainProduct['agentPrice'] ?? 0).toDouble();
+      case "subAgent":
+        return (mainProduct['subAgentPrice'] ?? 0).toDouble();
+
+      default:
+        return (mainProduct['salesmanPrice'] ?? 0).toDouble();
+    }
   }
 }

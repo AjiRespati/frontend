@@ -100,7 +100,7 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                 SizedBox(
                   width: 120,
                   child: GradientElevatedButton(
-                    inactiveDelay: Duration.zero,
+                    // inactiveDelay: Duration.zero,
                     buttonHeight: 25,
                     onPressed: () {
                       showModalBottomSheet(
@@ -141,7 +141,7 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    inactiveDelay: Duration.zero,
+                    // inactiveDelay: Duration.zero,
                     buttonHeight: 25,
                     onPressed:
                         product['totalStock'] == null ||

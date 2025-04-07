@@ -99,14 +99,14 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
               ),
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 50),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                 width: 120,
                 child: GradientElevatedButton(
-                  inactiveDelay: Duration.zero,
+                  // inactiveDelay: Duration.zero,
                   onPressed: () => Navigator.pop(context),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -162,12 +162,12 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
               ),
             ],
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 50),
           Center(
             child: SizedBox(
               width: 220,
               child: GradientElevatedButton(
-                inactiveDelay: Duration.zero,
+                // inactiveDelay: Duration.zero,
                 gradient: LinearGradient(
                   colors: [Colors.red.shade300, Colors.red.shade600],
                   begin: Alignment.topLeft,

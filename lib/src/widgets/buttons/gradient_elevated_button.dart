@@ -67,21 +67,24 @@ class _GradientElevatedButtonState extends State<GradientElevatedButton> {
                 : widget.onPressed == null
                 ? null
                 : () async {
+                  _isInactive = true;
                   setState(() => _isPressed = true);
+                  widget.onPressed!();
                   await Future.delayed(Durations.short3, () {
                     setState(() {
                       _isPressed = false;
-                      _isInactive = true;
+                      // _isInactive = true;
                     });
                   });
                   await Future.delayed(widget.inactiveDelay, () {
+                    if (!mounted) return;
                     setState(() {
                       _isInactive = false;
                     });
                   });
-                  await Future.delayed(Durations.short3, () {
-                    widget.onPressed!();
-                  });
+                  // await Future.delayed(Durations.short3, () {
+                  //   widget.onPressed!();
+                  // });
                 },
         borderRadius: BorderRadius.circular(widget.borderRadius),
         splashColor: Colors.white.withAlpha(200),

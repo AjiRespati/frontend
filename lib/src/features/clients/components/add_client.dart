@@ -55,7 +55,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
                       height: 40,
                       width: 70,
                       child: GradientElevatedButton(
-                        inactiveDelay: Duration.zero,
+                        // inactiveDelay: Duration.zero,
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -73,7 +73,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
                       height: 40,
                       width: 70,
                       child: GradientElevatedButton(
-                        inactiveDelay: Duration.zero,
+                        // inactiveDelay: Duration.zero,
                         gradient: const LinearGradient(
                           colors: [
                             Color.fromRGBO(30, 241, 107, 1),
@@ -246,7 +246,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
           ),
           SizedBox(height: 40),
           GradientElevatedButton(
-            inactiveDelay: Duration.zero,
+            // inactiveDelay: Duration.zero,
             onPressed: _submit,
             child: Text(
               "Add Client",
