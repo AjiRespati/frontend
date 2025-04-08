@@ -975,11 +975,11 @@ class ApiService {
     }
   }
 
-  Future<List<dynamic>> getSalesmen() async {
+  Future<List<dynamic>> getSalesmen({required String? status}) async {
     String? token = await _getToken();
 
     final response = await http.get(
-      Uri.parse('$baseUrl/salesmen'),
+      Uri.parse('$baseUrl/salesmen?status=$status'),
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
@@ -1046,11 +1046,14 @@ class ApiService {
     }
   }
 
-  Future<List<dynamic>> getSubAgents(BuildContext context) async {
+  Future<List<dynamic>> getSubAgents(
+    BuildContext context,
+    String? status,
+  ) async {
     String? token = await _getToken();
 
     final response = await http.get(
-      Uri.parse('$baseUrl/subagents'),
+      Uri.parse('$baseUrl/subagents?status=$status'),
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
@@ -1063,7 +1066,7 @@ class ApiService {
         Navigator.pushNamed(context, signInRoute);
         return [];
       }
-      return getSubAgents(context);
+      return getSubAgents(context, status);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1134,11 +1137,11 @@ class ApiService {
     }
   }
 
-  Future<List<dynamic>> getAgents(BuildContext context) async {
+  Future<List<dynamic>> getAgents(BuildContext context, String? status) async {
     String? token = await _getToken();
 
     final response = await http.get(
-      Uri.parse('$baseUrl/agents'),
+      Uri.parse('$baseUrl/agents?status=$status'),
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
@@ -1151,7 +1154,7 @@ class ApiService {
         Navigator.pushNamed(context, signInRoute);
         return [];
       }
-      return getAgents(context);
+      return getAgents(context, status);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/stock_client_card.dart';
-import 'package:frontend/src/features/stock/components/stock_table_card.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
@@ -86,30 +85,28 @@ class StockProcessedView extends StatelessWidget with GetItMixin {
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: get<StockViewModel>().stockOnProgressTable.length,
-
                   itemBuilder: (context, index) {
-                    int level = get<SystemViewModel>().level ?? 0;
+                    // int level = get<SystemViewModel>().level ?? 0;
                     Map<String, dynamic> stock =
                         get<StockViewModel>().stockOnProgressTable[index];
-                    if (level > 3) {
-                      return StockTableCard(
-                        stockStatus: 'created',
-                        isMobile: true,
-                        stock: stock,
-                      );
-                    } else {
-                      return StockClientCard(
-                        stockStatus: 'created',
-                        isMobile: true,
-                        stock: stock,
-                      );
-                    }
-
-                    // return StockTableCard(
-                    //   isMobile: true,
-                    //   stock: get<StockViewModel>().stockOnProgressTable[index],
-                    //   stockStatus: 'created',
-                    // );
+                    return StockClientCard(
+                      stockStatus: 'created',
+                      isMobile: true,
+                      stock: stock,
+                    );
+                    // if (level > 3) {
+                    //   return StockTableCard(
+                    //     stockStatus: 'created',
+                    //     isMobile: true,
+                    //     stock: stock,
+                    //   );
+                    // } else {
+                    //   return StockClientCard(
+                    //     stockStatus: 'created',
+                    //     isMobile: true,
+                    //     stock: stock,
+                    //   );
+                    // }
                   },
                 ),
               ),

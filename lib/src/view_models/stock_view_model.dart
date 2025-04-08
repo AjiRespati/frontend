@@ -553,9 +553,9 @@ class StockViewModel extends ChangeNotifier {
     return;
   }
 
-  fetchSalesmen({required bool isInitial}) async {
+  fetchSalesmen({required bool isInitial, required String? status}) async {
     isLoading = true;
-    salesmen = await apiService.getSalesmen();
+    salesmen = await apiService.getSalesmen(status: status);
     List<String> names = [];
     for (var element in salesmen) {
       names.add(element['name']);
@@ -574,9 +574,10 @@ class StockViewModel extends ChangeNotifier {
   fetchSubAgents({
     required BuildContext context,
     required bool isInitial,
+    required String? status,
   }) async {
     isLoading = true;
-    subAgents = await apiService.getSubAgents(context);
+    subAgents = await apiService.getSubAgents(context, status);
     List<String> names = [];
     for (var element in subAgents) {
       names.add(element['name']);
@@ -592,9 +593,13 @@ class StockViewModel extends ChangeNotifier {
     return;
   }
 
-  fetchAgents({required BuildContext context, required bool isInitial}) async {
+  fetchAgents({
+    required BuildContext context,
+    required String? status,
+    required bool isInitial,
+  }) async {
     isLoading = true;
-    agents = await apiService.getAgents(context);
+    agents = await apiService.getAgents(context, status);
     List<String> names = [];
     for (var element in agents) {
       names.add(element['name']);
@@ -631,15 +636,27 @@ class StockViewModel extends ChangeNotifier {
         salesId: salesId,
       );
     } else {
-      response = await apiService.getStockTable(
-        context: context,
-        fromDate: fromDate,
-        toDate: toDate,
-        status: status,
-        agentId: agentId,
-        subAgentId: subAgentId,
-        salesId: salesId,
-      );
+      if (status == 'created') {
+        response = await apiService.getStockClientTable(
+          context: context,
+          fromDate: fromDate,
+          toDate: toDate,
+          status: status,
+          agentId: null,
+          subAgentId: null,
+          salesId: null,
+        );
+      } else {
+        response = await apiService.getStockTable(
+          context: context,
+          fromDate: fromDate,
+          toDate: toDate,
+          status: status,
+          agentId: agentId,
+          subAgentId: subAgentId,
+          salesId: salesId,
+        );
+      }
     }
 
     switch (status) {
@@ -664,14 +681,18 @@ class StockViewModel extends ChangeNotifier {
         break;
       case 'created':
         for (var el in response) {
-          var price =
+          print("WOLOLO......");
+          print(el);
+          double price =
               (el?['agentPrice'] ?? 0) > 0
-                  ? el['agentPrice']
+                  ? el['agentPrice'].toDouble()
                   : (el?['subAgentPrice'] ?? 0) > 0
-                  ? el['subAgentPrice']
+                  ? el['subAgentPrice'].toDouble()
                   : (el?['salesmanPrice'] ?? 0) > 0
-                  ? el['salesmanPrice']
-                  : (el?['totalPrice'] ?? 0);
+                  ? el['salesmanPrice'].toDouble()
+                  : (el?['totalPrice'] ?? 0).toDouble();
+          print("PRICE......");
+          print(price);
           totalOnProgress += price;
         }
 

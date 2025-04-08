@@ -127,7 +127,10 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
     );
 
     if (success) {
-      await get<StockViewModel>().fetchSalesmen(isInitial: false);
+      await get<StockViewModel>().fetchSalesmen(
+        isInitial: false,
+        status: 'active',
+      );
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(
@@ -149,6 +152,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
       await get<StockViewModel>().fetchSubAgents(
         context: context,
         isInitial: false,
+        status: 'active',
       );
       Navigator.pop(context);
     } else {
@@ -171,6 +175,7 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
       await get<StockViewModel>().fetchAgents(
         context: context,
         isInitial: false,
+        status: 'active',
       );
       Navigator.pop(context);
     } else {
