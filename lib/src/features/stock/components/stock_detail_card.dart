@@ -12,6 +12,9 @@ class StockDetailCard extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    var client = item['entityType'].toLowerCase();
+    print(client);
+    print(item);
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: ClipRect(
@@ -64,7 +67,7 @@ class StockDetailCard extends StatelessWidget with GetItMixin {
                             Text("Harga Total: "),
                             Text(
                               item['stockEvent'] == 'stock_out'
-                                  ? formatCurrency(item['totalNetPrice'] ?? 0)
+                                  ? formatCurrency(_generatePrice(item, client))
                                   : formatCurrency(item['totalPrice'] ?? 0),
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
@@ -149,6 +152,23 @@ class StockDetailCard extends StatelessWidget with GetItMixin {
                               ),
                             ],
                           ),
+                        if (item['totalDistributorShare'] != null)
+                          Row(
+                            children: [
+                              SizedBox(width: 30),
+                              Expanded(child: Text("Distributor")),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  ": ${formatCurrency(item['totalDistributorShare'])}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    // fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         SizedBox(height: 10),
 
                         if (item['description'] != null)
@@ -176,5 +196,17 @@ class StockDetailCard extends StatelessWidget with GetItMixin {
         ),
       ),
     );
+  }
+
+  double _generatePrice(dynamic mainProduct, String client) {
+    switch (client) {
+      case "agent":
+        return (mainProduct?['agentPrice'] ?? 0).toDouble();
+      case "subAgent":
+        return (mainProduct?['subAgentPrice'] ?? 0).toDouble();
+
+      default:
+        return (mainProduct?['salesmanPrice'] ?? 0).toDouble();
+    }
   }
 }

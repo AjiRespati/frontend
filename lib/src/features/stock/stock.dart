@@ -3,6 +3,7 @@ import 'package:frontend/src/features/stock/stock_desktop.dart';
 import 'package:frontend/src/features/stock/stock_mobile.dart';
 import 'package:frontend/src/utils/responsive_layout.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class Stock extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -17,9 +18,21 @@ class _StockState extends State<Stock> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      get<StockViewModel>().getStockTable(context: context, status: 'created');
-      get<StockViewModel>().getStockTable(context: context, status: 'settled');
-      get<StockViewModel>().getStockTable(context: context, status: 'canceled');
+      get<StockViewModel>().getStockTable(
+        context: context,
+        status: 'created',
+        isClient: (get<SystemViewModel>().level ?? 0) < 4,
+      );
+      get<StockViewModel>().getStockTable(
+        context: context,
+        status: 'settled',
+        isClient: (get<SystemViewModel>().level ?? 0) < 4,
+      );
+      get<StockViewModel>().getStockTable(
+        context: context,
+        status: 'canceled',
+        isClient: (get<SystemViewModel>().level ?? 0) < 4,
+      );
     });
   }
 

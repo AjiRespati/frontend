@@ -545,13 +545,33 @@ class ApiService {
     required String fromDate,
     required String toDate,
     required String status,
+    required String? salesId,
+    required String? subAgentId,
+    required String? agentId,
   }) async {
     String? token = await _getToken();
+    // Build the query parameters map conditionally
+    final Map<String, String> queryParameters = {
+      'fromDate': fromDate,
+      'toDate': toDate,
+      'status': status,
+      // Only add ID parameters if they are not null and not empty
+      if (salesId != null && salesId.isNotEmpty) 'salesId': salesId,
+      if (subAgentId != null && subAgentId.isNotEmpty) 'subAgentId': subAgentId,
+      if (agentId != null && agentId.isNotEmpty) 'agentId': agentId,
+    };
+
+    final uri = Uri.parse(baseUrl).replace(
+      path:
+          '/api/stocks/table', // Or adjust if baseUrl already includes part of the path
+      queryParameters: queryParameters,
+    );
 
     final response = await http.get(
-      Uri.parse(
-        '$baseUrl/stocks/table?fromDate=$fromDate&toDate=$toDate&status=$status',
-      ),
+      uri,
+      // Uri.parse(
+      //   '$baseUrl/stocks/table?fromDate=$fromDate&toDate=$toDate&status=$status&salesId=$salesId&subAgentId=$subAgentId&agentId=$agentId',
+      // ),
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
@@ -569,6 +589,79 @@ class ApiService {
         fromDate: fromDate,
         toDate: toDate,
         status: status,
+        salesId: salesId,
+        subAgentId: subAgentId,
+        agentId: agentId,
+      );
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> getStockClientTable({
+    required BuildContext context,
+    required String fromDate,
+    required String toDate,
+    required String status,
+    required String? salesId,
+    required String? subAgentId,
+    required String? agentId,
+  }) async {
+    String? token = await _getToken();
+    // Build the query parameters map conditionally
+    final Map<String, String> queryParameters = {
+      'fromDate': fromDate,
+      'toDate': toDate,
+      'status': status,
+      // Only add ID parameters if they are not null and not empty
+      if (salesId != null && salesId.isNotEmpty) 'salesId': salesId,
+      if (subAgentId != null && subAgentId.isNotEmpty) 'subAgentId': subAgentId,
+      if (agentId != null && agentId.isNotEmpty) 'agentId': agentId,
+    };
+
+    final uri = Uri.parse(baseUrl).replace(
+      path:
+          '/api/stocks/table/client', // Or adjust if baseUrl already includes part of the path
+      queryParameters: queryParameters,
+    );
+
+    final response = await http.get(
+      uri,
+      // Uri.parse(
+      //   '$baseUrl/stocks/table?fromDate=$fromDate&toDate=$toDate&status=$status&salesId=$salesId&subAgentId=$subAgentId&agentId=$agentId',
+      // ),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getStockClientTable(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+        status: status,
+        salesId: salesId,
+        subAgentId: subAgentId,
+        agentId: agentId,
       );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);

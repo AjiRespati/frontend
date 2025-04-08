@@ -40,127 +40,160 @@ class StockTableCard extends StatelessWidget with GetItMixin {
             );
           }
         },
-        child: SizedBox(
-          height: 130,
-          child: Row(
-            children: [
-              SizedBox(
-                width: 110,
-                height: 90,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(10),
-                    bottom: Radius.circular(10),
-                  ),
-                  child:
-                      stock['image'] != null
-                          ? Image.network(
-                            imageUrl,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            errorBuilder:
-                                (context, error, stackTrace) => const Icon(
-                                  Icons.image_not_supported,
-                                  size: 50,
-                                ),
-                          )
-                          : const Icon(Icons.image, size: 50),
-                ),
-              ),
-              SizedBox(width: 10),
-              Flexible(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          stock['productName'] ?? " N/A",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Unit: "),
-                        Text(
-                          stock['metricName'] ?? " N/A",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Stock In: "),
-                        Text((stock['totalStockIn'] ?? " N/A").toString()),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Stock Out: "),
-                        Text((stock['totalStockOut'] ?? " N/A").toString()),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Stock On Hand: "),
-                        Text(
-                          stockStatus == 'settled'
-                              ? (stock['latestUpdateAmount'] ?? " N/A")
-                                  .toString()
-                              : " -",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            color: Colors.green[800],
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Last Update: "),
-                        Text(
-                          formatDateString(
-                            (stock['lastStockUpdate'] ??
-                                "2000-01-01T01:00:00.204Z"),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+        child: Stack(
+          alignment: AlignmentDirectional.centerEnd,
+          children: [
+            SizedBox(
+              height: 130,
+              child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () async {
-                      get<StockViewModel>().choosenMetricId = stock['metricId'];
-                      bool resp = await get<StockViewModel>().getStockHistory(
-                        context: context,
-                        status: stockStatus,
-                      );
-                      if (resp) {
-                        Navigator.pushNamed(
-                          context,
-                          stockDetailRoute,
-                          arguments: stockStatus,
-                        );
-                      }
-                    },
-                    icon: Icon(Icons.chevron_right_outlined, size: 40),
+                  SizedBox(
+                    width: 110,
+                    height: 90,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(10),
+                        bottom: Radius.circular(10),
+                      ),
+                      child:
+                          stock['image'] != null
+                              ? Image.network(
+                                imageUrl,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder:
+                                    (context, error, stackTrace) => const Icon(
+                                      Icons.image_not_supported,
+                                      size: 50,
+                                    ),
+                              )
+                              : const Icon(Icons.image, size: 50),
+                    ),
                   ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                stock['productName'] ?? " N/A",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (stockStatus == 'settled')
+                              Text(
+                                "Stocks: ${stockStatus == 'settled' ? (stock['latestUpdateAmount'] ?? " N/A").toString() : " -"}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.green[800],
+                                  fontSize: 16,
+                                ),
+                              ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text("Unit: "),
+                            Text(
+                              stock['metricName'] ?? " N/A",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        // (stock['totalStockIn'] != null && stock['totalStockIn'] > 0)
+                        Row(
+                          children: [
+                            Text("Stock In: "),
+                            Text(
+                              (stock['totalStockIn'] ?? " N/A").toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: Colors.green[800],
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text("Stock Out: "),
+                            Text(
+                              (stock['totalStockOut'] ?? " N/A").toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: Colors.red[800],
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Row(
+                        //   children: [
+                        //     Text("Stock On Hand: "),
+                        //     Text(
+                        //       stockStatus == 'settled'
+                        //           ? (stock['latestUpdateAmount'] ?? " N/A")
+                        //               .toString()
+                        //           : " -",
+                        //       style: TextStyle(
+                        //         fontWeight: FontWeight.w900,
+                        //         color: Colors.green[800],
+                        //         fontSize: 16,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        Row(
+                          children: [
+                            Text("Last Update: "),
+                            Text(
+                              formatDateString(
+                                (stock['lastStockUpdate'] ??
+                                    "2000-01-01T01:00:00.204Z"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 10),
                 ],
               ),
-              SizedBox(width: 10),
-            ],
-          ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    get<StockViewModel>().choosenMetricId = stock['metricId'];
+                    bool resp = await get<StockViewModel>().getStockHistory(
+                      context: context,
+                      status: stockStatus,
+                    );
+                    if (resp) {
+                      Navigator.pushNamed(
+                        context,
+                        stockDetailRoute,
+                        arguments: stockStatus,
+                      );
+                    }
+                  },
+                  icon: Icon(Icons.chevron_right_outlined, size: 40),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

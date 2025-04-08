@@ -24,7 +24,6 @@ class BuyProduct extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    print(shopId);
     var client = get<StockViewModel>().client;
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -127,7 +126,7 @@ class BuyProduct extends StatelessWidget with GetItMixin {
                   get<StockViewModel>().reloadBuy = null;
                   get<StockViewModel>().stockAmount = 0;
                   get<StockViewModel>().productsDetail = null;
-                  Navigator.pop(context);
+                  Navigator.pop(context, true);
                 }
               },
               child: Text(
@@ -147,12 +146,14 @@ class BuyProduct extends StatelessWidget with GetItMixin {
   double _generatePrice(dynamic mainProduct, String client) {
     switch (client) {
       case "agent":
-        return (mainProduct['agentPrice'] ?? 0).toDouble();
+        return (mainProduct?['agentPrice'] ?? 0).toDouble();
       case "subAgent":
-        return (mainProduct['subAgentPrice'] ?? 0).toDouble();
+        return (mainProduct?['subAgentPrice'] ?? 0).toDouble();
+      case "salesman":
+        return (mainProduct?['salesmanPrice'] ?? 0).toDouble();
 
       default:
-        return (mainProduct['salesmanPrice'] ?? 0).toDouble();
+        return (mainProduct?['price'] ?? 0).toDouble();
     }
   }
 }

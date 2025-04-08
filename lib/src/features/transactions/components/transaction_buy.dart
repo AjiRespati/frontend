@@ -33,7 +33,8 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
       context: context,
       builder: (context) {
         return BuyProduct(
-          measurement: _productDetail['metricType'].toString().toLowerCase(),
+          measurement:
+              (_productDetail?['metricType'] ?? "").toString().toLowerCase(),
           mainProduct: _productDetail,
           stockEvent: 'stock_in',
           shopId: null,
@@ -41,6 +42,7 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
       },
     ).then((value) async {
       await Future.delayed(Durations.short1);
+      get<StockViewModel>().stockAmount = 0;
       _selectedProduct = null;
       _selectedId = null;
       _productDetail = null;

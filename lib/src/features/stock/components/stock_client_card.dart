@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
 import 'package:frontend/src/utils/helpers.dart';
-import 'package:frontend/src/view_models/system_view_model.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class StockClientCard extends StatelessWidget with GetItMixin {
@@ -21,9 +21,9 @@ class StockClientCard extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     String imageUrl = ApplicationInfo.baseUrl + (stock['image'] ?? '');
-    int level = get<SystemViewModel>().level ?? 0;
-    int basicPrice = stock['basicPrice'] ?? 0;
-    int finalPrice = level < 3 ? (basicPrice * 2 * 0.8).toInt() : basicPrice;
+    var client = get<StockViewModel>().client;
+    print("HALAHHHHHHHHHHHHH");
+    print(stock);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
@@ -60,10 +60,21 @@ class StockClientCard extends StatelessWidget with GetItMixin {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        stock['productName'] ?? " N/A",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      Flexible(
+                        child: Text(
+                          stock['productName'] ?? " N/A",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Flexible(
+                        child: Text(
+                          stock['shopName'] ?? " N/A",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
@@ -92,42 +103,25 @@ class StockClientCard extends StatelessWidget with GetItMixin {
                   //     Text((stock['totalStockOut'] ?? " N/A").toString()),
                   //   ],
                   // ),
-                  stockStatus == 'settled'
-                      ? Row(
-                        children: [
-                          Text("Stock On Hand: "),
-                          Text(
-                            (stock['latestUpdateAmount'] ?? " N/A").toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              color: Colors.green[800],
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      )
-                      : Row(
-                        children: [
-                          Text("Jumlah: "),
-                          Text(
-                            (stock['totalStockIn'] > 0
-                                    ? stock['totalStockIn']
-                                    : stock['totalStockOut'])
-                                .toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              color: Colors.green[800],
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(" ${stock['metricName']}"),
-                        ],
+                  Row(
+                    children: [
+                      Text("Jumlah: "),
+                      Text(
+                        (stock['amount']).toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          color: Colors.green[800],
+                          fontSize: 16,
+                        ),
                       ),
+                      Text(" ${stock['measurement']}"),
+                    ],
+                  ),
                   Row(
                     children: [
                       Text("Harga total: "),
                       Text(
-                        formatCurrency(finalPrice),
+                        formatCurrency(_generatePrice(stock, client)),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -174,5 +168,17 @@ class StockClientCard extends StatelessWidget with GetItMixin {
         ),
       ),
     );
+  }
+
+  double _generatePrice(dynamic mainProduct, String client) {
+    switch (client) {
+      case "agent":
+        return (mainProduct?['agentPrice'] ?? 0).toDouble();
+      case "subAgent":
+        return (mainProduct?['subAgentPrice'] ?? 0).toDouble();
+
+      default:
+        return (mainProduct?['salesmanPrice'] ?? 0).toDouble();
+    }
   }
 }

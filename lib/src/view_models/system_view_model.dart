@@ -202,7 +202,7 @@ class SystemViewModel extends ChangeNotifier {
     return isLogout;
   }
 
-  void self(BuildContext context) async {
+  Future<bool> self(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? refreshToken = prefs.getString('refreshToken');
     user = await apiService.self(context, refreshToken ?? "-");
@@ -215,6 +215,7 @@ class SystemViewModel extends ChangeNotifier {
     salesId = user['salesId'];
     subAgentId = user['subAgentId'];
     agentId = user['agentId'];
+    return true;
   }
 
   Future<bool> register() async {

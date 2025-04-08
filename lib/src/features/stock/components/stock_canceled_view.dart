@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/stock_table_card.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -42,6 +43,7 @@ class StockCanceledView extends StatelessWidget with GetItMixin {
                   get<StockViewModel>().getStockTable(
                     context: context,
                     status: 'canceled',
+                    isClient: (get<SystemViewModel>().level ?? 0) < 4,
                   );
                 },
                 child: Icon(Icons.search, color: Colors.white, size: 30),

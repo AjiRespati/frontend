@@ -30,6 +30,7 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var client = get<StockViewModel>().client;
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -63,7 +64,7 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                   formatCurrency(
                     _isFactory
                         ? widget.item['totalPrice']
-                        : widget.item['totalNetPrice'],
+                        : _generatePrice(widget.item, client),
                   ),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
@@ -217,5 +218,17 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
         ],
       ),
     );
+  }
+
+  double _generatePrice(dynamic mainProduct, String client) {
+    switch (client) {
+      case "agent":
+        return (mainProduct?['agentPrice'] ?? 0).toDouble();
+      case "subAgent":
+        return (mainProduct?['subAgentPrice'] ?? 0).toDouble();
+
+      default:
+        return (mainProduct?['salesmanPrice'] ?? 0).toDouble();
+    }
   }
 }

@@ -591,17 +591,35 @@ class StockViewModel extends ChangeNotifier {
   Future<bool> getStockTable({
     required BuildContext context,
     required String status,
+    required bool isClient,
   }) async {
     isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
-    List<dynamic> response = await apiService.getStockTable(
-      context: context,
-      fromDate: fromDate,
-      toDate: toDate,
-      status: status,
-    );
+    List<dynamic> response = [];
+
+    if (isClient) {
+      response = await apiService.getStockClientTable(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+        status: status,
+        agentId: agentId,
+        subAgentId: subAgentId,
+        salesId: salesId,
+      );
+    } else {
+      response = await apiService.getStockTable(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+        status: status,
+        agentId: agentId,
+        subAgentId: subAgentId,
+        salesId: salesId,
+      );
+    }
 
     switch (status) {
       case 'settled':

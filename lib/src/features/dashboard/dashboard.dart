@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/dashboard/dashboard_desktop.dart';
 import 'package:frontend/src/features/dashboard/dashboard_mobile.dart';
@@ -14,12 +16,24 @@ class Dashboard extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _DashboardState extends State<Dashboard> with GetItStateMixin {
+  Future<void> _setup() async {
+    await get<SystemViewModel>().self(context);
+    var user = get<SystemViewModel>().user;
+    get<StockViewModel>().client =
+        (user['levelDesc'] ?? "salesman").toLowerCase();
+
+    get<StockViewModel>().salesId = get<SystemViewModel>().salesId;
+    get<StockViewModel>().subAgentId = get<SystemViewModel>().subAgentId;
+    get<StockViewModel>().agentId = get<SystemViewModel>().agentId;
+
+    get<StockViewModel>().fetchCommissionData(context: context);
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      get<SystemViewModel>().self(context);
-      get<StockViewModel>().fetchCommissionData(context: context);
+      _setup();
     });
   }
 

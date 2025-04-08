@@ -13,7 +13,6 @@ class StockSettledView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    print(get<SystemViewModel>().level);
     return Column(
       children: [
         Padding(
@@ -45,6 +44,7 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                   get<StockViewModel>().getStockTable(
                     context: context,
                     status: 'settled',
+                    isClient: (get<SystemViewModel>().level ?? 0) < 4,
                   );
                 },
                 child: Icon(Icons.search, color: Colors.white, size: 30),
