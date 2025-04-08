@@ -35,7 +35,7 @@ class _SendStockState extends State<SendStock> with GetItStateMixin {
   /// 5. lanjutkan proses pembayaran di halaman stock
   @override
   Widget build(BuildContext context) {
-    watchOnly((StockViewModel x) => x.client);
+    watchOnly((StockViewModel x) => x.clientProduct);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -156,9 +156,9 @@ class _SendStockState extends State<SendStock> with GetItStateMixin {
                 SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(isDense: true),
-                  value: get<StockViewModel>().client,
+                  value: get<StockViewModel>().clientProduct,
                   items:
-                      get<StockViewModel>().clients.map((item) {
+                      get<StockViewModel>().clientProducts.map((item) {
                         return DropdownMenuItem<String>(
                           value: item,
                           child: Text(item),
@@ -168,7 +168,7 @@ class _SendStockState extends State<SendStock> with GetItStateMixin {
                     get<StockViewModel>().salesChoosen = null;
                     get<StockViewModel>().subAgentChoosen = null;
                     get<StockViewModel>().agentChoosen = null;
-                    get<StockViewModel>().client = value ?? "salesman";
+                    get<StockViewModel>().clientProduct = value ?? "salesman";
                   },
                 ),
                 SizedBox(height: 10),
@@ -178,20 +178,25 @@ class _SendStockState extends State<SendStock> with GetItStateMixin {
             Column(
               children: [
                 SizedBox(height: 10),
-                Row(children: [Text("${get<StockViewModel>().client} Name: ")]),
+                Row(
+                  children: [
+                    Text("${get<StockViewModel>().clientProduct} Name: "),
+                  ],
+                ),
                 SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(isDense: true),
                   value:
-                      get<StockViewModel>().client == "salesman"
+                      get<StockViewModel>().clientProduct == "salesman"
                           ? get<StockViewModel>().salesChoosen
-                          : get<StockViewModel>().client == 'subAgent'
+                          : get<StockViewModel>().clientProduct == 'subAgent'
                           ? get<StockViewModel>().subAgentChoosen
                           : get<StockViewModel>().agentChoosen,
                   items:
-                      (get<StockViewModel>().client == "salesman"
+                      (get<StockViewModel>().clientProduct == "salesman"
                               ? get<StockViewModel>().salesmanNames
-                              : get<StockViewModel>().client == 'subAgent'
+                              : get<StockViewModel>().clientProduct ==
+                                  'subAgent'
                               ? get<StockViewModel>().subAgentNames
                               : get<StockViewModel>().agentNames)
                           .map((item) {
@@ -202,9 +207,9 @@ class _SendStockState extends State<SendStock> with GetItStateMixin {
                           })
                           .toList(),
                   onChanged: (value) {
-                    get<StockViewModel>().client == "salesman"
+                    get<StockViewModel>().clientProduct == "salesman"
                         ? get<StockViewModel>().salesChoosen = value
-                        : get<StockViewModel>().client == 'subAgent'
+                        : get<StockViewModel>().clientProduct == 'subAgent'
                         ? get<StockViewModel>().subAgentChoosen = value
                         : get<StockViewModel>().agentChoosen = value;
                   },

@@ -58,7 +58,20 @@ class StockViewModel extends ChangeNotifier {
   dynamic _reloadBuy;
 
   String _client = 'salesman';
-  final List<String> _clients = ['salesman', 'subAgent', "agent"];
+  final List<String> _clients = [
+    'salesman',
+    'subAgent',
+    "agent",
+    "admin",
+    "owner",
+  ];
+  String? _clientProduct;
+  final List<String> _clientProducts = [
+    'distributor',
+    'salesman',
+    'subAgent',
+    "agent",
+  ];
   String? _createdBy;
   int _stockAmount = 0;
   String? _salesId;
@@ -145,6 +158,14 @@ class StockViewModel extends ChangeNotifier {
   }
 
   List<String> get clients => _clients;
+
+  String? get clientProduct => _clientProduct;
+  set clientProduct(String? val) {
+    _clientProduct = val;
+    notifyListeners();
+  }
+
+  List<String> get clientProducts => _clientProducts;
 
   String? get createdBy => _createdBy;
   set createdBy(String? val) {
@@ -618,6 +639,9 @@ class StockViewModel extends ChangeNotifier {
     required BuildContext context,
     required String status,
     required bool isClient,
+    required String? salesId,
+    required String? subAgentId,
+    required String? agentId,
   }) async {
     isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
@@ -642,9 +666,9 @@ class StockViewModel extends ChangeNotifier {
           fromDate: fromDate,
           toDate: toDate,
           status: status,
-          agentId: null,
-          subAgentId: null,
-          salesId: null,
+          agentId: agentId,
+          subAgentId: subAgentId,
+          salesId: salesId,
         );
       } else {
         response = await apiService.getStockTable(

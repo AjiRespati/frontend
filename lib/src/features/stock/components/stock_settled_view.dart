@@ -45,6 +45,9 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                     context: context,
                     status: 'settled',
                     isClient: (get<SystemViewModel>().level ?? 0) < 4,
+                    salesId: null,
+                    agentId: null,
+                    subAgentId: null,
                   );
                 },
                 child: Icon(Icons.search, color: Colors.white, size: 30),

@@ -22,16 +22,25 @@ class _StockState extends State<Stock> with GetItStateMixin {
         context: context,
         status: 'created',
         isClient: (get<SystemViewModel>().level ?? 0) < 4,
+        salesId: null,
+        agentId: null,
+        subAgentId: null,
       );
       get<StockViewModel>().getStockTable(
         context: context,
         status: 'settled',
         isClient: (get<SystemViewModel>().level ?? 0) < 4,
+        salesId: null,
+        agentId: null,
+        subAgentId: null,
       );
       get<StockViewModel>().getStockTable(
         context: context,
         status: 'canceled',
         isClient: (get<SystemViewModel>().level ?? 0) < 4,
+        salesId: null,
+        agentId: null,
+        subAgentId: null,
       );
     });
   }

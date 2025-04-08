@@ -12,6 +12,7 @@ class LoginButton extends StatelessWidget with GetItMixin {
       width: double.infinity,
       height: 44,
       child: GradientElevatedButton(
+        inactiveDelay: Duration.zero,
         onPressed: () {
           get<SystemViewModel>().onLogin(context: context);
         },

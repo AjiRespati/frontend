@@ -24,8 +24,8 @@ class StockClientCard extends StatelessWidget with GetItMixin {
     String imageUrl = ApplicationInfo.baseUrl + (stock['image'] ?? '');
     var client = get<StockViewModel>().client;
     bool isNew = stock['status'] == 'created';
-    print("HALAHHHHHHHHHHHHH");
-    print(stock);
+    // print("HALAHHHHHHHHHHHHH");
+    // print(stock);
     return ClipRect(
       child: Banner(
         message: isNew ? 'Unpaid' : "",
@@ -212,8 +212,8 @@ class StockClientCard extends StatelessWidget with GetItMixin {
   }
 
   double _generatePrice(dynamic mainProduct, String client) {
-    print("OKE DEH.......");
-    print(mainProduct);
+    // print("OKE DEH.......");
+    // print(mainProduct);
 
     return (mainProduct?['agentPrice'] ?? 0) > 0
         ? mainProduct['agentPrice'].toDouble()

@@ -27,6 +27,17 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
     get<StockViewModel>().agentId = get<SystemViewModel>().agentId;
 
     get<StockViewModel>().fetchCommissionData(context: context);
+    get<StockViewModel>().fetchSalesmen(isInitial: true, status: 'active');
+    get<StockViewModel>().fetchSubAgents(
+      context: context,
+      isInitial: true,
+      status: 'active',
+    );
+    get<StockViewModel>().fetchAgents(
+      context: context,
+      isInitial: true,
+      status: 'active',
+    );
   }
 
   @override
