@@ -61,11 +61,7 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  formatCurrency(
-                    _isFactory
-                        ? widget.item['totalPrice']
-                        : _generatePrice(widget.item, client),
-                  ),
+                  formatCurrency(_generatePrice(widget.item, client)),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ],
@@ -226,9 +222,10 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
         return (mainProduct?['agentPrice'] ?? 0).toDouble();
       case "subAgent":
         return (mainProduct?['subAgentPrice'] ?? 0).toDouble();
-
-      default:
+      case "salesman":
         return (mainProduct?['salesmanPrice'] ?? 0).toDouble();
+      default:
+        return (mainProduct?['totalPrice'] ?? 0).toDouble();
     }
   }
 }

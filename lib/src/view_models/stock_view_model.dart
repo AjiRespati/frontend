@@ -644,8 +644,8 @@ class StockViewModel extends ChangeNotifier {
 
     switch (status) {
       case 'settled':
-        print("DAPATNYAAAAAAAAAAA");
-        print(response);
+        // print("DAPATNYAAAAAAAAAAA");
+        // print(response);
 
         stockTable = response;
 

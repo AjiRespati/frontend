@@ -33,7 +33,7 @@ class _TransactionSellClientState extends State<TransactionSellClient>
     _productDetail = get<StockViewModel>().productsDetail?[0];
 
     await Future.delayed(Durations.short3);
-    print(_productDetail);
+    // print(_productDetail);
     showModalBottomSheet(
       isScrollControlled: true,
       constraints: BoxConstraints(maxHeight: 540),

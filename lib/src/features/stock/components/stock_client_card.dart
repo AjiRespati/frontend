@@ -176,9 +176,10 @@ class StockClientCard extends StatelessWidget with GetItMixin {
         return (mainProduct?['agentPrice'] ?? 0).toDouble();
       case "subAgent":
         return (mainProduct?['subAgentPrice'] ?? 0).toDouble();
-
-      default:
+      case "salesman":
         return (mainProduct?['salesmanPrice'] ?? 0).toDouble();
+      default:
+        return (mainProduct?['totalPrice'] ?? 0).toDouble();
     }
   }
 }
