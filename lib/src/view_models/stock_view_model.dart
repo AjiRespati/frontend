@@ -36,6 +36,9 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> _stockHistoryTable = [];
   dynamic _stockResume;
   List<dynamic> _salesStockTable = [];
+  double _totalSettled = 0.0;
+  double _totalOnProgress = 0.0;
+  double _totalOnCanceled = 0.0;
 
   DateTime _dateFromFilter = DateTime.now().subtract(Duration(days: 7));
   DateTime _dateToFilter = DateTime.now();
@@ -335,6 +338,24 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  double get totalSettled => _totalSettled;
+  set totalSettled(double val) {
+    _totalSettled = val;
+    notifyListeners();
+  }
+
+  double get totalOnProgress => _totalOnProgress;
+  set totalOnProgress(double val) {
+    _totalOnProgress = val;
+    notifyListeners();
+  }
+
+  double get totalOnCanceled => _totalOnCanceled;
+  set totalOnCanceled(double val) {
+    _totalOnCanceled = val;
+    notifyListeners();
+  }
+
   DateTime get dateFromFilter => _dateFromFilter;
   set dateFromFilter(DateTime val) {
     _dateFromFilter = val;
@@ -623,13 +644,54 @@ class StockViewModel extends ChangeNotifier {
 
     switch (status) {
       case 'settled':
+        print("DAPATNYAAAAAAAAAAA");
+        print(response);
+
         stockTable = response;
+
+        for (var el in response) {
+          var price =
+              (el?['agentPrice'] ?? 0) > 0
+                  ? el['agentPrice']
+                  : (el?['subAgentPrice'] ?? 0) > 0
+                  ? el['subAgentPrice']
+                  : (el?['salesmanPrice'] ?? 0) > 0
+                  ? el['salesmanPrice']
+                  : (el?['totalPrice'] ?? 0);
+          totalSettled += price;
+        }
+
         break;
       case 'created':
+        for (var el in response) {
+          var price =
+              (el?['agentPrice'] ?? 0) > 0
+                  ? el['agentPrice']
+                  : (el?['subAgentPrice'] ?? 0) > 0
+                  ? el['subAgentPrice']
+                  : (el?['salesmanPrice'] ?? 0) > 0
+                  ? el['salesmanPrice']
+                  : (el?['totalPrice'] ?? 0);
+          totalOnProgress += price;
+        }
+
         stockOnProgressTable = response;
+
         break;
       default:
         stockOnCanceledTable = response;
+
+        for (var el in response) {
+          var price =
+              (el?['agentPrice'] ?? 0) > 0
+                  ? el['agentPrice']
+                  : (el?['subAgentPrice'] ?? 0) > 0
+                  ? el['subAgentPrice']
+                  : (el?['salesmanPrice'] ?? 0) > 0
+                  ? el['salesmanPrice']
+                  : (el?['totalPrice'] ?? 0);
+          totalOnCanceled += price;
+        }
     }
 
     isBusy = false;

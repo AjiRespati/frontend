@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/stock_client_card.dart';
 import 'package:frontend/src/features/stock/components/stock_table_card.dart';
@@ -52,6 +51,23 @@ class StockProcessedView extends StatelessWidget with GetItMixin {
             ],
           ),
         ),
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text("Total Belum Dibayar:  "),
+              Text(
+                formatCurrency(get<StockViewModel>().totalOnProgress),
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: Colors.red.shade700,
+                ),
+              ),
+              SizedBox(width: 13),
+            ],
+          ),
+        ),
         watchOnly((StockViewModel x) => x.stockOnProgressTable).isEmpty
             ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -64,13 +80,11 @@ class StockProcessedView extends StatelessWidget with GetItMixin {
                 ),
               ],
             )
-            : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height:
-                    (MediaQuery.of(context).size.height - 280) -
-                    (kIsWeb ? 0 : 50),
+            : Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(
+                  shrinkWrap: true,
                   itemCount: get<StockViewModel>().stockOnProgressTable.length,
 
                   itemBuilder: (context, index) {

@@ -22,8 +22,8 @@ class StockClientCard extends StatelessWidget with GetItMixin {
   Widget build(BuildContext context) {
     String imageUrl = ApplicationInfo.baseUrl + (stock['image'] ?? '');
     var client = get<StockViewModel>().client;
-    print("HALAHHHHHHHHHHHHH");
-    print(stock);
+    // print("HALAHHHHHHHHHHHHH");
+    // print(stock);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,

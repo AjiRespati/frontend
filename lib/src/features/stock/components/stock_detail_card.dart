@@ -13,8 +13,8 @@ class StockDetailCard extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     var client = item['entityType'].toLowerCase();
-    print(client);
-    print(item);
+    // print(client);
+    // print(item);
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: ClipRect(
@@ -152,7 +152,8 @@ class StockDetailCard extends StatelessWidget with GetItMixin {
                               ),
                             ],
                           ),
-                        if (item['totalDistributorShare'] != null)
+                        if (item['totalDistributorShare'] != null &&
+                            item['totalDistributorShare'] > 0)
                           Row(
                             children: [
                               SizedBox(width: 30),
