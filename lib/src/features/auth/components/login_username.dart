@@ -9,10 +9,11 @@ class LoginUsername extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: TextInputType.emailAddress,
       controller: get<SystemViewModel>().usernameController,
       decoration: InputDecoration(
-        label: Text("Username", style: GoogleFonts.inter(fontSize: 12)),
-        hintText: "Username",
+        label: Text("Email", style: GoogleFonts.inter(fontSize: 12)),
+        hintText: "Email",
         hintStyle: GoogleFonts.inter(fontSize: 12),
         prefixIcon: const Icon(Icons.person_rounded, size: 20),
         contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -21,7 +22,7 @@ class LoginUsername extends StatelessWidget with GetItMixin {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Username can't be empty";
+          return "Email can't be empty";
         }
 
         return null;

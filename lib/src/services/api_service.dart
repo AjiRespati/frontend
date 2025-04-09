@@ -618,6 +618,7 @@ class ApiService {
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
+    required String? stockEvent,
   }) async {
     String? token = await _getToken();
     // Build the query parameters map conditionally
@@ -629,6 +630,7 @@ class ApiService {
       if (salesId != null && salesId.isNotEmpty) 'salesId': salesId,
       if (subAgentId != null && subAgentId.isNotEmpty) 'subAgentId': subAgentId,
       if (agentId != null && agentId.isNotEmpty) 'agentId': agentId,
+      if (stockEvent != null && stockEvent.isNotEmpty) 'stockEvent': stockEvent,
     };
 
     final uri = Uri.parse(baseUrl).replace(
@@ -639,9 +641,6 @@ class ApiService {
 
     final response = await http.get(
       uri,
-      // Uri.parse(
-      //   '$baseUrl/stocks/table?fromDate=$fromDate&toDate=$toDate&status=$status&salesId=$salesId&subAgentId=$subAgentId&agentId=$agentId',
-      // ),
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
@@ -662,6 +661,7 @@ class ApiService {
         salesId: salesId,
         subAgentId: subAgentId,
         agentId: agentId,
+        stockEvent: stockEvent,
       );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);

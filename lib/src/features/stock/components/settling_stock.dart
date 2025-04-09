@@ -30,7 +30,7 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var client = get<StockViewModel>().client;
+    print(widget.item);
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -61,7 +61,7 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  formatCurrency(_generatePrice(widget.item, client)),
+                  formatCurrency(_generatePrice(widget.item)),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ],
@@ -134,7 +134,7 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                     bool success = await get<StockViewModel>().settlingStock(
                       context: context,
                       stockId: widget.item['stockId'],
-                      metricId: get<StockViewModel>().choosenMetricId ?? "",
+                      metricId: widget.item['metricId'],
                     );
 
                     if (success) {
@@ -216,13 +216,13 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
     );
   }
 
-  double _generatePrice(dynamic mainProduct, String client) {
-    switch (client) {
-      case "agent":
+  double _generatePrice(dynamic mainProduct) {
+    switch (mainProduct['entityType']) {
+      case "Agent":
         return (mainProduct?['agentPrice'] ?? 0).toDouble();
-      case "subAgent":
+      case "SubAgent":
         return (mainProduct?['subAgentPrice'] ?? 0).toDouble();
-      case "salesman":
+      case "Salesman":
         return (mainProduct?['salesmanPrice'] ?? 0).toDouble();
       default:
         return (mainProduct?['totalPrice'] ?? 0).toDouble();

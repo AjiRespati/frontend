@@ -25,6 +25,7 @@ class _StockState extends State<Stock> with GetItStateMixin {
         salesId: null,
         agentId: null,
         subAgentId: null,
+        stockEvent: null,
       );
       get<StockViewModel>().getStockTable(
         context: context,
@@ -33,6 +34,7 @@ class _StockState extends State<Stock> with GetItStateMixin {
         salesId: null,
         agentId: null,
         subAgentId: null,
+        stockEvent: null,
       );
       get<StockViewModel>().getStockTable(
         context: context,
@@ -41,6 +43,7 @@ class _StockState extends State<Stock> with GetItStateMixin {
         salesId: null,
         agentId: null,
         subAgentId: null,
+        stockEvent: null,
       );
     });
   }

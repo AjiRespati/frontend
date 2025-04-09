@@ -69,14 +69,30 @@ class _StockProcessedViewState extends State<StockProcessedView>
                 buttonHeight: 34,
                 onPressed: () {
                   get<StockViewModel>().totalOnProgress = 0.0;
-                  get<StockViewModel>().getStockTable(
-                    context: context,
-                    status: 'created',
-                    isClient: (get<SystemViewModel>().level ?? 0) < 4,
-                    salesId: _client == "salesman" ? _idChoosen : null,
-                    agentId: _client == "subAgent" ? _idChoosen : null,
-                    subAgentId: _client == "agent" ? _idChoosen : null,
-                  );
+                  if (_validateClient(_client, _idChoosen)) {
+                    get<StockViewModel>().getStockTable(
+                      context: context,
+                      status: 'created',
+                      isClient: (get<SystemViewModel>().level ?? 0) < 4,
+                      salesId: _client == "salesman" ? _idChoosen : null,
+                      agentId: _client == "subAgent" ? _idChoosen : null,
+                      subAgentId: _client == "agent" ? _idChoosen : null,
+                      stockEvent: _client == 'distributor' ? "stock_in" : null,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.red.shade700,
+                        content: Text(
+                          "${_client ?? ""} harus dipilih",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        duration: Duration(
+                          seconds: 2,
+                        ), // Adjust duration as needed
+                      ),
+                    );
+                  }
                 },
                 child: Icon(Icons.search, color: Colors.white, size: 30),
               ),
@@ -111,6 +127,7 @@ class _StockProcessedViewState extends State<StockProcessedView>
                     get<StockViewModel>().subAgentChoosen = null;
                     get<StockViewModel>().agentChoosen = null;
                     get<StockViewModel>().clientProduct = value;
+                    _idChoosen = null;
                     _nameChoosen = null;
                     _client = value;
 
@@ -253,15 +270,15 @@ class _StockProcessedViewState extends State<StockProcessedView>
                 .where((el) => el['name'] == nameChoosen)
                 .toList();
         return user.first['id'];
-      default:
+      case 'agent':
         var user =
             get<StockViewModel>().agents
                 .where((el) => el['name'] == nameChoosen)
                 .toList();
         return user.first['id'];
+      default:
+        return null;
     }
-
-    return "";
   }
 
   Widget _buildDatePicker(
@@ -287,5 +304,15 @@ class _StockProcessedViewState extends State<StockProcessedView>
         ),
       ),
     );
+  }
+
+  bool _validateClient(String? client, String? idChoosen) {
+    if (client == "salesman" || client == "subAgent" || client == "agent") {
+      if (idChoosen != null) {
+        return true;
+      }
+      return false;
+    }
+    return true;
   }
 }

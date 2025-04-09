@@ -67,6 +67,7 @@ class StockViewModel extends ChangeNotifier {
   ];
   String? _clientProduct;
   final List<String> _clientProducts = [
+    'all',
     'distributor',
     'salesman',
     'subAgent',
@@ -642,6 +643,7 @@ class StockViewModel extends ChangeNotifier {
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
+    required String? stockEvent,
   }) async {
     isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
@@ -658,6 +660,7 @@ class StockViewModel extends ChangeNotifier {
         agentId: agentId,
         subAgentId: subAgentId,
         salesId: salesId,
+        stockEvent: stockEvent,
       );
     } else {
       if (status == 'created') {
@@ -669,6 +672,7 @@ class StockViewModel extends ChangeNotifier {
           agentId: agentId,
           subAgentId: subAgentId,
           salesId: salesId,
+          stockEvent: stockEvent,
         );
       } else {
         response = await apiService.getStockTable(
@@ -705,8 +709,6 @@ class StockViewModel extends ChangeNotifier {
         break;
       case 'created':
         for (var el in response) {
-          print("WOLOLO......");
-          print(el);
           double price =
               (el?['agentPrice'] ?? 0) > 0
                   ? el['agentPrice'].toDouble()
@@ -715,8 +717,6 @@ class StockViewModel extends ChangeNotifier {
                   : (el?['salesmanPrice'] ?? 0) > 0
                   ? el['salesmanPrice'].toDouble()
                   : (el?['totalPrice'] ?? 0).toDouble();
-          print("PRICE......");
-          print(price);
           totalOnProgress += price;
         }
 

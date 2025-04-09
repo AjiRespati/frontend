@@ -47,6 +47,7 @@ class StockCanceledView extends StatelessWidget with GetItMixin {
                     salesId: null,
                     agentId: null,
                     subAgentId: null,
+                    stockEvent: null,
                   );
                 },
                 child: Icon(Icons.search, color: Colors.white, size: 30),
