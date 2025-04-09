@@ -50,10 +50,12 @@ Future<DateTime?> showCustomDatePicker({
     context: context,
     builder: (BuildContext context) {
       return Dialog(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.white,
         child: CalendarDatePicker(
           initialDate: initialDate, // DateTime.now(),
           firstDate: firstDate, //DateTime(1900),
-          lastDate: DateTime.now(),
+          lastDate: DateTime(3000),
           onDateChanged: (DateTime date) {
             selectedDate = date;
             Navigator.of(context).pop(date); // Close and return date

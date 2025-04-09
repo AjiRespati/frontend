@@ -18,31 +18,79 @@ class _StockState extends State<Stock> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
+      var user = get<SystemViewModel>().user;
+      var userClient = (user['levelDesc'] ?? "salesman").toLowerCase();
       get<StockViewModel>().getStockTable(
         context: context,
         status: 'created',
-        isClient: (get<SystemViewModel>().level ?? 0) < 4,
-        salesId: null,
-        agentId: null,
-        subAgentId: null,
+        isClient: isClient,
+        salesId:
+            isClient
+                ? userClient == "salesman"
+                    ? get<SystemViewModel>().salesId
+                    : null
+                : null,
+        subAgentId:
+            isClient
+                ? userClient == "subagent"
+                    ? get<SystemViewModel>().subAgentId
+                    : null
+                : null,
+        agentId:
+            isClient
+                ? userClient == "agent"
+                    ? get<SystemViewModel>().agentId
+                    : null
+                : null,
         stockEvent: null,
       );
       get<StockViewModel>().getStockTable(
         context: context,
         status: 'settled',
-        isClient: (get<SystemViewModel>().level ?? 0) < 4,
-        salesId: null,
-        agentId: null,
-        subAgentId: null,
+        isClient: isClient,
+        salesId:
+            isClient
+                ? userClient == "salesman"
+                    ? get<SystemViewModel>().salesId
+                    : null
+                : null,
+        subAgentId:
+            isClient
+                ? userClient == "subagent"
+                    ? get<SystemViewModel>().subAgentId
+                    : null
+                : null,
+        agentId:
+            isClient
+                ? userClient == "agent"
+                    ? get<SystemViewModel>().agentId
+                    : null
+                : null,
         stockEvent: null,
       );
       get<StockViewModel>().getStockTable(
         context: context,
         status: 'canceled',
-        isClient: (get<SystemViewModel>().level ?? 0) < 4,
-        salesId: null,
-        agentId: null,
-        subAgentId: null,
+        isClient: isClient,
+        salesId:
+            isClient
+                ? userClient == "salesman"
+                    ? get<SystemViewModel>().salesId
+                    : null
+                : null,
+        subAgentId:
+            isClient
+                ? userClient == "subagent"
+                    ? get<SystemViewModel>().subAgentId
+                    : null
+                : null,
+        agentId:
+            isClient
+                ? userClient == "agent"
+                    ? get<SystemViewModel>().agentId
+                    : null
+                : null,
         stockEvent: null,
       );
     });

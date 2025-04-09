@@ -40,8 +40,18 @@ class StockViewModel extends ChangeNotifier {
   double _totalOnProgress = 0.0;
   double _totalOnCanceled = 0.0;
 
-  DateTime _dateFromFilter = DateTime.now().subtract(Duration(days: 7));
-  DateTime _dateToFilter = DateTime.now();
+  // DateTime _dateFromFilter = DateTime.now().subtract(Duration(days: 7));
+  // DateTime _dateToFilter = DateTime.now();
+  DateTime _dateFromFilter = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    1,
+  );
+  DateTime _dateToFilter = DateTime(
+    DateTime.now().year,
+    DateTime.now().month + 1,
+    1,
+  ).subtract(Duration(days: 1));
   String? _choosenMetricId;
 
   String? _metricId;

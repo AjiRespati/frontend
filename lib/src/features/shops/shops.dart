@@ -20,10 +20,6 @@ class _ShopsState extends State<Shops> with GetItStateMixin {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.isAllShop != true) {
-        get<SystemViewModel>().salesId;
-        get<SystemViewModel>().subAgentId;
-        get<SystemViewModel>().agentId;
-
         String? id =
             get<SystemViewModel>().salesId ??
             (get<SystemViewModel>().subAgentId ??

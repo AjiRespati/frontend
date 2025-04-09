@@ -5,6 +5,7 @@ import 'package:frontend/application_info.dart';
 import 'package:frontend/src/features/stock/components/settling_stock.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class StockClientCard extends StatelessWidget with GetItMixin {
@@ -24,6 +25,7 @@ class StockClientCard extends StatelessWidget with GetItMixin {
     String imageUrl = ApplicationInfo.baseUrl + (stock['image'] ?? '');
     var client = get<StockViewModel>().client;
     bool isNew = stock['status'] == 'created';
+    bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
     // print("HALAHHHHHHHHHHHHH");
     // print(stock);
     return ClipRect(
@@ -50,7 +52,9 @@ class StockClientCard extends StatelessWidget with GetItMixin {
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap:
-                isNew
+                isClient
+                    ? null
+                    : isNew
                     ? () {
                       showModalBottomSheet(
                         isScrollControlled: true,

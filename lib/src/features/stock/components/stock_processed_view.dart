@@ -23,7 +23,7 @@ class _StockProcessedViewState extends State<StockProcessedView>
 
   Future<void> _setup() async {
     _clients = get<StockViewModel>().clientProducts;
-    await Future.delayed(Durations.short4);
+
     setState(() {});
   }
 
@@ -38,6 +38,7 @@ class _StockProcessedViewState extends State<StockProcessedView>
 
   @override
   Widget build(BuildContext context) {
+    String? userCient = watchOnly((StockViewModel x) => x.client);
     return Column(
       children: [
         Padding(
@@ -68,17 +69,41 @@ class _StockProcessedViewState extends State<StockProcessedView>
                 // inactiveDelay: Duration.zero,
                 buttonHeight: 34,
                 onPressed: () {
+                  bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
                   get<StockViewModel>().totalOnProgress = 0.0;
                   if (_validateClient(_client, _idChoosen)) {
-                    get<StockViewModel>().getStockTable(
-                      context: context,
-                      status: 'created',
-                      isClient: (get<SystemViewModel>().level ?? 0) < 4,
-                      salesId: _client == "salesman" ? _idChoosen : null,
-                      agentId: _client == "subAgent" ? _idChoosen : null,
-                      subAgentId: _client == "agent" ? _idChoosen : null,
-                      stockEvent: _client == 'distributor' ? "stock_in" : null,
-                    );
+                    if (isClient) {
+                      get<StockViewModel>().getStockTable(
+                        context: context,
+                        status: 'created',
+                        isClient: isClient,
+                        salesId:
+                            userCient == "salesman"
+                                ? get<SystemViewModel>().salesId
+                                : null,
+                        agentId:
+                            userCient == "subagent"
+                                ? get<SystemViewModel>().subAgentId
+                                : null,
+                        subAgentId:
+                            userCient == "agent"
+                                ? get<SystemViewModel>().agentId
+                                : null,
+                        stockEvent:
+                            _client == 'distributor' ? "stock_in" : null,
+                      );
+                    } else {
+                      get<StockViewModel>().getStockTable(
+                        context: context,
+                        status: 'created',
+                        isClient: isClient,
+                        salesId: _client == "salesman" ? _idChoosen : null,
+                        agentId: _client == "subAgent" ? _idChoosen : null,
+                        subAgentId: _client == "agent" ? _idChoosen : null,
+                        stockEvent:
+                            _client == 'distributor' ? "stock_in" : null,
+                      );
+                    }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -99,95 +124,98 @@ class _StockProcessedViewState extends State<StockProcessedView>
             ],
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButtonFormField<String>(
-                  decoration: InputDecoration(isDense: true),
-                  value:
-                      _client, // watchOnly((StockViewModel x) => x.clientProduct),
-                  items:
-                      _clients.map((item) {
-                        return DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(item),
-                        );
-                      }).toList(),
-                  // get<StockViewModel>().clientProducts.map((item) {
-                  //   return DropdownMenuItem<String>(
-                  //     value: item,
-                  //     child: Text(item),
-                  //   );
-                  // }).toList(),
-                  onChanged: (value) async {
-                    get<StockViewModel>().salesChoosen = null;
-                    get<StockViewModel>().subAgentChoosen = null;
-                    get<StockViewModel>().agentChoosen = null;
-                    get<StockViewModel>().clientProduct = value;
-                    _idChoosen = null;
-                    _nameChoosen = null;
-                    _client = value;
+        if (!(userCient == "salesman" ||
+            userCient == "subagent" ||
+            userCient == "agent"))
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(isDense: true),
+                    value:
+                        _client, // watchOnly((StockViewModel x) => x.clientProduct),
+                    items:
+                        _clients.map((item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(item),
+                          );
+                        }).toList(),
+                    // get<StockViewModel>().clientProducts.map((item) {
+                    //   return DropdownMenuItem<String>(
+                    //     value: item,
+                    //     child: Text(item),
+                    //   );
+                    // }).toList(),
+                    onChanged: (value) async {
+                      get<StockViewModel>().salesChoosen = null;
+                      get<StockViewModel>().subAgentChoosen = null;
+                      get<StockViewModel>().agentChoosen = null;
+                      get<StockViewModel>().clientProduct = value;
+                      _idChoosen = null;
+                      _nameChoosen = null;
+                      _client = value;
 
-                    switch (value) {
-                      case 'salesman':
-                        _names = get<StockViewModel>().salesmanNames;
-                        break;
-                      case 'subAgent':
-                        _names = get<StockViewModel>().subAgentNames;
-                        break;
-                      case 'agent':
-                        _names = get<StockViewModel>().agentNames;
-                        break;
-                      default:
-                        _names = [];
-                    }
-                    await Future.delayed(Durations.short4);
-                    setState(() {});
-                  },
+                      switch (value) {
+                        case 'salesman':
+                          _names = get<StockViewModel>().salesmanNames;
+                          break;
+                        case 'subAgent':
+                          _names = get<StockViewModel>().subAgentNames;
+                          break;
+                        case 'agent':
+                          _names = get<StockViewModel>().agentNames;
+                          break;
+                        default:
+                          _names = [];
+                      }
+                      await Future.delayed(Durations.short4);
+                      setState(() {});
+                    },
+                  ),
                 ),
               ),
-            ),
 
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButtonFormField<String>(
-                  decoration: InputDecoration(isDense: true),
-                  value: _nameChoosen,
-                  // (_client == "salesman")
-                  //     ? watchOnly(
-                  //       (StockViewModel x) => x.salesChoosen,
-                  //     ) // get<StockViewModel>().salesChoosen
-                  //     : (_client == 'subAgent')
-                  //     ? watchOnly((StockViewModel x) => x.subAgentChoosen)
-                  //     : watchOnly((StockViewModel x) => x.agentChoosen),
-                  items:
-                      _names.map((item) {
-                        return DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(item),
-                        );
-                      }).toList(),
-                  onChanged: (value) async {
-                    (_client == "salesman")
-                        ? get<StockViewModel>().salesChoosen = value
-                        : (_client == 'subAgent')
-                        ? get<StockViewModel>().subAgentChoosen = value
-                        : get<StockViewModel>().agentChoosen = value;
-                    _nameChoosen = value;
-                    _idChoosen = generateIdChoosen(_client, _nameChoosen);
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(isDense: true),
+                    value: _nameChoosen,
+                    // (_client == "salesman")
+                    //     ? watchOnly(
+                    //       (StockViewModel x) => x.salesChoosen,
+                    //     ) // get<StockViewModel>().salesChoosen
+                    //     : (_client == 'subAgent')
+                    //     ? watchOnly((StockViewModel x) => x.subAgentChoosen)
+                    //     : watchOnly((StockViewModel x) => x.agentChoosen),
+                    items:
+                        _names.map((item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(item),
+                          );
+                        }).toList(),
+                    onChanged: (value) async {
+                      (_client == "salesman")
+                          ? get<StockViewModel>().salesChoosen = value
+                          : (_client == 'subAgent')
+                          ? get<StockViewModel>().subAgentChoosen = value
+                          : get<StockViewModel>().agentChoosen = value;
+                      _nameChoosen = value;
+                      _idChoosen = generateIdChoosen(_client, _nameChoosen);
 
-                    await Future.delayed(Durations.short4);
-                    setState(() {});
-                  },
+                      await Future.delayed(Durations.short4);
+                      setState(() {});
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
 
         Divider(),
 
