@@ -14,6 +14,7 @@ class ShopDetailMobile extends StatelessWidget with GetItMixin {
   final Map<String, dynamic> item;
   @override
   Widget build(BuildContext context) {
+    watchOnly((StockViewModel x) => x.shopStockTable);
     var mainItem = watchOnly((StockViewModel x) => x.stockResume);
     var mainList = watchOnly((StockViewModel x) => x.shopStockTable);
     print("MAIN ITEM: ");
@@ -52,7 +53,7 @@ class ShopDetailMobile extends StatelessWidget with GetItMixin {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         showModalBottomSheet(
                           isScrollControlled: true,
                           constraints: BoxConstraints(maxHeight: 640),
@@ -68,7 +69,7 @@ class ShopDetailMobile extends StatelessWidget with GetItMixin {
                               ),
                             );
                           },
-                        );
+                        ).then((value) {});
                       },
                       child: Icon(Icons.edit),
                     ),

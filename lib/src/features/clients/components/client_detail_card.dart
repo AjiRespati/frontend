@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/utils/helpers.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ClientDetailCard extends StatelessWidget with GetItMixin {
@@ -9,6 +10,7 @@ class ClientDetailCard extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    watchOnly((StockViewModel x) => x.shopStockTable);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),

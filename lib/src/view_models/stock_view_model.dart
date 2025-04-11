@@ -1022,6 +1022,25 @@ class StockViewModel extends ChangeNotifier {
     );
   }
 
+  Future<bool> returnFreezer({
+    required BuildContext context,
+    required String id,
+  }) async {
+    return await apiService.returnFreezer(context: context, id: id);
+  }
+
+  Future<bool> updateFreezerStatus({
+    required BuildContext context,
+    required String id,
+    required String status,
+  }) async {
+    return await apiService.updateFreezerStatus(
+      context: context,
+      id: id,
+      status: status,
+    );
+  }
+
   addProductTransaction(ProductTransaction val) {
     // Find the index of an existing transaction with the same productId
     // Returns -1 if no matching element is found.

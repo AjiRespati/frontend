@@ -1646,4 +1646,82 @@ class ApiService {
       return false;
     }
   }
+
+  Future<bool> returnFreezer({
+    required BuildContext context,
+    required String id,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/refrigerators/return/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return returnFreezer(context: context, id: id);
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return false;
+    }
+  }
+
+  Future<bool> updateFreezerStatus({
+    required BuildContext context,
+    required String id,
+    required String status,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/refrigerators/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({'status': status}),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return updateFreezerStatus(context: context, id: id, status: status);
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return false;
+    }
+  }
 }
