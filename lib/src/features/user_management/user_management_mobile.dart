@@ -46,7 +46,10 @@ class UserManagementMobile extends StatelessWidget with GetItMixin {
                     itemBuilder: (context, index) {
                       var item = get<SystemViewModel>().users[index];
                       // print(item);
-                      return UserTableCard(user: item);
+                      return UserTableCard(
+                        key: ValueKey(index + 19000),
+                        user: item,
+                      );
                     },
                   ),
                 ),

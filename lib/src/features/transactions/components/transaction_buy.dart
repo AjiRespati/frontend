@@ -90,6 +90,7 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
                 ProductTransaction item =
                     get<StockViewModel>().newTransactions[index];
                 return Card(
+                  key: ValueKey(index + 17000),
                   elevation: 1,
                   child: Padding(
                     padding: const EdgeInsets.all(10),

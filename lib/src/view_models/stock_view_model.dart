@@ -1033,11 +1033,13 @@ class StockViewModel extends ChangeNotifier {
     required BuildContext context,
     required String id,
     required String status,
+    required String? description,
   }) async {
     return await apiService.updateFreezerStatus(
       context: context,
       id: id,
       status: status,
+      description: description,
     );
   }
 

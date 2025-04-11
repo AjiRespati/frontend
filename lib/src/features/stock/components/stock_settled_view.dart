@@ -81,12 +81,14 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                         get<StockViewModel>().stockTable[index];
                     if (level > 3) {
                       return StockTableCard(
+                        key: ValueKey(index + 14000),
                         isMobile: true,
                         stock: stock,
                         stockStatus: 'settled',
                       );
                     } else {
                       return StockClientCard(
+                        key: ValueKey(index + 15000),
                         stockStatus: 'settled',
                         isMobile: true,
                         stock: stock,

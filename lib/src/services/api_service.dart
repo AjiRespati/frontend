@@ -1689,6 +1689,7 @@ class ApiService {
     required BuildContext context,
     required String id,
     required String status,
+    required String? description,
   }) async {
     String? token = await _getToken();
 
@@ -1698,7 +1699,7 @@ class ApiService {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
       },
-      body: jsonEncode({'status': status}),
+      body: jsonEncode({'status': status, 'description': description}),
     );
 
     if (response.statusCode == 401) {
@@ -1707,7 +1708,12 @@ class ApiService {
         Navigator.pushNamed(context, signInRoute);
         return false;
       }
-      return updateFreezerStatus(context: context, id: id, status: status);
+      return updateFreezerStatus(
+        context: context,
+        id: id,
+        status: status,
+        description: description,
+      );
     } else if (response.statusCode == 200) {
       return true;
     } else {

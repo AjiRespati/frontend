@@ -151,7 +151,10 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                                 watchOnly(
                                   (StockViewModel x) => x.productsDetail,
                                 )![index];
-                            return ProductDetailCard(product: product);
+                            return ProductDetailCard(
+                              product: product,
+                              key: ValueKey(index + 6000),
+                            );
                           },
                         ),
                       ),

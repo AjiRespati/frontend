@@ -64,6 +64,7 @@ class FreezerMobile extends StatelessWidget with GetItMixin {
                   return FreezerTableCard(
                     isMobile: true,
                     freezer: get<StockViewModel>().freezers[index],
+                    key: ValueKey(index + 5000),
                   );
                 },
               ),

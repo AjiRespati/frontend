@@ -10,6 +10,7 @@ class DashboardMobile extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
     return Scaffold(
       appBar: AppBar(
         title: Text("Dashboard"),
@@ -52,42 +53,57 @@ class DashboardMobile extends StatelessWidget with GetItMixin {
                     .toDouble(),
               ),
 
-            _buildCommissionCard(
-              "Total Commission",
-              (get<StockViewModel>().commissionData?['totalCommission'] ??
-                      0 as num)
-                  .toDouble(),
-            ),
-            _buildCommissionCard(
-              "Distributor",
-              (get<StockViewModel>().commissionData?['distributorCommission'] ??
-                      0 as num)
-                  .toDouble(),
-            ),
-            _buildCommissionCard(
-              "Agent",
-              (get<StockViewModel>().commissionData?['agentCommission'] ??
-                      0 as num)
-                  .toDouble(),
-            ),
-            _buildCommissionCard(
-              "SubAgent",
-              (get<StockViewModel>().commissionData?['subAgentCommission'] ??
-                      0 as num)
-                  .toDouble(),
-            ),
-            _buildCommissionCard(
-              "Salesman",
-              (get<StockViewModel>().commissionData?['salesmanCommission'] ??
-                      0 as num)
-                  .toDouble(),
-            ),
-            _buildCommissionCard(
-              "Shop",
-              (get<StockViewModel>().commissionData?['shopCommission'] ??
-                      0 as num)
-                  .toDouble(),
-            ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "Total Commission",
+                  (get<StockViewModel>().commissionData?['totalCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "Distributor",
+                  (get<StockViewModel>()
+                              .commissionData?['distributorCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "Agent",
+                  (get<StockViewModel>().commissionData?['agentCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "SubAgent",
+                  (get<StockViewModel>()
+                              .commissionData?['subAgentCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "Salesman",
+                  (get<StockViewModel>()
+                              .commissionData?['salesmanCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "Shop",
+                  (get<StockViewModel>().commissionData?['shopCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
             const SizedBox(height: 20),
           ],
         ),

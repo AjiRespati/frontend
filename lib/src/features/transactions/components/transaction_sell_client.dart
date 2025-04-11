@@ -110,6 +110,7 @@ class _TransactionSellClientState extends State<TransactionSellClient>
                 ProductTransaction item =
                     get<StockViewModel>().newTransactions[index];
                 return Card(
+                  key: ValueKey(index + 18000),
                   elevation: 1,
                   child: Padding(
                     padding: const EdgeInsets.all(10),

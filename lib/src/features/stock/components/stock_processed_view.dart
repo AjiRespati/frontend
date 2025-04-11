@@ -259,6 +259,7 @@ class _StockProcessedViewState extends State<StockProcessedView>
                     Map<String, dynamic> stock =
                         get<StockViewModel>().stockOnProgressTable[index];
                     return StockClientCard(
+                      key: ValueKey(index + 13000),
                       stockStatus: 'created',
                       isMobile: true,
                       stock: stock,

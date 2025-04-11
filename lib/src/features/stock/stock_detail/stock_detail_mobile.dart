@@ -72,7 +72,11 @@ class StockDetailMobile extends StatelessWidget with GetItMixin {
                         itemBuilder: (context, idx) {
                           var item = stocks[idx];
                           bool isNew = item['status'] == 'created';
-                          return StockDetailCard(isNew: isNew, item: item);
+                          return StockDetailCard(
+                            key: ValueKey(idx + 16000),
+                            isNew: isNew,
+                            item: item,
+                          );
                         },
                       ),
                     ),

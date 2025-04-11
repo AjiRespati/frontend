@@ -131,7 +131,10 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
                     itemCount: mainList.length,
                     itemBuilder: (context, index) {
                       var item = mainList[index];
-                      return ClientDetailCard(item: item);
+                      return ClientDetailCard(
+                        item: item,
+                        key: ValueKey(index + 1000),
+                      );
                     },
                   ),
                 ),

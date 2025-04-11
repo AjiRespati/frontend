@@ -33,6 +33,7 @@ class _UpdateFreezerState extends State<UpdateFreezer> with GetItStateMixin {
         context: context,
         id: freezerInfo['id'],
         status: oldStatus.toLowerCase(),
+        description: null,
       );
 
       if (result) {

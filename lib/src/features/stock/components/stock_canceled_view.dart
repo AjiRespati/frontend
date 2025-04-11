@@ -76,6 +76,7 @@ class StockCanceledView extends StatelessWidget with GetItMixin {
 
                   itemBuilder: (context, index) {
                     return StockTableCard(
+                      key: ValueKey(index + 12000),
                       isMobile: true,
                       stock: get<StockViewModel>().stockOnCanceledTable[index],
                       stockStatus: 'canceled',

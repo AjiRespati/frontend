@@ -5,6 +5,7 @@ import 'package:frontend/src/models/freezer_status.dart';
 import 'package:frontend/src/services/api_service.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -25,14 +26,18 @@ class UpdateFreezerStatus extends StatefulWidget with GetItStatefulWidgetMixin {
 class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
     with GetItStateMixin {
   bool _isBusy = false;
-  // State variable to hold the currently selected status
-  // No longer initialized here directly
+  bool _isClient = true;
   late FreezerStatus _selectedStatus;
-
-  // List of all possible status values (remains the same)
   final List<FreezerStatus> _allStatuses = FreezerStatus.values;
+  final TextEditingController _freezerDescController = TextEditingController();
 
   Future<bool> _handleUpdate() async {
+    String? id =
+        get<SystemViewModel>().salesId ??
+        (get<SystemViewModel>().subAgentId ?? (get<SystemViewModel>().agentId));
+
+    String salesId = id ?? "";
+
     if (_selectedStatus == FreezerStatus.idle) {
       bool result = await get<StockViewModel>().returnFreezer(
         context: context,
@@ -40,7 +45,14 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
       );
 
       if (result) {
-        await get<StockViewModel>().getAllShops(context: context);
+        if (_isClient) {
+          await get<StockViewModel>().getShopsBySales(
+            context: context,
+            salesId: salesId,
+          );
+        } else {
+          await get<StockViewModel>().getAllShops(context: context);
+        }
         await get<StockViewModel>().getAllFrezer(context);
         return true;
       } else {
@@ -51,10 +63,18 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
         context: context,
         id: widget.freezer?['id'] ?? "",
         status: _selectedStatus.name,
+        description: _freezerDescController.text,
       );
 
       if (result) {
-        await get<StockViewModel>().getAllShops(context: context);
+        if (_isClient) {
+          await get<StockViewModel>().getShopsBySales(
+            context: context,
+            salesId: salesId,
+          );
+        } else {
+          await get<StockViewModel>().getAllShops(context: context);
+        }
         await get<StockViewModel>().getAllFrezer(context);
         return true;
       } else {
@@ -66,13 +86,15 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
   @override
   void initState() {
     super.initState();
-    _selectedStatus = freezerStatusFromString(widget.freezer['status']);
+    _isClient = (get<SystemViewModel>().level ?? 0) < 4;
+    _selectedStatus = freezerStatusFromString(widget.freezer?['status']);
+    _freezerDescController.text = widget.freezer?['description'] ?? "";
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 450,
+      height: 500,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -113,7 +135,20 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
                 },
               );
             }),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: TextField(
+                controller: _freezerDescController,
+                maxLines: 2,
+                minLines: 1,
+                decoration: InputDecoration(
+                  labelText: "Keterangan",
+                  isDense: true,
+                ),
+              ),
+            ),
             SizedBox(height: 30),
+
             Stack(
               children: [
                 Row(
@@ -180,6 +215,7 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
                 ),
               ],
             ),
+            SizedBox(height: 20),
           ],
         ),
       ),

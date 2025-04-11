@@ -17,12 +17,7 @@ class ShopDetailMobile extends StatelessWidget with GetItMixin {
     watchOnly((StockViewModel x) => x.shopStockTable);
     var mainItem = watchOnly((StockViewModel x) => x.stockResume);
     var mainList = watchOnly((StockViewModel x) => x.shopStockTable);
-    print("MAIN ITEM: ");
-    print(mainItem);
-    print("MAIN LIST: ");
-    print(mainList);
-    print("ITEM: ");
-    print(item);
+
     return Scaffold(
       appBar: AppBar(title: Text("Detail Toko")),
       body: Padding(
@@ -127,11 +122,18 @@ class ShopDetailMobile extends StatelessWidget with GetItMixin {
                           itemBuilder: (context, index) {
                             var freezer = item['Refrigerators'][index];
                             return Row(
+                              key: ValueKey(index + 10000),
                               children: [
                                 Flexible(
                                   child: Text(
                                     "${freezer['name']} (${freezer['serialNumber']})",
                                     overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: _generateBrokenFreezerColor(
+                                        freezer['status'],
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -199,7 +201,10 @@ class ShopDetailMobile extends StatelessWidget with GetItMixin {
                     itemCount: mainList.length,
                     itemBuilder: (context, index) {
                       var item = mainList[index];
-                      return ClientDetailCard(item: item);
+                      return ClientDetailCard(
+                        item: item,
+                        key: ValueKey(index + 11000),
+                      );
                     },
                   ),
                 ),
@@ -235,5 +240,16 @@ class ShopDetailMobile extends StatelessWidget with GetItMixin {
         ),
       ),
     );
+  }
+
+  Color _generateBrokenFreezerColor(String status) {
+    switch (status) {
+      case 'broken':
+        return Colors.red.shade700;
+      case 'repairing':
+        return Colors.amber.shade700;
+      default:
+        return Colors.black;
+    }
   }
 }

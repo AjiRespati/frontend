@@ -17,6 +17,7 @@ class SubAgentView extends StatelessWidget with GetItMixin {
             var item = get<StockViewModel>().subAgents[index];
             return Padding(
               padding: const EdgeInsets.all(8.0),
+              key: ValueKey(index + 4000),
               child: Card(
                 child: SizedBox(
                   child: Padding(

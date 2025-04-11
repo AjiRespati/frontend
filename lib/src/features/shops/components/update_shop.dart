@@ -7,6 +7,7 @@ import 'package:frontend/src/models/freezer_status.dart';
 import 'package:frontend/src/services/api_service.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -23,6 +24,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
   dynamic _selectedFrezer;
   String oldStatus = "ACTIVE";
   String? _message;
+  bool _isClient = true;
 
   void _submit() async {
     var shopInfo = widget.shop;
@@ -58,19 +60,17 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
     super.initState();
     // print(widget.shop);
     oldStatus = widget.shop["status"].toString().toUpperCase();
+    _isClient = (get<SystemViewModel>().level ?? 0) < 4;
   }
 
   @override
   Widget build(BuildContext context) {
     watchOnly((StockViewModel x) => x.shops);
+
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
         children: [
-          Text(
-            "Update Toko",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -84,11 +84,11 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
             ],
           ),
           Text(
-            "${widget.shop['status']}",
+            "${(widget.shop['status'] ?? "").toUpperCase()}",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,
-              color: statusColor(widget.shop['status']),
+              color: statusColor(widget.shop['status'] ?? ""),
             ),
           ),
           SizedBox(height: 15),
@@ -105,68 +105,79 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                 var freezer = widget.shop['Refrigerators'][index];
                 var freezerStatus = freezer['status'];
                 return Padding(
+                  key: ValueKey(index + 9000),
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
+                  child: Column(
                     children: [
-                      Flexible(
-                        child: Text(
-                          "${freezer['name']} (${freezer['serialNumber']})",
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        freezerStatusFromString(freezerStatus).displayName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: statusColor(freezerStatus),
-                        ),
-                      ),
-                      SizedBox(width: 30),
-                      InkWell(
-                        onTap: () async {
-                          bool? result = await showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                child: UpdateFreezerStatus(
-                                  freezer: freezer,
-                                  selectedStatus: (newStatus) {
-                                    setState(() {
-                                      freezerStatus = newStatus?.name;
-                                    });
-                                  },
-                                ),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              "${freezer['name']} (${freezer['serialNumber']})",
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            freezerStatusFromString(freezerStatus).displayName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: statusColor(freezerStatus),
+                            ),
+                          ),
+                          SizedBox(width: 30),
+                          InkWell(
+                            onTap: () async {
+                              bool? result = await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    child: UpdateFreezerStatus(
+                                      freezer: freezer,
+                                      selectedStatus: (newStatus) {
+                                        setState(() {
+                                          freezerStatus = newStatus?.name;
+                                        });
+                                      },
+                                    ),
+                                  );
+                                },
                               );
-                            },
-                          );
-                          if (result == true) {
-                            setState(() {
-                              _message = "Berhasil update status freezer";
-                            });
-                            await Future.delayed(Durations.extralong4);
+                              if (result == true) {
+                                setState(() {
+                                  _message = "Berhasil update status freezer";
+                                });
+                                await Future.delayed(Durations.extralong4);
 
-                            setState(() {
-                              _message = null;
-                            });
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          } else if (result == false) {
-                            setState(() {
-                              _message = "Update status freezer tidak berhasil";
-                            });
-                            await Future.delayed(Durations.extralong4);
-                            setState(() {
-                              _message = null;
-                            });
-                          } else {
-                            setState(() {
-                              _message = "test";
-                            });
-                          }
-                        },
-                        child: Icon(Icons.edit, size: 18),
+                                setState(() {
+                                  _message = null;
+                                });
+                                // Navigator.pop(context);
+                                Navigator.pop(context);
+                              } else if (result == false) {
+                                setState(() {
+                                  _message =
+                                      "Update status freezer tidak berhasil";
+                                });
+                                await Future.delayed(Durations.extralong4);
+                                setState(() {
+                                  _message = null;
+                                });
+                              } else {
+                                setState(() {
+                                  _message = "test";
+                                });
+                                await Future.delayed(Durations.extralong4);
+                                setState(() {
+                                  _message = null;
+                                });
+                              }
+                            },
+                            child: Icon(Icons.edit, size: 18),
+                          ),
+                        ],
                       ),
+                      Row(children: [Text(freezer['description'] ?? "")]),
                     ],
                   ),
                 );
@@ -174,84 +185,88 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
             ),
           ),
 
-          Row(children: [Text("Kirim Freezer")]),
-          DropdownSearch<dynamic>(
-            decoratorProps: DropDownDecoratorProps(
-              baseStyle: const TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
-              ), // Style for text inside the closed dropdown
-            ),
-            popupProps: PopupProps.menu(
-              // Or .dialog(), .modalBottomSheet(), .menu()
-              showSearchBox: true,
-              searchFieldProps: TextFieldProps(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  hintText: "Cari freezer...",
-                ),
-                cursorColor: Theme.of(context).primaryColor,
+          if (!_isClient) Row(children: [Text("Kirim Freezer")]),
+          if (!_isClient)
+            DropdownSearch<dynamic>(
+              decoratorProps: DropDownDecoratorProps(
+                baseStyle: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ), // Style for text inside the closed dropdown
               ),
-              itemBuilder: _customPopupItemBuilder,
+              popupProps: PopupProps.menu(
+                // Or .dialog(), .modalBottomSheet(), .menu()
+                showSearchBox: true,
+                searchFieldProps: TextFieldProps(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    hintText: "Cari freezer...",
+                  ),
+                  cursorColor: Theme.of(context).primaryColor,
+                ),
+                itemBuilder: _customPopupItemBuilder,
+              ),
+              // *** Core properties (mostly unchanged in how they are used) ***
+              items:
+                  (filter, loadProps) =>
+                      get<StockViewModel>().idleFreezers, // The list of items
+              onChanged: (dynamic newValue) {
+                // Callback when an item is selected
+                setState(() {
+                  _selectedFrezer = newValue;
+                  // print("Selected shop: $_selectedFrezer");
+                });
+              },
+              selectedItem: _selectedFrezer, // The currently selected item
+              // *** Optional: Customize the display of the selected item when closed ***
+              // This builder is still valid at the top level
+              dropdownBuilder: (context, selectedItem) {
+                if (selectedItem == null) {
+                  // Use hint style from decoration if available and item is null
+                  final hintStyle =
+                      Theme.of(context).inputDecorationTheme.hintStyle ??
+                      TextStyle(color: Colors.grey[600]);
+                  return Text("Pilih freezer", style: hintStyle);
+                }
+                return Text(
+                  "${selectedItem['name']} (${selectedItem['serialNumber']})",
+                );
+              },
+              filterFn: (item, filter) {
+                // Optional: Custom filter logic
+                if (filter.isEmpty) return true; // Show all if search is empty
+                // Case-insensitive search
+                return item['name'].toLowerCase().contains(
+                  filter.toLowerCase(),
+                );
+              },
+              compareFn: (item1, item2) => item1['id' == item2['id']],
             ),
-            // *** Core properties (mostly unchanged in how they are used) ***
-            items:
-                (filter, loadProps) =>
-                    get<StockViewModel>().idleFreezers, // The list of items
-            onChanged: (dynamic newValue) {
-              // Callback when an item is selected
-              setState(() {
-                _selectedFrezer = newValue;
-                // print("Selected shop: $_selectedFrezer");
-              });
-            },
-            selectedItem: _selectedFrezer, // The currently selected item
-            // *** Optional: Customize the display of the selected item when closed ***
-            // This builder is still valid at the top level
-            dropdownBuilder: (context, selectedItem) {
-              if (selectedItem == null) {
-                // Use hint style from decoration if available and item is null
-                final hintStyle =
-                    Theme.of(context).inputDecorationTheme.hintStyle ??
-                    TextStyle(color: Colors.grey[600]);
-                return Text("Pilih freezer", style: hintStyle);
-              }
-              return Text(
-                "${selectedItem['name']} (${selectedItem['serialNumber']})",
-              );
-            },
-            filterFn: (item, filter) {
-              // Optional: Custom filter logic
-              if (filter.isEmpty) return true; // Show all if search is empty
-              // Case-insensitive search
-              return item['name'].toLowerCase().contains(filter.toLowerCase());
-            },
-            compareFn: (item1, item2) => item1['id' == item2['id']],
-          ),
 
           SizedBox(height: 10),
-          Row(children: [Text("Update Status Toko")]),
-          DropdownButtonFormField<String>(
-            decoration: InputDecoration(isDense: true),
-            value: oldStatus,
-            items:
-                ["ACTIVE", "INACTIVE"].map((item) {
-                  return DropdownMenuItem<String>(
-                    value: item,
-                    child: Text(item),
-                  );
-                }).toList(),
-            onChanged: (value) {
-              oldStatus = value ?? "new";
-              setState(() {});
-            },
-          ),
+          if (!_isClient) Row(children: [Text("Update Status Toko")]),
+          if (!_isClient)
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(isDense: true),
+              value: oldStatus,
+              items:
+                  ["ACTIVE", "INACTIVE"].map((item) {
+                    return DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(item),
+                    );
+                  }).toList(),
+              onChanged: (value) {
+                oldStatus = value ?? "new";
+                setState(() {});
+              },
+            ),
 
           Stack(
             children: [
@@ -277,38 +292,56 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                 ),
             ],
           ),
-          Stack(
-            children: [
-              GradientElevatedButton(
-                // inactiveDelay: Duration.zero,
-                onPressed: _submit,
-                child: Text(
-                  "Update Toko",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+
+          if (!_isClient)
+            Stack(
+              children: [
+                GradientElevatedButton(
+                  // inactiveDelay: Duration.zero,
+                  onPressed: _submit,
+                  child: Text(
+                    "Update Toko",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
-              Row(
-                children: [
-                  if (watchOnly((StockViewModel x) => x.isBusy))
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 5,
+                Row(
+                  children: [
+                    if (watchOnly((StockViewModel x) => x.isBusy))
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 5,
+                        ),
+                        child: SizedBox(
+                          width: 25,
+                          height: 25,
+                          child: CircularProgressIndicator(
+                            color: Colors.white70,
+                          ),
+                        ),
                       ),
-                      child: SizedBox(
-                        width: 25,
-                        height: 25,
-                        child: CircularProgressIndicator(color: Colors.white70),
-                      ),
-                    ),
-                ],
+                  ],
+                ),
+              ],
+            ),
+          if (!_isClient) SizedBox(height: 400),
+
+          if (_isClient)
+            GradientElevatedButton(
+              // inactiveDelay: Duration.zero,
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Tutup",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ],
-          ),
-          SizedBox(height: 400),
+            ),
+          if (_isClient) SizedBox(height: 50),
         ],
       ),
     );
