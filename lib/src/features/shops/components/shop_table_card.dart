@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend/src/routes/route_names.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
 
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -24,9 +25,7 @@ class ShopTableCard extends StatefulWidget with GetItStatefulWidgetMixin {
 class _ShopTableCardState extends State<ShopTableCard> with GetItStateMixin {
   bool _isBroken = false;
 
-  @override
-  void initState() {
-    super.initState();
+  void _setup() {
     List<bool> brokenFreezer = [];
     for (var i = 0; i < (widget.shop['Refrigerators'] ?? []).length; i++) {
       var item = widget.shop['Refrigerators'][i];
@@ -36,11 +35,20 @@ class _ShopTableCardState extends State<ShopTableCard> with GetItStateMixin {
       }
 
       _isBroken = brokenFreezer.isNotEmpty;
+      setState(() {});
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+    _setup();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    watchOnly((StockViewModel x) => x.reloadBuy);
+    _setup();
     return ClipRect(
       child: Banner(
         message: _isBroken ? 'Cek !' : "",

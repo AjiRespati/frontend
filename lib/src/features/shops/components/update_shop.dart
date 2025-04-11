@@ -144,15 +144,17 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                                 },
                               );
                               if (result == true) {
+                                get<StockViewModel>().reloadBuy = true;
                                 setState(() {
                                   _message = "Berhasil update status freezer";
                                 });
                                 await Future.delayed(Durations.extralong4);
+                                get<StockViewModel>().reloadBuy = null;
 
                                 setState(() {
                                   _message = null;
                                 });
-                                // Navigator.pop(context);
+                                Navigator.pop(context);
                                 Navigator.pop(context);
                               } else if (result == false) {
                                 setState(() {

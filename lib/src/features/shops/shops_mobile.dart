@@ -14,6 +14,7 @@ class ShopsMobile extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     watchOnly((StockViewModel x) => x.shops);
+    watchOnly((StockViewModel x) => x.reloadBuy);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Toko'),

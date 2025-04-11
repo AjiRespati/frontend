@@ -17,6 +17,7 @@ class Dashboard extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _DashboardState extends State<Dashboard> with GetItStateMixin {
   Future<void> _setup() async {
+    get<StockViewModel>().isBusy = true;
     await get<SystemViewModel>().self(context);
     var user = get<SystemViewModel>().user;
     get<StockViewModel>().client =
@@ -42,6 +43,8 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
         status: 'active',
       );
     }
+
+    get<StockViewModel>().isBusy = false;
   }
 
   @override
