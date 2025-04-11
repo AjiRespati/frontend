@@ -26,22 +26,51 @@ class _UpdateFreezerState extends State<UpdateFreezer> with GetItStateMixin {
   void _submit() async {
     var freezerInfo = widget.freezer;
     var shopInfo = _selectedShop;
+
+    // Hanya update freezer
     if (shopInfo == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          backgroundColor: Colors.red.shade400,
-          content: Text("Kesalahan system, Toko tidak dikenali"),
-          duration: const Duration(seconds: 3), // Adjust duration as needed
-        ),
+      bool result = await ApiService().updateFreezerStatus(
+        context: context,
+        id: freezerInfo['id'],
+        status: oldStatus.toLowerCase(),
       );
+
+      if (result) {
+        await get<StockViewModel>().getAllFrezer(context);
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.red.shade400,
+            content: Text("Kesalahan system, gagal update freezer"),
+            duration: const Duration(seconds: 3), // Adjust duration as needed
+          ),
+        );
+      }
     } else {
-      get<StockViewModel>().updateFreezerShop(
+      // update freezer dan toko
+      bool result = await get<StockViewModel>().updateFreezerShop(
         context: context,
         id: freezerInfo['id'],
         shopId: shopInfo['id'],
         status: oldStatus.toLowerCase(),
       );
+
+      if (result) {
+        await get<StockViewModel>().getAllFrezer(context);
+        get<StockViewModel>().getAllShops(context: context);
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.red.shade400,
+            content: Text("Kesalahan system, gagal update freezer"),
+            duration: const Duration(seconds: 3), // Adjust duration as needed
+          ),
+        );
+      }
     }
 
     await get<StockViewModel>().getAllFrezer(context);
