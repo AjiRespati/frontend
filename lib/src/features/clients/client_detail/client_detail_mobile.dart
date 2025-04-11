@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:frontend/src/features/clients/components/client_detail_card.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ClientDetailMobile extends StatelessWidget with GetItMixin {
@@ -67,11 +71,55 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
                 Text(formatCurrency(mainItem['totalSalesmanCommission'])),
               ],
             ),
-            Row(
-              children: [
-                Text('Total komisi toko: '),
-                Text(formatCurrency(mainItem['totalShopAllCommission'])),
-              ],
+            // Row(
+            //   children: [
+            //     Text('Total komisi toko: '),
+            //     Text(formatCurrency(mainItem['totalShopAllCommission'])),
+            //   ],
+            // ),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildDatePicker(
+                    context,
+                    "From: ",
+                    get<StockViewModel>().dateFromFilter,
+                    (date) {
+                      get<StockViewModel>().dateFromFilter = date;
+                    },
+                  ),
+                  _buildDatePicker(
+                    context,
+                    "To: ",
+                    get<StockViewModel>().dateToFilter,
+                    (date) {
+                      get<StockViewModel>().dateToFilter = date;
+                    },
+                  ),
+
+                  GradientElevatedButton(
+                    // inactiveDelay: Duration.zero,
+                    buttonHeight: 34,
+                    onPressed: () async {
+                      await get<StockViewModel>().getStockResume(
+                        context: context,
+                        salesId: item['id'],
+                        agentId: null,
+                        shopId: null,
+                        subAgentId: null,
+                      );
+                      await get<StockViewModel>().getTableBySalesId(
+                        context: context,
+                        salesId: item['id'],
+                      );
+                    },
+                    child: Icon(Icons.search, color: Colors.white, size: 30),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 5),
             Flexible(
@@ -83,66 +131,39 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
                     itemCount: mainList.length,
                     itemBuilder: (context, index) {
                       var item = mainList[index];
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Text(item['productName']),
-                              Text("(${item['metricType']})"),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(item['status']),
-                                        Text(
-                                          formatDateString(item['updatedAt']),
-                                        ),
-                                        Text(item['amount'].toString()),
-                                        Text(formatCurrency(item['netPrice'])),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          formatCurrency(item['totalNetPrice']),
-                                        ),
-                                        Text(
-                                          formatCurrency(
-                                            item['salesmanCommission'] ?? 0,
-                                          ),
-                                        ),
-                                        Text(
-                                          formatCurrency(
-                                            item['shopAllCommission'] ?? 0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      return ClientDetailCard(item: item);
                     },
                   ),
                 ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDatePicker(
+    BuildContext context,
+    String label,
+    DateTime? selectedDate,
+    Function(DateTime) onDateSelected,
+  ) {
+    return SizedBox(
+      height: 32,
+      child: ElevatedButton(
+        onPressed: () async {
+          DateTime? pickedDate = await showCustomDatePicker(
+            context: context,
+            initialDate: selectedDate ?? DateTime.now(),
+            firstDate: DateTime(2000),
+          );
+          // );
+          if (pickedDate != null) onDateSelected(pickedDate);
+        },
+        child: Text(
+          label + (selectedDate?.toLocal() ?? "").toString().split(' ')[0],
+          style: TextStyle(fontSize: 13),
         ),
       ),
     );

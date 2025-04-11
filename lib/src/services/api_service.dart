@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -347,10 +348,14 @@ class ApiService {
 
   Future<Map<String, dynamic>> fetchCommissionSummary({
     required BuildContext context,
+    required String fromDate,
+    required String toDate,
   }) async {
     String? token = await _getToken();
     final response = await http.get(
-      Uri.parse('$baseUrl/dashboard/commissionSummary'),
+      Uri.parse(
+        '$baseUrl/dashboard/commissionSummary?fromDate=$fromDate&toDate=$toDate',
+      ),
       headers: {"Authorization": "Bearer $token"},
     );
 
@@ -360,7 +365,11 @@ class ApiService {
         Navigator.pushNamed(context, signInRoute);
         return {};
       }
-      return fetchCommissionSummary(context: context);
+      return fetchCommissionSummary(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+      );
     } else if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
@@ -536,6 +545,71 @@ class ApiService {
       //   ),
       // );
       return false;
+    }
+  }
+
+  Future<bool> createStockBatch({
+    required Map<String, dynamic> batchData,
+  }) async {
+    String? token = await _getToken();
+
+    try {
+      final response = await http
+          .post(
+            Uri.parse('$baseUrl/stocks/batch'),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+              "Authorization": "Bearer $token",
+            },
+            body: jsonEncode(batchData), // Send the whole batch data as JSON
+          )
+          .timeout(
+            const Duration(seconds: 30),
+          ); // Adjust timeout for potentially longer batch operations
+
+      if (response.statusCode == 401) {
+        token = await refreshAccessToken();
+        if (token == null) {
+          // Navigator.pushNamed(context, signInRoute);
+          return false;
+        }
+        return createStockBatch(batchData: batchData);
+      } else if (response.statusCode >= 200 && response.statusCode < 300) {
+        // Batch Success (e.g., 201 Created)
+        if (kDebugMode) {
+          print('Batch API Call Success: ${response.body}');
+        }
+        // Optionally parse response.body if backend sends back created items
+        // var responseData = jsonDecode(response.body);
+        return true; // Indicate success
+      } else {
+        // Server returned an error (e.g., 400 Bad Request, 500 Internal Server Error)
+        if (kDebugMode) {
+          print(
+            'Batch API Call Failed: ${response.statusCode} ${response.body}',
+          );
+        }
+        // Throw an exception with details from the response
+        // Try to parse error message from backend response body
+        String errorMessage = 'Batch purchase failed: ${response.statusCode}';
+        try {
+          var errorJson = jsonDecode(response.body);
+          errorMessage =
+              errorJson['error'] ?? (errorJson['details'] ?? errorMessage);
+        } catch (_) {
+          /* Ignore parsing error */
+        }
+        throw Exception(errorMessage);
+      }
+    } on TimeoutException catch (_) {
+      throw Exception('Batch purchase request timed out.');
+    } catch (e) {
+      // Handle other errors (network issues, JSON encoding errors, etc.)
+      if (kDebugMode) {
+        print('Batch API Call Error: $e');
+      }
+      // Re-throw the original exception or a custom one
+      rethrow;
     }
   }
 
@@ -818,11 +892,15 @@ class ApiService {
     }
   }
 
+  //   const { fromDate, toDate, salesId, subAgentId, agentId, shopId } = req.body;
   Future<dynamic> getStockResume({
     required BuildContext context,
     required String fromDate,
     required String toDate,
-    required String salesId,
+    required String? salesId,
+    required String? subAgentId,
+    required String? agentId,
+    required String? shopId,
   }) async {
     String? token = await _getToken();
 
@@ -836,6 +914,9 @@ class ApiService {
         'fromDate': fromDate,
         'toDate': toDate,
         'salesId': salesId,
+        'agentId': agentId,
+        'subAgentId': subAgentId,
+        'shopId': shopId,
       }),
     );
 
@@ -850,6 +931,9 @@ class ApiService {
         fromDate: fromDate,
         toDate: toDate,
         salesId: salesId,
+        agentId: agentId,
+        subAgentId: subAgentId,
+        shopId: shopId,
       );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -900,6 +984,56 @@ class ApiService {
         fromDate: fromDate,
         toDate: toDate,
         salesId: salesId,
+      );
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> getTableByShopId({
+    required BuildContext context,
+    required String fromDate,
+    required String toDate,
+    required String shopId,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/stocks/table/shop'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        'fromDate': fromDate,
+        'toDate': toDate,
+        'shopId': shopId,
+      }),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getTableByShopId(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+        shopId: shopId,
       );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);

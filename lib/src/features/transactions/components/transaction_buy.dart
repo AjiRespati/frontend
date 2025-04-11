@@ -211,13 +211,32 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
           SizedBox(height: 15),
           GradientElevatedButton(
             onPressed: () async {
-              await get<StockViewModel>().buyProducts(
+              bool purchaseSuccess = await get<StockViewModel>().buyProducts(
                 // context: context,
                 isAdmin: true,
               );
               get<StockViewModel>().reloadBuy = "reload";
               await Future.delayed(Durations.short1);
               get<StockViewModel>().reloadBuy = null;
+
+              // Show feedback using the widget's context (which is now safe to use)
+              // Get the message from the ViewModel state which was updated
+              final String message =
+                  get<StockViewModel>().submissionStatusMessage.isNotEmpty
+                      ? get<StockViewModel>().submissionStatusMessage
+                      : (purchaseSuccess
+                          ? 'Success!'
+                          : 'Failed!'); // Fallback message
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(message),
+                  backgroundColor: purchaseSuccess ? Colors.green : Colors.red,
+                  duration: const Duration(
+                    seconds: 3,
+                  ), // Adjust duration as needed
+                ),
+              );
             },
             child: Text(
               "Buat Pembelian",

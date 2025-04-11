@@ -35,7 +35,7 @@ class _TransactionMobileState extends State<TransactionMobile>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_level < 4 ? "Penjualan" : "Buy & Sell"),
+        title: Text(_level < 4 ? "Pemesanan" : "Pembelian"),
         actions: [
           if (watchOnly((StockViewModel x) => x.isBusy))
             Padding(
@@ -47,30 +47,28 @@ class _TransactionMobileState extends State<TransactionMobile>
               ),
             ),
         ],
-        bottom:
-            _level < 4
-                ? null
-                : TabBar(
-                  labelColor: Colors.blue.shade800,
-                  unselectedLabelColor: Colors.grey.shade600,
-                  controller: _transactionTabController,
-                  indicatorColor: Colors.blue.shade700,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  indicatorWeight: 5,
-                  labelStyle: TextStyle(fontWeight: FontWeight.w500),
-                  tabs: [
-                    Tab(icon: Icon(Icons.check), text: "Buy"),
-                    Tab(icon: Icon(Icons.cancel_outlined), text: "Sell"),
-                  ],
-                ),
+        // bottom:
+        //     _level < 4
+        //         ? null
+        //         : TabBar(
+        //           labelColor: Colors.blue.shade800,
+        //           unselectedLabelColor: Colors.grey.shade600,
+        //           controller: _transactionTabController,
+        //           indicatorColor: Colors.blue.shade700,
+        //           indicatorSize: TabBarIndicatorSize.label,
+        //           indicatorWeight: 5,
+        //           labelStyle: TextStyle(fontWeight: FontWeight.w500),
+        //           tabs: [
+        //             Tab(icon: Icon(Icons.check), text: "Buy"),
+        //             Tab(icon: Icon(Icons.cancel_outlined), text: "Sell"),
+        //           ],
+        //         ),
       ),
-      body:
-          _level < 4
-              ? TransactionSellClient()
-              : TabBarView(
-                controller: _transactionTabController,
-                children: [TransactionBuy(), Container(color: Colors.green)],
-              ),
+      body: _level < 4 ? TransactionSellClient() : TransactionBuy(),
+      // : TabBarView(
+      //   controller: _transactionTabController,
+      //   children: [TransactionBuy(), Container(color: Colors.green)],
+      // ),
       bottomNavigationBar: MobileNavbar(),
     );
   }

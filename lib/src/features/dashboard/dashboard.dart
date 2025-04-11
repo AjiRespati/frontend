@@ -27,17 +27,21 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
     get<StockViewModel>().agentId = get<SystemViewModel>().agentId;
 
     get<StockViewModel>().fetchCommissionData(context: context);
-    get<StockViewModel>().fetchSalesmen(isInitial: true, status: 'active');
-    get<StockViewModel>().fetchSubAgents(
-      context: context,
-      isInitial: true,
-      status: 'active',
-    );
-    get<StockViewModel>().fetchAgents(
-      context: context,
-      isInitial: true,
-      status: 'active',
-    );
+
+    bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
+    if (!isClient) {
+      get<StockViewModel>().fetchSalesmen(isInitial: true, status: 'active');
+      get<StockViewModel>().fetchSubAgents(
+        context: context,
+        isInitial: true,
+        status: 'active',
+      );
+      get<StockViewModel>().fetchAgents(
+        context: context,
+        isInitial: true,
+        status: 'active',
+      );
+    }
   }
 
   @override
@@ -50,6 +54,8 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    watchOnly((SystemViewModel x) => x.username);
+    watchOnly((StockViewModel x) => x.commissionData);
     return ResponsiveLayout(
       mobileLayout: DashboardMobile(),
       desktopLayout: DashboardDesktop(),

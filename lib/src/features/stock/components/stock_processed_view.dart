@@ -38,7 +38,7 @@ class _StockProcessedViewState extends State<StockProcessedView>
 
   @override
   Widget build(BuildContext context) {
-    String? userCient = watchOnly((StockViewModel x) => x.client);
+    String? userClient = watchOnly((StockViewModel x) => x.client);
     return Column(
       children: [
         Padding(
@@ -78,15 +78,15 @@ class _StockProcessedViewState extends State<StockProcessedView>
                         status: 'created',
                         isClient: isClient,
                         salesId:
-                            userCient == "salesman"
+                            userClient == "salesman"
                                 ? get<SystemViewModel>().salesId
                                 : null,
                         agentId:
-                            userCient == "subagent"
+                            userClient == "subagent"
                                 ? get<SystemViewModel>().subAgentId
                                 : null,
                         subAgentId:
-                            userCient == "agent"
+                            userClient == "agent"
                                 ? get<SystemViewModel>().agentId
                                 : null,
                         stockEvent:
@@ -124,9 +124,9 @@ class _StockProcessedViewState extends State<StockProcessedView>
             ],
           ),
         ),
-        if (!(userCient == "salesman" ||
-            userCient == "subagent" ||
-            userCient == "agent"))
+        if (!(userClient == "salesman" ||
+            userClient == "subagent" ||
+            userClient == "agent"))
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

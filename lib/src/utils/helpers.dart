@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/src/models/freezer_status.dart';
 import 'package:intl/intl.dart';
 
 String generateRandomValueKey() {
@@ -82,3 +83,27 @@ String formatCurrency(num number) {
   // Format the rounded number
   return currencyFormatter.format(roundedNumber);
 }
+
+// --- Helper Function to convert String to Enum ---
+// It's good practice to handle potential mismatches
+FreezerStatus freezerStatusFromString(
+  String statusStr, {
+  FreezerStatus fallback = FreezerStatus.idle,
+}) {
+  // Normalize the input string (lowercase) for case-insensitive comparison
+  final normalizedStr = statusStr.toLowerCase();
+  try {
+    // Find the enum value whose display name matches the normalized input string
+    return FreezerStatus.values.firstWhere(
+      (el) => el.name == normalizedStr,
+      // (e) => e.displayName.toLowerCase() == normalizedStr,
+    );
+  } catch (e) {
+    // Handle cases where the string doesn't match any enum value
+    print(
+      "Warning: Received unknown status '$statusStr' from backend. Falling back to ${fallback.displayName}",
+    );
+    return fallback; // Return the fallback value (e.g., idle)
+  }
+}
+// --- End Helper Function ---

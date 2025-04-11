@@ -36,6 +36,7 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> _stockHistoryTable = [];
   dynamic _stockResume;
   List<dynamic> _salesStockTable = [];
+  List<dynamic> _shopStockTable = [];
   double _totalSettled = 0.0;
   double _totalOnProgress = 0.0;
   double _totalOnCanceled = 0.0;
@@ -370,6 +371,12 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<dynamic> get shopStockTable => _shopStockTable;
+  set shopStockTable(List<dynamic> val) {
+    _shopStockTable = val;
+    notifyListeners();
+  }
+
   double get totalSettled => _totalSettled;
   set totalSettled(double val) {
     _totalSettled = val;
@@ -424,7 +431,13 @@ class StockViewModel extends ChangeNotifier {
 
   fetchCommissionData({required BuildContext context}) async {
     isLoading = true;
-    final data = await apiService.fetchCommissionSummary(context: context);
+    String fromDate = generateDateString(dateFromFilter);
+    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+    final data = await apiService.fetchCommissionSummary(
+      context: context,
+      fromDate: fromDate,
+      toDate: toDate,
+    );
     if (data['message'] == "Invalid token") {
       isLoading = false;
       Navigator.pushReplacementNamed(context, signInRoute);
@@ -809,7 +822,10 @@ class StockViewModel extends ChangeNotifier {
 
   Future<bool> getStockResume({
     required BuildContext context,
-    required String salesId,
+    required String? salesId,
+    required String? subAgentId,
+    required String? agentId,
+    required String? shopId,
   }) async {
     isBusy = true;
     String fromDate = generateDateString(dateFromFilter);
@@ -820,6 +836,9 @@ class StockViewModel extends ChangeNotifier {
       fromDate: fromDate,
       toDate: toDate,
       salesId: salesId,
+      subAgentId: subAgentId,
+      agentId: agentId,
+      shopId: shopId,
     );
 
     isBusy = false;
@@ -839,6 +858,27 @@ class StockViewModel extends ChangeNotifier {
       fromDate: fromDate,
       toDate: toDate,
       salesId: salesId,
+    );
+
+    // print(salesStockTable);
+
+    isBusy = false;
+    return true;
+  }
+
+  Future<bool> getTableByShopId({
+    required BuildContext context,
+    required String shopId,
+  }) async {
+    isBusy = true;
+    String fromDate = generateDateString(dateFromFilter);
+    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+
+    shopStockTable = await apiService.getTableByShopId(
+      context: context,
+      fromDate: fromDate,
+      toDate: toDate,
+      shopId: shopId,
     );
 
     // print(salesStockTable);
@@ -1065,113 +1105,170 @@ class StockViewModel extends ChangeNotifier {
     required bool isAdmin,
   }) async {
     if (isBusy || _newTransactions.isEmpty) {
-      // Prevent concurrent submissions or submitting an empty list
       return false;
     }
-    _submissionStatusMessage = '';
-    isBusy = true;
-    // Work on a copy in case the original list is modified elsewhere unexpectedly,
-    // although UI should typically be blocked during submission.
-    List<ProductTransaction> transactionsToProcess = List.from(
-      _newTransactions,
-    );
-    List<Map<String, dynamic>> failedPurchases =
-        []; // To store info about failures
 
-    bool allSucceeded = true;
+    isBusy = true;
+    _submissionStatusMessage = '';
+    notifyListeners(); // Notify started
+
+    bool success = false;
 
     try {
-      // Process transactions sequentially
-      for (var transaction in transactionsToProcess) {
-        try {
-          // --- Call the actual API method for one item ---
+      // Prepare the data payload for the batch endpoint
+      // Convert each ProductTransaction to a Map matching backend expectation
+      List<Map<String, dynamic>> transactionsPayload =
+          _newTransactions.map((tx) {
+            return {
+              // Map fields from ProductTransaction to match backend expected fields
+              'metricId':
+                  tx.productDetail['metricId'], // Adjust based on your ProductTransaction structure
+              'stockEvent': tx.stockEvent, // Or get from tx if variable
+              'amount': tx.productAmount,
+              'salesId': salesId, // Or get from tx / global state
+              'subAgentId': subAgentId, // Or get from tx / global state
+              'agentId': agentId, // Or get from tx / global state
+              'shopId':
+                  tx.shopId, // Assuming shopId is stored in ProductTransaction
+              'status': 'created', // Or let backend decide
+              'description':
+                  null, //tx.description, // Assuming description is available
+              // Add any other fields expected by _internalCreateSingleStock's itemData
+            };
+          }).toList();
+      // Call the new batch API helper
+      // await _performBatchPurchaseApiCall({'transactions': transactionsPayload});
+      await ApiService().createStockBatch(
+        batchData: {'transactions': transactionsPayload},
+      );
 
-          // await _performSinglePurchaseApiCall(transaction);
-          // If it doesn't throw, assume success for this item
-
-          // metricId stockEvent stockAmount status
-          metricId = transaction.productDetail['metricId'];
-          shopId = transaction.shopId;
-          stockEvent = transaction.stockEvent;
-          stockAmount = transaction.productAmount;
-          status = 'created';
-
-          await createStock(isAdmin: isAdmin);
-          if (kDebugMode) {
-            print("Successfully purchased: ${transaction.productId}");
-          }
-        } catch (e) {
-          // --- Handle failure for this specific item ---
-          allSucceeded = false;
-          if (kDebugMode) {
-            print("Failed purchase for ${transaction.productId}: $e");
-          }
-          failedPurchases.add({
-            'productId': transaction.productId,
-            // Consider adding product name if available
-            'amount': transaction.productAmount,
-            'error': e.toString(), // Store error message
-          });
-
-          // --- Decision: Stop on first error? ---
-          // Option 1: Stop processing immediately on first failure
-          // throw Exception("Purchase failed for ${transaction.productId}. Stopping.");
-
-          // Option 2: Continue processing remaining items (implemented here)
-          // Just record the failure and continue the loop
-        }
-      } // End of loop
-
-      // --- Process Results After Loop ---
-      if (allSucceeded) {
-        clearNewTransactions(
-          isFromUI: null,
-        ); // This already calls notifyListeners()
-        _submissionStatusMessage = "All purchases submitted successfully!";
-        // Clear the list only if everything succeeded
-      } else {
-        _submissionStatusMessage =
-            "Purchase submission completed with ${failedPurchases.length} failure(s).";
-        // Decide if you want to remove successful items or leave the list as is
-        // For simplicity here, we leave the list unchanged if there were failures,
-        // allowing the user to potentially retry or remove failed items.
-        // You could implement logic to remove only successful items if desired.
-        int successCount =
-            transactionsToProcess.length - failedPurchases.length;
-        _submissionStatusMessage =
-            "Partial success: $successCount items purchased, ${failedPurchases.length} failed.";
-
-        // --- Logic to remove successful items ---
-        // 1. Get the set of product IDs that failed
-        Set<String> failedProductIds =
-            failedPurchases.map((f) => f['productId'] as String).toSet();
-
-        // 2. Modify the *original* list (_newTransactions) in place.
-        // Keep only the elements whose productId is present in the failed set.
-        _newTransactions.retainWhere(
-          (tx) => failedProductIds.contains(tx.productId),
-        );
-
-        // 3. Recalculate the summary totals based on the remaining (failed) items
-        _recalculateSummaries();
-        // --- End modification ---
-      }
+      // If API call doesn't throw, assume success
+      success = true;
+      _submissionStatusMessage = "All purchases submitted successfully!";
+      clearNewTransactions(isFromUI: true); // Clear list on success
     } catch (e) {
-      // Catch any unexpected error during the overall process (like the rethrow from Option 1 above)
-      allSucceeded = false;
-      _submissionStatusMessage =
-          "An unexpected error occurred during purchase submission: $e";
+      // API call failed (network error, 4xx/5xx response)
+      success = false;
+      _submissionStatusMessage = "Purchase submission failed: ${e.toString()}";
+      // Keep the _newTransactions list as is, because the backend likely rolled back
       if (kDebugMode) {
-        print(_submissionStatusMessage);
+        print("Batch purchase failed: $e");
       }
     } finally {
-      // --- Ensure loading state is reset ---
       isBusy = false;
-      notifyListeners(); // Notify UI about loading state and potential message change
+      notifyListeners(); // Notify finished + state changes
     }
 
-    // You might want to expose 'failedPurchases' list via a getter if UI needs details
-    return allSucceeded;
+    return success;
+
+    // if (isBusy || _newTransactions.isEmpty) {
+    //   // Prevent concurrent submissions or submitting an empty list
+    //   return false;
+    // }
+    // _submissionStatusMessage = '';
+    // isBusy = true;
+    // // Work on a copy in case the original list is modified elsewhere unexpectedly,
+    // // although UI should typically be blocked during submission.
+    // List<ProductTransaction> transactionsToProcess = List.from(
+    //   _newTransactions,
+    // );
+    // List<Map<String, dynamic>> failedPurchases =
+    //     []; // To store info about failures
+
+    // bool allSucceeded = true;
+
+    // try {
+    //   // Process transactions sequentially
+    //   for (var transaction in transactionsToProcess) {
+    //     try {
+    //       // --- Call the actual API method for one item ---
+
+    //       // await _performSinglePurchaseApiCall(transaction);
+    //       // If it doesn't throw, assume success for this item
+
+    //       // metricId stockEvent stockAmount status
+    //       metricId = transaction.productDetail['metricId'];
+    //       shopId = transaction.shopId;
+    //       stockEvent = transaction.stockEvent;
+    //       stockAmount = transaction.productAmount;
+    //       status = 'created';
+
+    //       await createStock(isAdmin: isAdmin);
+    //       if (kDebugMode) {
+    //         print("Successfully purchased: ${transaction.productId}");
+    //       }
+    //     } catch (e) {
+    //       // --- Handle failure for this specific item ---
+    //       allSucceeded = false;
+    //       if (kDebugMode) {
+    //         print("Failed purchase for ${transaction.productId}: $e");
+    //       }
+    //       failedPurchases.add({
+    //         'productId': transaction.productId,
+    //         // Consider adding product name if available
+    //         'amount': transaction.productAmount,
+    //         'error': e.toString(), // Store error message
+    //       });
+
+    //       // --- Decision: Stop on first error? ---
+    //       // Option 1: Stop processing immediately on first failure
+    //       // throw Exception("Purchase failed for ${transaction.productId}. Stopping.");
+
+    //       // Option 2: Continue processing remaining items (implemented here)
+    //       // Just record the failure and continue the loop
+    //     }
+    //   } // End of loop
+
+    //   // --- Process Results After Loop ---
+    //   if (allSucceeded) {
+    //     clearNewTransactions(
+    //       isFromUI: null,
+    //     ); // This already calls notifyListeners()
+    //     _submissionStatusMessage = "All purchases submitted successfully!";
+    //     // Clear the list only if everything succeeded
+    //   } else {
+    //     _submissionStatusMessage =
+    //         "Purchase submission completed with ${failedPurchases.length} failure(s).";
+    //     // Decide if you want to remove successful items or leave the list as is
+    //     // For simplicity here, we leave the list unchanged if there were failures,
+    //     // allowing the user to potentially retry or remove failed items.
+    //     // You could implement logic to remove only successful items if desired.
+    //     int successCount =
+    //         transactionsToProcess.length - failedPurchases.length;
+    //     _submissionStatusMessage =
+    //         "Partial success: $successCount items purchased, ${failedPurchases.length} failed.";
+
+    //     // --- Logic to remove successful items ---
+    //     // 1. Get the set of product IDs that failed
+    //     Set<String> failedProductIds =
+    //         failedPurchases.map((f) => f['productId'] as String).toSet();
+
+    //     // 2. Modify the *original* list (_newTransactions) in place.
+    //     // Keep only the elements whose productId is present in the failed set.
+    //     _newTransactions.retainWhere(
+    //       (tx) => failedProductIds.contains(tx.productId),
+    //     );
+
+    //     // 3. Recalculate the summary totals based on the remaining (failed) items
+    //     _recalculateSummaries();
+    //     // --- End modification ---
+    //   }
+    // } catch (e) {
+    //   // Catch any unexpected error during the overall process (like the rethrow from Option 1 above)
+    //   allSucceeded = false;
+    //   _submissionStatusMessage =
+    //       "An unexpected error occurred during purchase submission: $e";
+    //   if (kDebugMode) {
+    //     print(_submissionStatusMessage);
+    //   }
+    // } finally {
+    //   // --- Ensure loading state is reset ---
+    //   isBusy = false;
+    //   notifyListeners(); // Notify UI about loading state and potential message change
+    // }
+
+    // // You might want to expose 'failedPurchases' list via a getter if UI needs details
+    // return allSucceeded;
   }
 
   // Method to clear transactions and reset sums (potentially called by submitPurchases)
@@ -1189,19 +1286,19 @@ class StockViewModel extends ChangeNotifier {
     }
   }
 
-  /// --- NEW: Helper to recalculate summaries from the current _newTransactions list ---
-  void _recalculateSummaries() {
-    double newSumTransactions = 0.0;
-    int newSumItems = 0;
-    for (var tx in _newTransactions) {
-      newSumTransactions += tx.totalPrice;
-      newSumItems += tx.productAmount;
-    }
-    _sumTransactions = newSumTransactions;
-    _sumItems = newSumItems;
-    _sumProducts = _newTransactions.length;
-    // Do NOT call notifyListeners here, the caller should handle it.
-  }
+  // /// --- NEW: Helper to recalculate summaries from the current _newTransactions list ---
+  // void _recalculateSummaries() {
+  //   double newSumTransactions = 0.0;
+  //   int newSumItems = 0;
+  //   for (var tx in _newTransactions) {
+  //     newSumTransactions += tx.totalPrice;
+  //     newSumItems += tx.productAmount;
+  //   }
+  //   _sumTransactions = newSumTransactions;
+  //   _sumItems = newSumItems;
+  //   _sumProducts = _newTransactions.length;
+  //   // Do NOT call notifyListeners here, the caller should handle it.
+  // }
 
   String generateDateString(DateTime time) {
     final formatter = DateFormat('yyyy-MM-dd');

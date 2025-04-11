@@ -1,40 +1,54 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/shops/components/update_shop.dart';
+import 'package:frontend/src/routes/route_names.dart';
 
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ShopTableCard extends StatelessWidget with GetItMixin {
-  ShopTableCard({super.key, required this.isMobile, required this.shop});
+  ShopTableCard({
+    super.key,
+    required this.isMobile,
+    required this.isClient,
+    required this.shop,
+  });
 
   final Map<String, dynamic> shop;
   final bool isMobile;
+  final bool isClient;
 
   @override
   Widget build(BuildContext context) {
-    // String imageUrl = ApplicationInfo.baseUrl + (stock['image'] ?? '');
-    print(shop);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
       child: InkWell(
-        onTap: () async {
-          // print(shop);
-          showModalBottomSheet(
-            isScrollControlled: true,
-            constraints: BoxConstraints(maxHeight: 640),
-            context: context,
-            builder: (context) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                ),
-                child: SingleChildScrollView(child: UpdateShop(shop: shop)),
-              );
-            },
-          );
-        },
+        onTap:
+            isClient
+                ? null
+                : () {
+                  Navigator.pushNamed(
+                    context,
+                    shopsDetailRoute,
+                    arguments: shop,
+                  );
+                  // // print(shop);
+                  // showModalBottomSheet(
+                  //   isScrollControlled: true,
+                  //   constraints: BoxConstraints(maxHeight: 640),
+                  //   context: context,
+                  //   builder: (context) {
+                  //     return Padding(
+                  //       padding: EdgeInsets.only(
+                  //         bottom: MediaQuery.of(context).viewInsets.bottom,
+                  //       ),
+                  //       child: SingleChildScrollView(
+                  //         child: UpdateShop(shop: shop),
+                  //       ),
+                  //     );
+                  //   },
+                  // );
+                },
         child: SizedBox(
           height: 130,
           child: Row(
@@ -181,32 +195,39 @@ class ShopTableCard extends StatelessWidget with GetItMixin {
                   ],
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  IconButton(
-                    onPressed: () async {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        constraints: BoxConstraints(maxHeight: 640),
-                        context: context,
-                        builder: (context) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).viewInsets.bottom,
-                            ),
-                            child: SingleChildScrollView(
-                              child: UpdateShop(shop: shop),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    icon: Icon(Icons.chevron_right_outlined, size: 40),
-                  ),
-                ],
-              ),
+              if (!isClient)
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          shopsDetailRoute,
+                          arguments: shop,
+                        );
+                        // showModalBottomSheet(
+                        //   isScrollControlled: true,
+                        //   constraints: BoxConstraints(maxHeight: 640),
+                        //   context: context,
+                        //   builder: (context) {
+                        //     return Padding(
+                        //       padding: EdgeInsets.only(
+                        //         bottom:
+                        //             MediaQuery.of(context).viewInsets.bottom,
+                        //       ),
+                        //       child: SingleChildScrollView(
+                        //         child: UpdateShop(shop: shop),
+                        //       ),
+                        //     );
+                        //   },
+                        // );
+                      },
+                      icon: Icon(Icons.chevron_right_outlined, size: 40),
+                    ),
+                  ],
+                ),
             ],
           ),
         ),

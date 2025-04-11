@@ -6,6 +6,7 @@ import 'package:frontend/src/features/freezer/freezer.dart';
 import 'package:frontend/src/features/products/components/add_product.dart';
 import 'package:frontend/src/features/products/product_detail/product_detail.dart';
 import 'package:frontend/src/features/settings/settings.dart';
+import 'package:frontend/src/features/shops/shop_detail/shop_detail.dart';
 import 'package:frontend/src/features/shops/shops.dart';
 import 'package:frontend/src/features/stock/stock.dart';
 import 'package:frontend/src/features/stock/stock_detail/stock_detail.dart';
@@ -63,6 +64,9 @@ class AppRouter {
           break;
         case shopsRoute:
           screen = Shops(isAllShop: arguments);
+          break;
+        case shopsDetailRoute:
+          screen = ShopDetail(shop: arguments);
           break;
         case freezersRoute:
           screen = Freezer();

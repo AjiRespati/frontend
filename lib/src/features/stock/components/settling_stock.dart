@@ -30,7 +30,6 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.item);
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(

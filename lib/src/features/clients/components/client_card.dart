@@ -21,6 +21,9 @@ class ClientCard extends StatelessWidget with GetItMixin {
             await get<StockViewModel>().getStockResume(
               context: context,
               salesId: item['id'],
+              agentId: null,
+              shopId: null,
+              subAgentId: null,
             );
             await get<StockViewModel>().getTableBySalesId(
               context: context,

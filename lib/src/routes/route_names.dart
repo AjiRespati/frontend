@@ -13,5 +13,6 @@ const String clientDetailRoute = "/Clients/Detail";
 const String settingsRoute = "/Settings";
 const String userManagementRoute = "/UserManagement";
 const String shopsRoute = "/Shops";
+const String shopsDetailRoute = "/Shops/Detail";
 const String freezersRoute = "/Freezers";
 const String transactionsRoute = "/Transactions";
