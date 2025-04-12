@@ -13,6 +13,7 @@ class TransactionResume extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
     return Column(
       children: [
         Padding(
@@ -79,21 +80,67 @@ class TransactionResume extends StatelessWidget with GetItMixin {
                     int level = get<SystemViewModel>().level ?? 0;
                     Map<String, dynamic> stock =
                         get<StockViewModel>().responseBatch[index];
-                    print("MBAHNYAAAAAAAAAAAAAAAA INIIIIIIIIIIIIIIIIII");
-                    print(stock);
-                    print("APAAAAAAAAAAAAAAAAAAAA INIIIIIIIIIIIIIIIIII");
-                    print(stock['Stocks']);
-                    // print(stock['Stocks'][0]['Metric']);
-                    // print(stock['Stocks'][0]['Metric']['Product']);
+                    List<dynamic> stocks = stock['Stocks'];
+                    double totalPrice = _generateTotalPrice(stocks, level);
+                    int totalProduct = _generateTotalProduct(stocks);
+                    int totalItem = _generateTotalItem(stocks);
                     if (level > 3) {
                       return Card(
-                        child: Column(
-                          children: [
-                            Text(stock['createdBy']),
-                            Text(stock['createdAt']),
-                            Text(stock['createdBy']),
-                            Text(stock['createdBy']),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(stock['userDesc'] + ": "),
+                                        SizedBox(width: 10),
+                                        Text(stock['createdBy']),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          formatDateString(stock['createdAt']),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text("Total Product: $totalProduct"),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text("Total Item: $totalItem"),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Total Price: ${formatCurrency(totalPrice)}",
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: stocks.length,
+                                  itemBuilder: (context, index) {
+                                    var item = stocks[index];
+                                    return Text(
+                                      "${item['productName']} ${item['amount']} ${item['metricType']}",
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                       return StockTableCard(
@@ -145,6 +192,56 @@ class TransactionResume extends StatelessWidget with GetItMixin {
           label + (selectedDate?.toLocal() ?? "").toString().split(' ')[0],
         ),
       ),
+    );
+  }
+
+  double _generateTotalPrice(List<dynamic> stocks, int level) {
+    double totalPrice = 0;
+    switch (level) {
+      case 5:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['totalPrice'] ?? 0)),
+        );
+        break;
+      case 4:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['totalPrice'] ?? 0)),
+        );
+        break;
+      case 3:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['agentPrice'] ?? 0)),
+        );
+        break;
+      case 2:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['subAgentPrice'] ?? 0)),
+        );
+        break;
+      case 1:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['salesmanPrice'] ?? 0)),
+        );
+        break;
+      default:
+    }
+
+    return totalPrice;
+  }
+
+  int _generateTotalProduct(List<dynamic> stocks) {
+    return stocks.length;
+  }
+
+  int _generateTotalItem(List<dynamic> stocks) {
+    return stocks.fold<int>(
+      0,
+      (sum, item) => sum + ((item['amount'] ?? 0) as int),
     );
   }
 }

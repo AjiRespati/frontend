@@ -56,7 +56,7 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          Text("Resume Pembelian"),
+          Text("Pembelian"),
           Text(formatDateFromYearToDay(DateTime.now())),
           SizedBox(height: 5),
           Row(
