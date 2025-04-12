@@ -614,6 +614,83 @@ class ApiService {
   }
 
   /// Date String yyyy-mm-dd, 2025-03-01
+  Future<List<dynamic>> getStockBatches({
+    required BuildContext context,
+    required String status,
+    required String? fromDate,
+    required String? toDate,
+    required String? createdBy,
+    required String? sortBy,
+    required String? sortOrder,
+    required int? page,
+    required int? limit,
+  }) async {
+    String? token = await _getToken();
+    // Build the query parameters map conditionally
+    final Map<String, dynamic> queryParameters = {
+      'status': status,
+      // Only add ID parameters if they are not null and not empty
+      if (fromDate != null && fromDate.isNotEmpty) 'fromDate': fromDate,
+      if (toDate != null && toDate.isNotEmpty) 'toDate': toDate,
+      if (createdBy != null && createdBy.isNotEmpty) 'createdBy': createdBy,
+      if (sortBy != null && sortBy.isNotEmpty) 'sortBy': sortBy,
+      if (sortOrder != null && sortOrder.isNotEmpty) 'sortOrder': sortOrder,
+      if (page != null && page > 1) 'page': page,
+      if (limit != null && limit > 1) 'limit': limit,
+    };
+
+    final uri = Uri.parse(baseUrl).replace(
+      path:
+          '/api/stocks/batches', // Or adjust if baseUrl already includes part of the path
+      queryParameters: queryParameters,
+    );
+
+    final response = await http.get(
+      uri,
+      // Uri.parse(
+      //   '$baseUrl/stocks/table?fromDate=$fromDate&toDate=$toDate&status=$status&salesId=$salesId&subAgentId=$subAgentId&agentId=$agentId',
+      // ),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getStockBatches(
+        context: context,
+        createdBy: createdBy,
+        fromDate: fromDate,
+        toDate: toDate,
+        page: page,
+        limit: limit,
+        status: status,
+        sortBy: sortBy,
+        sortOrder: sortOrder,
+      );
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return [];
+    }
+  }
+
+  /// Date String yyyy-mm-dd, 2025-03-01
   Future<List<dynamic>> getStockTable({
     required BuildContext context,
     required String fromDate,

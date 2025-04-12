@@ -14,10 +14,23 @@ class Transaction extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _TransactionState extends State<Transaction> with GetItStateMixin {
+  bool isClient = true;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      isClient = (get<SystemViewModel>().level ?? 0) < 4;
+      if (!isClient) {
+        get<StockViewModel>().getStockBatches(
+          context: context,
+          status: 'completed',
+          sortBy: null,
+          sortOrder: null,
+          page: null,
+          limit: null,
+        );
+      }
       get<StockViewModel>().fetchProducts(context);
 
       String? id =

@@ -68,6 +68,8 @@ class StockViewModel extends ChangeNotifier {
   int _sumItems = 0;
   dynamic _reloadBuy;
 
+  List<dynamic> _responseBatch = [];
+
   String _client = 'salesman';
   final List<String> _clients = [
     'salesman',
@@ -136,6 +138,12 @@ class StockViewModel extends ChangeNotifier {
   List<ProductTransaction> get newTransactions => _newTransactions;
   set newTransactions(List<ProductTransaction> val) {
     _newTransactions = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get responseBatch => _responseBatch;
+  set responseBatch(List<dynamic> val) {
+    _responseBatch = val;
     notifyListeners();
   }
 
@@ -1305,6 +1313,35 @@ class StockViewModel extends ChangeNotifier {
     if (isFromUI == true) {
       notifyListeners();
     }
+  }
+
+  Future<bool> getStockBatches({
+    required BuildContext context,
+    required String status,
+    required String? sortBy,
+    required String? sortOrder,
+    required int? page,
+    required int? limit,
+  }) async {
+    isBusy = true;
+
+    String fromDate = generateDateString(dateFromFilter);
+    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+
+    responseBatch = await ApiService().getStockBatches(
+      context: context,
+      status: status,
+      fromDate: fromDate,
+      toDate: toDate,
+      createdBy: createdBy,
+      sortBy: sortBy,
+      sortOrder: sortOrder,
+      page: page,
+      limit: limit,
+    );
+
+    isBusy = false;
+    return true;
   }
 
   // /// --- NEW: Helper to recalculate summaries from the current _newTransactions list ---
