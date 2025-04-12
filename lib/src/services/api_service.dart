@@ -45,7 +45,7 @@ class ApiService {
   /// /login',
   /// /refresh',
   /// /logout',
-  Future<bool> login(String username, String password) async {
+  Future<dynamic> login(String username, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/login'),
       headers: {"Content-Type": "application/json"},
@@ -57,9 +57,9 @@ class ApiService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('accessToken', data['accessToken']);
       await prefs.setString('refreshToken', data['refreshToken']);
-      return true;
+      return data;
     }
-    return false;
+    return null;
   }
 
   Future<dynamic> self(BuildContext context, String refreshToken) async {

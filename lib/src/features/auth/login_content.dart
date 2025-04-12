@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
 import 'package:frontend/src/features/auth/components/login_button.dart';
 import 'package:frontend/src/features/auth/components/login_password.dart';
 import 'package:frontend/src/features/auth/components/login_title.dart';
 import 'package:frontend/src/features/auth/components/login_username.dart';
+import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -29,7 +32,21 @@ class LoginContent extends StatelessWidget with GetItMixin {
             const SizedBox(height: 20),
             LoginPassword(),
             const SizedBox(height: 20),
-            LoginButton(),
+            LoginButton(
+              handleLogin: () async {
+                bool isLogin = await get<SystemViewModel>().onLogin();
+                if (isLogin) {
+                  get<SystemViewModel>().isBusy = false;
+                  Navigator.pushReplacementNamed(context, dashboardRoute);
+                } else {
+                  get<SystemViewModel>().isBusy = false;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Invalid credentials")),
+                  );
+                }
+              },
+            ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

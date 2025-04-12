@@ -14,9 +14,17 @@ class ConfirmPassword extends StatelessWidget with GetItMixin {
     return TextFormField(
       controller: get<SystemViewModel>().confirmpasswordController,
       obscureText: !get<SystemViewModel>().showPassword,
-      onEditingComplete: () {
-        get<SystemViewModel>().onLogin(context: context);
-      },
+      // onEditingComplete: () async {
+      //   bool isLogin = await get<SystemViewModel>().onLogin();
+
+      //   if (isLogin) {
+      //     Navigator.pushReplacementNamed(context, dashboardRoute);
+      //   } else {
+      //     ScaffoldMessenger.of(
+      //       context,
+      //     ).showSnackBar(const SnackBar(content: Text("Invalid credentials")));
+      //   }
+      // },
       onTap: () {
         log('tapped');
       },

@@ -32,12 +32,12 @@ class _GradientElevatedButtonState extends State<GradientElevatedButton> {
   bool _isPressed = false;
   bool _isInactive = false;
 
-  @override
-  void dispose() {
-    super.dispose();
-    _isPressed = false;
-    _isInactive = false;
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _isPressed = false;
+  //   _isInactive = false;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -71,16 +71,19 @@ class _GradientElevatedButtonState extends State<GradientElevatedButton> {
                   setState(() => _isPressed = true);
                   widget.onPressed!();
                   await Future.delayed(Durations.short3, () {
-                    setState(() {
-                      _isPressed = false;
-                      // _isInactive = true;
-                    });
+                    if (mounted) {
+                      setState(() {
+                        _isPressed = false;
+                        // _isInactive = true;
+                      });
+                    }
                   });
                   await Future.delayed(widget.inactiveDelay, () {
-                    if (!mounted) return;
-                    setState(() {
-                      _isInactive = false;
-                    });
+                    if (mounted) {
+                      setState(() {
+                        _isInactive = false;
+                      });
+                    }
                   });
                   // await Future.delayed(Durations.short3, () {
                   //   widget.onPressed!();

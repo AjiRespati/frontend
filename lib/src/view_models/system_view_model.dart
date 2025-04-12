@@ -176,24 +176,28 @@ class SystemViewModel extends ChangeNotifier {
     return JwtDecoder.isExpired(token);
   }
 
-  void onLogin({required BuildContext context}) async {
-    bool isLogin = await apiService.login(
+  Future<bool> onLogin() async {
+    isBusy = true;
+    user = await apiService.login(
       usernameController.text,
       passwordController.text,
     );
-    if (isLogin) {
-      Navigator.pushReplacementNamed(context, dashboardRoute);
+    if (user != null) {
+      // isBusy = false;
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? refreshToken = prefs.getString('refreshToken');
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // String? refreshToken = prefs.getString('refreshToken');
       usernameController.text = "";
       passwordController.text = "";
 
-      user = await apiService.self(context, refreshToken ?? "-");
+      // user = await apiService.self(context, refreshToken ?? "-");
+      return true;
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Invalid credentials")));
+      isBusy = false;
+      return false;
+      // ScaffoldMessenger.of(
+      //   context,
+      // ).showSnackBar(const SnackBar(content: Text("Invalid credentials")));
     }
   }
 
@@ -215,15 +219,15 @@ class SystemViewModel extends ChangeNotifier {
     if (user == null) {
       return false;
     } else {
-      name = user?['name'] ?? "";
-      username = user?['username'] ?? "";
-      email = user?['email'] ?? "";
-      phone = user?['phone'] ?? "";
-      address = user?['address'] ?? "";
-      level = user?['level'] ?? 0;
-      salesId = user?['salesId'] ?? "";
-      subAgentId = user?['subAgentId'] ?? "";
-      agentId = user?['agentId'] ?? "";
+      name = user?['name'];
+      username = user?['username'];
+      email = user?['email'];
+      phone = user?['phone'];
+      address = user?['address'];
+      level = user?['level'];
+      salesId = user?['salesId'];
+      subAgentId = user?['subAgentId'];
+      agentId = user?['agentId'];
       return true;
     }
   }

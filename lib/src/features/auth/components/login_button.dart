@@ -1,10 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class LoginButton extends StatelessWidget with GetItMixin {
-  LoginButton({super.key});
+  LoginButton({required this.handleLogin, super.key});
+
+  final Function() handleLogin;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class LoginButton extends StatelessWidget with GetItMixin {
       child: GradientElevatedButton(
         inactiveDelay: Duration.zero,
         onPressed: () {
-          get<SystemViewModel>().onLogin(context: context);
+          handleLogin();
         },
         borderRadius: 15,
         child: const Text(

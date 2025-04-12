@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/auth/login_desktop.dart';
 import 'package:frontend/src/features/auth/login_mobile.dart';
 import 'package:frontend/src/utils/responsive_layout.dart';
-import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class LoginScreen extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -17,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      get<SystemViewModel>().checkSession(context: context);
+      // get<SystemViewModel>().checkSession(context: context);
     });
   }
 

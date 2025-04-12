@@ -79,8 +79,9 @@ class TransactionResume extends StatelessWidget with GetItMixin {
                     int level = get<SystemViewModel>().level ?? 0;
                     Map<String, dynamic> stock =
                         get<StockViewModel>().responseBatch[index];
+                    print("MBAHNYAAAAAAAAAAAAAAAA INIIIIIIIIIIIIIIIIII");
+                    print(stock);
                     print("APAAAAAAAAAAAAAAAAAAAA INIIIIIIIIIIIIIIIIII");
-                    // print(stock);
                     print(stock['Stocks']);
                     // print(stock['Stocks'][0]['Metric']);
                     // print(stock['Stocks'][0]['Metric']['Product']);
