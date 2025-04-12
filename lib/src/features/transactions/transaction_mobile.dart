@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/transactions/components/transaction_buy.dart';
+import 'package:frontend/src/features/transactions/components/transaction_resume.dart';
 import 'package:frontend/src/features/transactions/components/transaction_sell_client.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
@@ -47,28 +48,30 @@ class _TransactionMobileState extends State<TransactionMobile>
               ),
             ),
         ],
-        // bottom:
-        //     _level < 4
-        //         ? null
-        //         : TabBar(
-        //           labelColor: Colors.blue.shade800,
-        //           unselectedLabelColor: Colors.grey.shade600,
-        //           controller: _transactionTabController,
-        //           indicatorColor: Colors.blue.shade700,
-        //           indicatorSize: TabBarIndicatorSize.label,
-        //           indicatorWeight: 5,
-        //           labelStyle: TextStyle(fontWeight: FontWeight.w500),
-        //           tabs: [
-        //             Tab(icon: Icon(Icons.check), text: "Buy"),
-        //             Tab(icon: Icon(Icons.cancel_outlined), text: "Sell"),
-        //           ],
-        //         ),
+        bottom:
+            _level < 4
+                ? null
+                : TabBar(
+                  labelColor: Colors.blue.shade800,
+                  unselectedLabelColor: Colors.grey.shade600,
+                  controller: _transactionTabController,
+                  indicatorColor: Colors.blue.shade700,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  indicatorWeight: 5,
+                  labelStyle: TextStyle(fontWeight: FontWeight.w500),
+                  tabs: [
+                    Tab(icon: Icon(Icons.note_alt), text: "Resume"),
+                    Tab(icon: Icon(Icons.sell_outlined), text: "Pembelian"),
+                  ],
+                ),
       ),
-      body: _level < 4 ? TransactionSellClient() : TransactionBuy(),
-      // : TabBarView(
-      //   controller: _transactionTabController,
-      //   children: [TransactionBuy(), Container(color: Colors.green)],
-      // ),
+      body: TabBarView(
+        controller: _transactionTabController,
+        children: [
+          TransactionResume(),
+          _level < 4 ? TransactionSellClient() : TransactionBuy(),
+        ],
+      ),
       bottomNavigationBar: MobileNavbar(),
     );
   }

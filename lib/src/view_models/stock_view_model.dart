@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
 import 'package:frontend/src/models/product_transaction.dart';
-import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/services/api_service.dart';
 import 'package:intl/intl.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -446,13 +445,17 @@ class StockViewModel extends ChangeNotifier {
       fromDate: fromDate,
       toDate: toDate,
     );
-    if (data['message'] == "Invalid token") {
-      isLoading = false;
-      Navigator.pushReplacementNamed(context, signInRoute);
-    } else {
-      isLoading = false;
-      commissionData = data;
-    }
+
+    isLoading = false;
+    commissionData = data;
+
+    // if (data['message'] == "Invalid token") {
+    //   isLoading = false;
+    //   Navigator.pushReplacementNamed(context, signInRoute);
+    // } else {
+    //   isLoading = false;
+    //   commissionData = data;
+    // }
   }
 
   fetchProducts(BuildContext context) async {
@@ -1134,6 +1137,7 @@ class StockViewModel extends ChangeNotifier {
     required bool isAdmin,
   }) async {
     if (isBusy || _newTransactions.isEmpty) {
+      submissionStatusMessage = "Silahkan buat pembelian.";
       return false;
     }
 
@@ -1328,7 +1332,7 @@ class StockViewModel extends ChangeNotifier {
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
-    responseBatch = await ApiService().getStockBatches(
+    dynamic response = await ApiService().getStockBatches(
       context: context,
       status: status,
       fromDate: fromDate,
@@ -1340,8 +1344,14 @@ class StockViewModel extends ChangeNotifier {
       limit: limit,
     );
 
-    isBusy = false;
-    return true;
+    if (response == null) {
+      isBusy = false;
+      return false;
+    } else {
+      responseBatch = response['data'];
+      isBusy = false;
+      return true;
+    }
   }
 
   // /// --- NEW: Helper to recalculate summaries from the current _newTransactions list ---

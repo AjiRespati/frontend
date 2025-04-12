@@ -146,28 +146,33 @@ class SystemViewModel extends ChangeNotifier {
   //====================//
 
   /// call this method after mounted
-  checkSession({required BuildContext context}) async {
+  Future<bool> checkSession({required BuildContext context}) async {
     isBusy = true;
     SharedPreferences prefs = await _prefs;
     String? token = prefs.getString('accessToken');
 
-    if (!isTokenExpired(token)) {
-      Navigator.pushNamed(context, dashboardRoute);
+    if (token != null) {
+      if (!isTokenExpired(token)) {
+        Navigator.pushNamed(context, dashboardRoute);
+        isBusy = false;
+        return true;
+      }
       isBusy = false;
-    } else {
-      isBusy = false;
+      return false;
     }
+    isBusy = false;
+    return false;
   }
 
-  bool isTokenExpired(String? token) {
-    if (token == null) {
-      return true;
-    }
+  bool isTokenExpired(String token) {
+    // if (token == null) {
+    //   return true;
+    // }
 
-    bool isNeedRefresh = JwtDecoder.isExpired(token);
-    if (isNeedRefresh) {
-      apiService.refreshAccessToken();
-    }
+    // bool isNeedRefresh = JwtDecoder.isExpired(token);
+    // if (isNeedRefresh) {
+    //   apiService.refreshAccessToken();
+    // }
     return JwtDecoder.isExpired(token);
   }
 
@@ -206,16 +211,21 @@ class SystemViewModel extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? refreshToken = prefs.getString('refreshToken');
     user = await apiService.self(context, refreshToken ?? "-");
-    name = user['name'];
-    username = user['username'];
-    email = user['email'];
-    phone = user['phone'];
-    address = user['address'];
-    level = user['level'];
-    salesId = user['salesId'];
-    subAgentId = user['subAgentId'];
-    agentId = user['agentId'];
-    return true;
+
+    if (user == null) {
+      return false;
+    } else {
+      name = user?['name'] ?? "";
+      username = user?['username'] ?? "";
+      email = user?['email'] ?? "";
+      phone = user?['phone'] ?? "";
+      address = user?['address'] ?? "";
+      level = user?['level'] ?? 0;
+      salesId = user?['salesId'] ?? "";
+      subAgentId = user?['subAgentId'] ?? "";
+      agentId = user?['agentId'] ?? "";
+      return true;
+    }
   }
 
   Future<bool> register() async {

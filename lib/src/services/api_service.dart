@@ -614,7 +614,7 @@ class ApiService {
   }
 
   /// Date String yyyy-mm-dd, 2025-03-01
-  Future<List<dynamic>> getStockBatches({
+  Future<dynamic> getStockBatches({
     required BuildContext context,
     required String status,
     required String? fromDate,
@@ -686,7 +686,7 @@ class ApiService {
           ),
         ),
       );
-      return [];
+      return null;
     }
   }
 
