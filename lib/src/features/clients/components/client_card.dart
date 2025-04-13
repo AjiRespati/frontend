@@ -7,9 +7,10 @@ import 'package:frontend/src/widgets/copy_to_clipboard.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ClientCard extends StatelessWidget with GetItMixin {
-  ClientCard({super.key, required this.item});
+  ClientCard({super.key, required this.level, required this.item});
 
   final dynamic item;
+  final int level;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,11 @@ class ClientCard extends StatelessWidget with GetItMixin {
 
             // print(get<StockViewModel>().stockResume);
             // print(get<StockViewModel>().salesStockTable);
-            Navigator.pushNamed(context, clientDetailRoute, arguments: item);
+            Navigator.pushNamed(
+              context,
+              clientDetailRoute,
+              arguments: {"item": item, "level": level},
+            );
           },
           child: SizedBox(
             child: Padding(

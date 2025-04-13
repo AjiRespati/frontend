@@ -35,6 +35,8 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> _stockHistoryTable = [];
   dynamic _stockResume;
   List<dynamic> _salesStockTable = [];
+  List<dynamic> _subAgentStockTable = [];
+  List<dynamic> _agentStockTable = [];
   List<dynamic> _shopStockTable = [];
   double _totalSettled = 0.0;
   double _totalOnProgress = 0.0;
@@ -375,6 +377,18 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> get salesStockTable => _salesStockTable;
   set salesStockTable(List<dynamic> val) {
     _salesStockTable = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get subAgentStockTable => _subAgentStockTable;
+  set subAgentStockTable(List<dynamic> val) {
+    _subAgentStockTable = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get agentStockTable => _agentStockTable;
+  set agentStockTable(List<dynamic> val) {
+    _agentStockTable = val;
     notifyListeners();
   }
 
@@ -740,11 +754,7 @@ class StockViewModel extends ChangeNotifier {
 
     switch (status) {
       case 'settled':
-        // print("DAPATNYAAAAAAAAAAA");
-        // print(response);
-
-        stockTable = response;
-
+        totalSettled = 0;
         for (var el in response) {
           var price =
               (el?['agentPrice'] ?? 0) > 0
@@ -757,8 +767,11 @@ class StockViewModel extends ChangeNotifier {
           totalSettled += price;
         }
 
+        stockTable = response;
+
         break;
       case 'created':
+        totalOnProgress = 0;
         for (var el in response) {
           double price =
               (el?['agentPrice'] ?? 0) > 0
@@ -775,8 +788,7 @@ class StockViewModel extends ChangeNotifier {
 
         break;
       default:
-        stockOnCanceledTable = response;
-
+        totalOnCanceled = 0;
         for (var el in response) {
           var price =
               (el?['agentPrice'] ?? 0) > 0
@@ -788,6 +800,8 @@ class StockViewModel extends ChangeNotifier {
                   : (el?['totalPrice'] ?? 0);
           totalOnCanceled += price;
         }
+
+        stockOnCanceledTable = response;
     }
 
     isBusy = false;
@@ -889,6 +903,50 @@ class StockViewModel extends ChangeNotifier {
       fromDate: fromDate,
       toDate: toDate,
       salesId: salesId,
+    );
+
+    // print(salesStockTable);
+
+    isBusy = false;
+    return true;
+  }
+
+  Future<bool> getTableBySubAgentId({
+    required BuildContext context,
+    required String subAgentId,
+  }) async {
+    isBusy = true;
+    subAgentStockTable = [];
+    String fromDate = generateDateString(dateFromFilter);
+    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+
+    subAgentStockTable = await apiService.getTableBySubAgentId(
+      context: context,
+      fromDate: fromDate,
+      toDate: toDate,
+      subAgentId: subAgentId,
+    );
+
+    // print(salesStockTable);
+
+    isBusy = false;
+    return true;
+  }
+
+  Future<bool> getTableByAgentId({
+    required BuildContext context,
+    required String agentId,
+  }) async {
+    isBusy = true;
+    salesStockTable = [];
+    String fromDate = generateDateString(dateFromFilter);
+    String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+
+    agentStockTable = await apiService.getTableByAgentId(
+      context: context,
+      fromDate: fromDate,
+      toDate: toDate,
+      agentId: agentId,
     );
 
     // print(salesStockTable);

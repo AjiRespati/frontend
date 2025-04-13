@@ -8,13 +8,23 @@ import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ClientDetailMobile extends StatelessWidget with GetItMixin {
-  ClientDetailMobile({required this.item, super.key});
+  ClientDetailMobile({required this.item, required this.level, super.key});
   final dynamic item;
+  final int level;
 
   @override
   Widget build(BuildContext context) {
     var mainItem = get<StockViewModel>().stockResume;
-    var mainList = get<StockViewModel>().salesStockTable;
+    var mainList =
+        level == 1
+            ? get<StockViewModel>().salesStockTable
+            : level == 2
+            ? get<StockViewModel>().subAgentStockTable
+            : get<StockViewModel>().agentStockTable;
+    print(item);
+    print(mainItem);
+    print(mainList);
+    print(level);
     return Scaffold(
       appBar: AppBar(
         title: Text("Client Detail"),
@@ -56,7 +66,8 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
             Row(
               children: [
                 Text('Total penjualan: '),
-                Text(formatCurrency(mainItem['totalNetPriceSum'])),
+                Text(formatCurrency(_generateTotalPrice(mainList, level))),
+                // Text(formatCurrency(mainItem['totalNetPriceSum'])),
               ],
             ),
             Row(
@@ -68,7 +79,7 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
             Row(
               children: [
                 Text('Total komisi: '),
-                Text(formatCurrency(mainItem['totalSalesmanCommission'])),
+                Text(formatCurrency(_generateTotalKomisi(mainItem, level))),
               ],
             ),
             // Row(
@@ -170,5 +181,69 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
         ),
       ),
     );
+  }
+
+  double _generateTotalPrice(List<dynamic> stocks, int level) {
+    double totalPrice = 0;
+    switch (level) {
+      case 5:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['totalPrice'] ?? 0)),
+        );
+        break;
+      case 4:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['totalPrice'] ?? 0)),
+        );
+        break;
+      case 3:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['agentPrice'] ?? 0)),
+        );
+        break;
+      case 2:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['subAgentPrice'] ?? 0)),
+        );
+        break;
+      case 1:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['salesmanPrice'] ?? 0)),
+        );
+        break;
+      default:
+        totalPrice;
+    }
+
+    return totalPrice;
+  }
+
+  double _generateTotalKomisi(dynamic mainItem, int level) {
+    double totalKomisi = 0;
+    switch (level) {
+      case 5:
+        totalKomisi;
+        break;
+      case 4:
+        totalKomisi;
+        break;
+      case 3:
+        totalKomisi = mainItem['totalAgentCommission'];
+        break;
+      case 2:
+        totalKomisi = mainItem['totalSubAgentCommission'];
+        break;
+      case 1:
+        totalKomisi = mainItem['totalSalesmanCommission'];
+        break;
+      default:
+        totalKomisi;
+    }
+    return totalKomisi;
   }
 }

@@ -1127,6 +1127,106 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> getTableBySubAgentId({
+    required BuildContext context,
+    required String fromDate,
+    required String toDate,
+    required String subAgentId,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/stocks/table/subAgent'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        'fromDate': fromDate,
+        'toDate': toDate,
+        'subAgentId': subAgentId,
+      }),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getTableBySubAgentId(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+        subAgentId: subAgentId,
+      );
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> getTableByAgentId({
+    required BuildContext context,
+    required String fromDate,
+    required String toDate,
+    required String agentId,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/stocks/table/agent'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        'fromDate': fromDate,
+        'toDate': toDate,
+        'agentId': agentId,
+      }),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return [];
+      }
+      return getTableByAgentId(
+        context: context,
+        fromDate: fromDate,
+        toDate: toDate,
+        agentId: agentId,
+      );
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return [];
+    }
+  }
+
   Future<List<dynamic>> getTableByShopId({
     required BuildContext context,
     required String fromDate,

@@ -54,7 +54,10 @@ class AppRouter {
           screen = Clients();
           break;
         case clientDetailRoute:
-          screen = ClientDetail(item: arguments);
+          screen = ClientDetail(
+            item: arguments["item"],
+            level: arguments['level'],
+          );
           break;
         case settingsRoute:
           screen = Settings();

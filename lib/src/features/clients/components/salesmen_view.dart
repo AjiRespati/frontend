@@ -15,7 +15,11 @@ class SalesmenView extends StatelessWidget with GetItMixin {
           itemCount: watchOnly((StockViewModel x) => x.salesmen).length,
           itemBuilder: (context, index) {
             var item = get<StockViewModel>().salesmen[index];
-            return ClientCard(item: item, key: ValueKey(index + 3000));
+            return ClientCard(
+              item: item,
+              key: ValueKey(index + 3000),
+              level: 1,
+            );
           },
         ),
       ),

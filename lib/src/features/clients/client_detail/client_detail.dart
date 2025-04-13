@@ -4,8 +4,9 @@ import 'package:frontend/src/features/clients/client_detail/client_detail_mobile
 import 'package:frontend/src/utils/responsive_layout.dart';
 
 class ClientDetail extends StatefulWidget {
-  const ClientDetail({required this.item, super.key});
+  const ClientDetail({required this.item, required this.level, super.key});
   final dynamic item;
+  final int level;
 
   @override
   State<ClientDetail> createState() => _ClientDetailState();
@@ -16,7 +17,7 @@ class _ClientDetailState extends State<ClientDetail> {
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       desktopLayout: ClientDetailDesktop(),
-      mobileLayout: ClientDetailMobile(item: widget.item),
+      mobileLayout: ClientDetailMobile(item: widget.item, level: widget.level),
     );
   }
 }
