@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/user_management/components/user_table_card.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';

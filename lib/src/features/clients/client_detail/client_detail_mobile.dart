@@ -21,10 +21,7 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
             : level == 2
             ? get<StockViewModel>().subAgentStockTable
             : get<StockViewModel>().agentStockTable;
-    print(item);
-    print(mainItem);
-    print(mainList);
-    print(level);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Client Detail"),

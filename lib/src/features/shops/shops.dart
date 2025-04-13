@@ -26,7 +26,6 @@ class _ShopsState extends State<Shops> with GetItStateMixin {
                 (get<SystemViewModel>().agentId));
 
         String salesId = id ?? "";
-        print("ADA ID KAH????$salesId");
         get<StockViewModel>().getShopsBySales(
           context: context,
           salesId: salesId,

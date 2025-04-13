@@ -23,7 +23,6 @@ class _StockState extends State<Stock> with GetItStateMixin {
       var userClient = (user?['levelDesc'] ?? "salesman")
           .toLowerCase()
           .replaceAll(" ", "");
-      print("APA INI CLIENTNNYA????? $userClient");
       get<StockViewModel>().getStockTable(
         context: context,
         status: 'created',
