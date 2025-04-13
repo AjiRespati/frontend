@@ -31,8 +31,7 @@ class _TransactionResumeState extends State<TransactionResume>
   }
 
   _handleBatchActions(Map<String, dynamic> stock, double totalPrice) async {
-    print(stock);
-    showModalBottomSheet(
+    await showModalBottomSheet(
       isScrollControlled: true,
       constraints: BoxConstraints(minHeight: 600, maxHeight: 620),
       context: context,
@@ -172,17 +171,7 @@ class _TransactionResumeState extends State<TransactionResume>
                           get<StockViewModel>().reloadBuy = false;
                           get<StockViewModel>().isBusy = false;
                           get<StockViewModel>().reloadBuy = null;
-                          // ScaffoldMessenger.of(context).showSnackBar(
-                          //   SnackBar(
-                          //     showCloseIcon: true,
-                          //     backgroundColor: Colors.green.shade400,
-                          //     content: Text(
-                          //       "Konfirmasi pembayaran berhasil.",
-                          //       style: TextStyle(color: Colors.white),
-                          //     ),
-                          //     duration: Duration(seconds: 2),
-                          //   ),
-                          // );
+                          Navigator.pop(context);
                         } else {
                           _messageSuccess = "";
                           _messageError =
@@ -190,17 +179,7 @@ class _TransactionResumeState extends State<TransactionResume>
                           get<StockViewModel>().reloadBuy = false;
                           get<StockViewModel>().isBusy = false;
                           get<StockViewModel>().reloadBuy = null;
-                          // ScaffoldMessenger.of(context).showSnackBar(
-                          //   SnackBar(
-                          //     showCloseIcon: true,
-                          //     backgroundColor: Colors.red.shade400,
-                          //     content: Text(
-                          //       "Konfirmasi pembayaran gagal, hubungi pengembang aplikasi",
-                          //       style: TextStyle(color: Colors.white),
-                          //     ),
-                          //     duration: Duration(seconds: 2),
-                          //   ),
-                          // );
+                          Navigator.pop(context);
                         }
                       },
                       child: Row(
@@ -281,6 +260,30 @@ class _TransactionResumeState extends State<TransactionResume>
         );
       },
     );
+
+    if (_messageSuccess.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.green.shade400,
+          content: Text(_messageSuccess, style: TextStyle(color: Colors.white)),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      _messageSuccess = "";
+    }
+
+    if (_messageError.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(_messageError, style: TextStyle(color: Colors.white)),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      _messageError = "";
+    }
   }
 
   @override
