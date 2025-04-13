@@ -37,21 +37,17 @@ class UserManagementMobile extends StatelessWidget with GetItMixin {
               ? Text("user not found")
               : Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height:
-                      (MediaQuery.of(context).size.height - 280) -
-                      (kIsWeb ? 0 : 50),
-                  child: ListView.builder(
-                    itemCount: get<SystemViewModel>().users.length,
-                    itemBuilder: (context, index) {
-                      var item = get<SystemViewModel>().users[index];
-                      // print(item);
-                      return UserTableCard(
-                        key: ValueKey(index + 19000),
-                        user: item,
-                      );
-                    },
-                  ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: get<SystemViewModel>().users.length,
+                  itemBuilder: (context, index) {
+                    var item = get<SystemViewModel>().users[index];
+                    // print(item);
+                    return UserTableCard(
+                      key: ValueKey(index + 19000),
+                      user: item,
+                    );
+                  },
                 ),
               ),
       bottomNavigationBar: MobileNavbar(),

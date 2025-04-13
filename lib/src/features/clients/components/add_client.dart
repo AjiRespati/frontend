@@ -192,6 +192,16 @@ class _AddClientState extends State<AddClient> with GetItStateMixin {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+
+    _nameController.dispose();
+    _addressController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),

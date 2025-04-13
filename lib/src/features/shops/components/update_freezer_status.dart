@@ -92,6 +92,12 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _freezerDescController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 500,

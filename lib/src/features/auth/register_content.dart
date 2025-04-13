@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
 import 'package:frontend/src/features/auth/components/confirm_password.dart';
@@ -38,7 +40,37 @@ class RegisterContent extends StatelessWidget with GetItMixin {
             const SizedBox(height: 20),
             PhoneRegister(),
             const SizedBox(height: 20),
-            RegisterButton(),
+            RegisterButton(
+              handleRegister: () async {
+                bool isRegistered = await get<SystemViewModel>().register();
+
+                if (isRegistered) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      backgroundColor: Colors.green,
+                      content: Text("Registrasi sukses"),
+                      duration: Duration(
+                        seconds: 3,
+                      ), // Adjust duration as needed
+                    ),
+                  );
+                  get<SystemViewModel>().passwordController.text = "";
+                  await Future.delayed(Durations.medium1);
+                  get<SystemViewModel>().isLoginView = true;
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      showCloseIcon: true,
+                      backgroundColor: Colors.red.shade400,
+                      content: Text(
+                        "Registrasi gagal",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

@@ -23,8 +23,8 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
 
   void _submit() async {
     String? salesId = get<SystemViewModel>().salesId;
-    String? subAgentId = get<SystemViewModel>().salesId;
-    String? agentId = get<SystemViewModel>().salesId;
+    String? subAgentId = get<SystemViewModel>().subAgentId;
+    String? agentId = get<SystemViewModel>().agentId;
     await get<StockViewModel>().createShop(
       context: context,
       salesId: salesId,
@@ -46,8 +46,12 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
   }
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
   }
 
   @override

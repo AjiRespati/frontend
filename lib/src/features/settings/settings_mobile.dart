@@ -175,7 +175,7 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                               signInRoute,
                             );
                           } else {
-                            get<StockViewModel>().isBusy = true;
+                            get<StockViewModel>().isBusy = false;
                           }
                         },
                         child: Text(

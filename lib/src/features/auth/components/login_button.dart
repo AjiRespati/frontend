@@ -2,10 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
-import 'package:get_it_mixin/get_it_mixin.dart';
 
-class LoginButton extends StatelessWidget with GetItMixin {
-  LoginButton({required this.handleLogin, super.key});
+class LoginButton extends StatelessWidget {
+  const LoginButton({required this.handleLogin, super.key});
 
   final Function() handleLogin;
 

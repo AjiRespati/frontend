@@ -38,6 +38,14 @@ class _AddFreezerState extends State<AddFreezer> with GetItStateMixin {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _capacityController.dispose();
+    _serialNumberController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),

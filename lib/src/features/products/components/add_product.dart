@@ -72,6 +72,14 @@ class _AddProductScreenState extends State<AddProductScreen>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _priceController.dispose();
+    _descriptionController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),

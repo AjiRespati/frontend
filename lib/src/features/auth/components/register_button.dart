@@ -1,13 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
-import 'package:get_it_mixin/get_it_mixin.dart';
 
-class RegisterButton extends StatelessWidget with GetItMixin {
-  RegisterButton({super.key});
+class RegisterButton extends StatelessWidget {
+  const RegisterButton({required this.handleRegister, super.key});
 
+  final Function() handleRegister;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -16,16 +15,7 @@ class RegisterButton extends StatelessWidget with GetItMixin {
       child: GradientElevatedButton(
         // inactiveDelay: Duration.zero,
         onPressed: () async {
-          await get<SystemViewModel>().register();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.green,
-              content: Text("Register Success"),
-              duration: Duration(seconds: 3), // Adjust duration as needed
-            ),
-          );
-          get<SystemViewModel>().passwordController.text = "";
-          get<SystemViewModel>().isLoginView = true;
+          handleRegister();
         },
         borderRadius: 15,
         child: const Text(

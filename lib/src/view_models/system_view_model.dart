@@ -207,6 +207,13 @@ class SystemViewModel extends ChangeNotifier {
     bool isLogout = await apiService.logout(refreshToken ?? "");
     prefs.remove('refreshToken');
     prefs.remove('accessToken');
+    salesId = null;
+    subAgentId = null;
+    agentId = null;
+    level = null;
+    currentPageIndex = 0;
+    isLoginView = true;
+    user = null;
 
     return isLogout;
   }
