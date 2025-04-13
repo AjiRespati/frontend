@@ -29,8 +29,14 @@ String getYesOrNo(bool condition) {
 }
 
 String formatDateString(String dateTimeString) {
-  final dateTime = DateTime.parse(dateTimeString);
+  final dateTime = DateTime.parse(dateTimeString).toLocal();
   final formatter = DateFormat('yyyy-MM-dd');
+  return formatter.format(dateTime);
+}
+
+String formatDateStringHM(String dateTimeString) {
+  final dateTime = DateTime.parse(dateTimeString).toLocal();
+  final formatter = DateFormat('yyyy-MM-dd, HH:mm');
   return formatter.format(dateTime);
 }
 

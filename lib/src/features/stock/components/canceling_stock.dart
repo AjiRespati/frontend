@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 // For detecting web
@@ -18,6 +19,7 @@ class CancelingStock extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _AddProductScreenState extends State<CancelingStock>
     with GetItStateMixin {
+  bool isClient = false;
   bool _showError = false;
   final TextEditingController _descriptionController = TextEditingController();
 
@@ -31,6 +33,7 @@ class _AddProductScreenState extends State<CancelingStock>
   void dispose() {
     super.dispose();
     _descriptionController.dispose();
+    isClient = (get<SystemViewModel>().level ?? 0) < 4;
   }
 
   @override
@@ -145,6 +148,7 @@ class _AddProductScreenState extends State<CancelingStock>
                     if (success == true) {
                       await get<StockViewModel>().getStockBatches(
                         context: context,
+                        isClient: isClient,
                         status: 'completed',
                         sortBy: null,
                         sortOrder: null,

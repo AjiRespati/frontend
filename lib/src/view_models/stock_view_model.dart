@@ -438,6 +438,7 @@ class StockViewModel extends ChangeNotifier {
 
   fetchCommissionData({required BuildContext context}) async {
     isLoading = true;
+    commissionData = null;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
     final data = await apiService.fetchCommissionSummary(
@@ -460,6 +461,7 @@ class StockViewModel extends ChangeNotifier {
 
   fetchProducts(BuildContext context) async {
     isLoading = true;
+    products = [];
     // List<dynamic> datas = await apiService.fetchProducts(context);
     // Set<String> productIds = {};
     // List<dynamic> data = [];
@@ -477,6 +479,7 @@ class StockViewModel extends ChangeNotifier {
 
   Future<dynamic> fetchProduct(BuildContext context, String productId) async {
     isLoading = true;
+    productsDetail = [];
     dynamic data = await apiService.fetchProduct(context, productId);
     productsDetail = data;
     List<String> usedMetric = [];
@@ -604,6 +607,7 @@ class StockViewModel extends ChangeNotifier {
     String productId,
   ) async {
     isBusy = true;
+    stock = null;
     stock = await apiService.fetchStockByProduct(context, productId);
     isBusy = false;
     return;
@@ -611,6 +615,9 @@ class StockViewModel extends ChangeNotifier {
 
   fetchSalesmen({required bool isInitial, required String? status}) async {
     isLoading = true;
+    salesmen = [];
+    salesmanNames = [];
+
     salesmen = await apiService.getSalesmen(status: status);
     List<String> names = [];
     for (var element in salesmen) {
@@ -633,6 +640,9 @@ class StockViewModel extends ChangeNotifier {
     required String? status,
   }) async {
     isLoading = true;
+    subAgents = [];
+    subAgentNames = [];
+
     subAgents = await apiService.getSubAgents(context, status);
     List<String> names = [];
     for (var element in subAgents) {
@@ -655,6 +665,9 @@ class StockViewModel extends ChangeNotifier {
     required bool isInitial,
   }) async {
     isLoading = true;
+    agents = [];
+    agentNames = [];
+
     agents = await apiService.getAgents(context, status);
     List<String> names = [];
     for (var element in agents) {
@@ -680,6 +693,10 @@ class StockViewModel extends ChangeNotifier {
     required String? stockEvent,
   }) async {
     isBusy = true;
+    stockTable = [];
+    stockOnProgressTable = [];
+    stockOnCanceledTable = [];
+
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
@@ -816,6 +833,7 @@ class StockViewModel extends ChangeNotifier {
     required String status,
   }) async {
     isBusy = true;
+    stockHistoryTable = [];
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
@@ -839,6 +857,7 @@ class StockViewModel extends ChangeNotifier {
     required String? shopId,
   }) async {
     isBusy = true;
+    stockResume = null;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
@@ -861,6 +880,7 @@ class StockViewModel extends ChangeNotifier {
     required String salesId,
   }) async {
     isBusy = true;
+    salesStockTable = [];
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
@@ -882,6 +902,7 @@ class StockViewModel extends ChangeNotifier {
     required String shopId,
   }) async {
     isBusy = true;
+    shopStockTable = [];
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
 
@@ -939,12 +960,13 @@ class StockViewModel extends ChangeNotifier {
     bool? isActive,
   }) async {
     isBusy = true;
+    shops = [];
+
     shops = await apiService.getAllShopsBySales(
       context: context,
       salesId: salesId,
     );
 
-    print("APA INIIIIIIIIIII ?$shops");
     if (isActive == true) {
       shops.removeWhere((shop) {
         // The test function: return true if the item should be removed
@@ -958,6 +980,8 @@ class StockViewModel extends ChangeNotifier {
 
   Future<bool> getAllShops({required BuildContext context}) async {
     isBusy = true;
+    shops = [];
+
     shops = await apiService.getAllShops(context: context);
     // print(shops.first);
     isBusy = false;
@@ -1016,6 +1040,9 @@ class StockViewModel extends ChangeNotifier {
 
   Future<bool> getAllFrezer(BuildContext context) async {
     isBusy = true;
+    freezers = [];
+    idleFreezers = [];
+
     freezers = await apiService.getAllFreezer(context);
 
     idleFreezers = freezers.where((el) => el['status'] == 'idle').toList();
@@ -1326,6 +1353,7 @@ class StockViewModel extends ChangeNotifier {
 
   Future<bool> getStockBatches({
     required BuildContext context,
+    required bool isClient,
     required String status,
     required String? sortBy,
     required String? sortOrder,
@@ -1333,6 +1361,7 @@ class StockViewModel extends ChangeNotifier {
     required int? limit,
   }) async {
     isBusy = true;
+    responseBatch = [];
 
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
@@ -1342,7 +1371,7 @@ class StockViewModel extends ChangeNotifier {
       status: status,
       fromDate: fromDate,
       toDate: toDate,
-      createdBy: createdBy,
+      createdBy: isClient ? createdBy : null,
       sortBy: sortBy,
       sortOrder: sortOrder,
       page: page,

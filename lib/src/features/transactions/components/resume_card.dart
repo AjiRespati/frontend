@@ -37,7 +37,7 @@ class ResumeCard extends StatelessWidget with GetItMixin {
                     Row(
                       children: [
                         Text(
-                          formatDateString(stock['createdAt']),
+                          formatDateStringHM(stock['createdAt']),
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 14,
@@ -99,7 +99,7 @@ class ResumeCard extends StatelessWidget with GetItMixin {
                       children: [
                         Flexible(
                           child: Text(
-                            "${item['productName']} ${item['amount']} ${item['metricType']}",
+                            "${item['amount']} ${item['metricType']}, ${item['productName']}",
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),

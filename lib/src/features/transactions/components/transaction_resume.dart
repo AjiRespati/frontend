@@ -21,8 +21,17 @@ class _TransactionResumeState extends State<TransactionResume>
     with GetItStateMixin {
   String _messageSuccess = "";
   String _messageError = "";
+  bool isClient = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    isClient = (get<SystemViewModel>().level ?? 0) < 4;
+  }
 
   _handleBatchActions(Map<String, dynamic> stock, double totalPrice) async {
+    print(stock);
     showModalBottomSheet(
       isScrollControlled: true,
       constraints: BoxConstraints(minHeight: 600, maxHeight: 620),
@@ -45,7 +54,7 @@ class _TransactionResumeState extends State<TransactionResume>
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 15, top: 3, bottom: 3),
                 child: Text(
                   formatCurrency(totalPrice),
                   style: TextStyle(
@@ -55,6 +64,46 @@ class _TransactionResumeState extends State<TransactionResume>
                   ),
                 ),
               ),
+              if (stock['Stocks']?[0]?['stockEvent'] == 'stock_in')
+                Row(
+                  children: [
+                    Text(
+                      "Kepada ",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      "Gracia Factory",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.green.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              if (stock['Stocks']?[0]?['stockEvent'] == 'stock_out')
+                Row(
+                  children: [
+                    Text(
+                      "Oleh ",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      "${stock['userDesc']} ${stock['createdBy']}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.green.shade600,
+                      ),
+                    ),
+                  ],
+                ),
               Text(
                 "Telah dilakukan?",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -111,6 +160,7 @@ class _TransactionResumeState extends State<TransactionResume>
                         if (result == true) {
                           await get<StockViewModel>().getStockBatches(
                             context: context,
+                            isClient: isClient,
                             status: 'completed',
                             sortBy: null,
                             sortOrder: null,
@@ -234,13 +284,6 @@ class _TransactionResumeState extends State<TransactionResume>
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    // bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
-  }
-
-  @override
   Widget build(BuildContext context) {
     watchOnly((StockViewModel x) => x.reloadBuy);
     return Column(
@@ -275,6 +318,7 @@ class _TransactionResumeState extends State<TransactionResume>
                     onPressed: () {
                       get<StockViewModel>().getStockBatches(
                         context: context,
+                        isClient: isClient,
                         status: 'completed',
                         sortBy: null,
                         sortOrder: null,
@@ -325,8 +369,6 @@ class _TransactionResumeState extends State<TransactionResume>
                     int totalProduct = _generateTotalProduct(stocks);
                     int totalItem = _generateTotalItem(stocks);
 
-                    print(stock);
-
                     return ResumeCard(
                       stock: stock,
                       totalProduct: totalProduct,
@@ -334,7 +376,9 @@ class _TransactionResumeState extends State<TransactionResume>
                       totalPrice: totalPrice,
                       stocks: stocks,
                       onSelect: () {
-                        _handleBatchActions(stock, totalPrice);
+                        if (!isClient) {
+                          _handleBatchActions(stock, totalPrice);
+                        }
                       },
                     );
                   },

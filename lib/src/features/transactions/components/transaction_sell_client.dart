@@ -4,6 +4,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/transactions/components/buy_product.dart';
 import 'package:frontend/src/models/product_transaction.dart';
+import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
@@ -396,20 +397,6 @@ class _TransactionSellClientState extends State<TransactionSellClient>
                       ),
                 );
 
-                // .then((value) async {
-                //   if (value == true) {
-                // await get<StockViewModel>().buyProducts(
-                //   // context: context,
-                //   isAdmin: false,
-                // );
-                // get<StockViewModel>().reloadBuy = "reload";
-                // await Future.delayed(Durations.short1);
-                // get<StockViewModel>().reloadBuy = null;
-                // await Future.delayed(Durations.short1);
-                // Navigator.pushNamed(context, stockRoute);
-                //   }
-                // });
-
                 // Check result AFTER dialog closes
                 if (confirmResult == true) {
                   // Check if widget is still mounted BEFORE starting async work
@@ -418,7 +405,6 @@ class _TransactionSellClientState extends State<TransactionSellClient>
                   // Assuming 'viewModel' is your instance of StockViewModel
                   // Call the async method and wait for it
                   final bool purchaseSuccess = await viewModel.buyProducts(
-                    // context: context,
                     isAdmin: false,
                   );
 
@@ -440,10 +426,12 @@ class _TransactionSellClientState extends State<TransactionSellClient>
                       backgroundColor:
                           purchaseSuccess ? Colors.green : Colors.red,
                       duration: const Duration(
-                        seconds: 3,
+                        seconds: 2,
                       ), // Adjust duration as needed
                     ),
                   );
+                  await Future.delayed(Durations.extralong4);
+                  Navigator.pushNamed(context, transactionsRoute);
                 }
               }
             },
