@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
@@ -29,10 +17,22 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>frontend</title>
+  <title>Gracia</title>
   <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+  <div class="bodyload">
+    <div id="splash">
+      <div class="loader"></div>
+    </div>
+    <div id="splashtext" style="color: #3BAF29;">
+      <h3 class="loaderText" id="loadingText">Loading application...</h3>
+    </div>
+    <div class="progress-bar" id="progressBar">
+      <h3 class="percentage" id="percentage">0%</h3>
+    </div>
+  </div>
+  <script type="module" src="flutter_bootstrap.js" async></script>
 </body>
 </html>
