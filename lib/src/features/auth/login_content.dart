@@ -42,7 +42,14 @@ class LoginContent extends StatelessWidget with GetItMixin {
                   get<SystemViewModel>().isBusy = false;
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Invalid credentials")),
+                    SnackBar(
+                      showCloseIcon: true,
+                      backgroundColor: Colors.red.shade400,
+                      content: Text(
+                        "Email atau password salah",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   );
                 }
               },

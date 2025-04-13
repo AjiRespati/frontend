@@ -26,20 +26,23 @@ class StockTableCard extends StatelessWidget with GetItMixin {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
       child: InkWell(
-        onTap: () async {
-          get<StockViewModel>().choosenMetricId = stock['metricId'];
-          bool resp = await get<StockViewModel>().getStockHistory(
-            context: context,
-            status: stockStatus,
-          );
-          if (resp) {
-            Navigator.pushNamed(
-              context,
-              stockDetailRoute,
-              arguments: stockStatus,
-            );
-          }
-        },
+        onTap:
+            stockStatus == 'canceled'
+                ? null
+                : () async {
+                  get<StockViewModel>().choosenMetricId = stock['metricId'];
+                  bool resp = await get<StockViewModel>().getStockHistory(
+                    context: context,
+                    status: stockStatus,
+                  );
+                  if (resp) {
+                    Navigator.pushNamed(
+                      context,
+                      stockDetailRoute,
+                      arguments: stockStatus,
+                    );
+                  }
+                },
         child: Stack(
           alignment: AlignmentDirectional.centerEnd,
           children: [
@@ -170,29 +173,30 @@ class StockTableCard extends StatelessWidget with GetItMixin {
                 ],
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () async {
-                    get<StockViewModel>().choosenMetricId = stock['metricId'];
-                    bool resp = await get<StockViewModel>().getStockHistory(
-                      context: context,
-                      status: stockStatus,
-                    );
-                    if (resp) {
-                      Navigator.pushNamed(
-                        context,
-                        stockDetailRoute,
-                        arguments: stockStatus,
+            if (stockStatus != 'canceled')
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      get<StockViewModel>().choosenMetricId = stock['metricId'];
+                      bool resp = await get<StockViewModel>().getStockHistory(
+                        context: context,
+                        status: stockStatus,
                       );
-                    }
-                  },
-                  icon: Icon(Icons.chevron_right_outlined, size: 40),
-                ),
-              ],
-            ),
+                      if (resp) {
+                        Navigator.pushNamed(
+                          context,
+                          stockDetailRoute,
+                          arguments: stockStatus,
+                        );
+                      }
+                    },
+                    icon: Icon(Icons.chevron_right_outlined, size: 40),
+                  ),
+                ],
+              ),
           ],
         ),
       ),

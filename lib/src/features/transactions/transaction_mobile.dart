@@ -60,8 +60,8 @@ class _TransactionMobileState extends State<TransactionMobile>
                   indicatorWeight: 5,
                   labelStyle: TextStyle(fontWeight: FontWeight.w500),
                   tabs: [
-                    Tab(icon: Icon(Icons.note_alt), text: "Resume"),
-                    Tab(icon: Icon(Icons.sell_outlined), text: "Pembelian"),
+                    Tab(icon: Icon(Icons.note_alt_outlined), text: "Resume"),
+                    Tab(icon: Icon(Icons.sell), text: "Pembelian"),
                   ],
                 ),
       ),

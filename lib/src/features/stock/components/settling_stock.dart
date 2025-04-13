@@ -176,7 +176,7 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
                     constraints: BoxConstraints(minHeight: 600, maxHeight: 620),
                     context: context,
                     builder: (context) {
-                      return CancelingStock(item: widget.item);
+                      return CancelingStock(item: widget.item, isBatch: false);
                     },
                   );
                 },

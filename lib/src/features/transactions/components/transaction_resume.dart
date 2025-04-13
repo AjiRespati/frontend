@@ -1,59 +1,84 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/stock/components/stock_client_card.dart';
-import 'package:frontend/src/features/stock/components/stock_table_card.dart';
+import 'package:frontend/src/features/stock/components/canceling_stock.dart';
+import 'package:frontend/src/features/transactions/components/resume_card.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
-class TransactionResume extends StatelessWidget with GetItMixin {
+class TransactionResume extends StatefulWidget with GetItStatefulWidgetMixin {
   TransactionResume({super.key});
 
   @override
+  State<TransactionResume> createState() => _TransactionResumeState();
+}
+
+class _TransactionResumeState extends State<TransactionResume>
+    with GetItStateMixin {
+  @override
+  void initState() {
+    super.initState();
+
+    // bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Stack(
             children: [
-              _buildDatePicker(
-                context,
-                "From: ",
-                get<StockViewModel>().dateFromFilter,
-                (date) {
-                  get<StockViewModel>().dateFromFilter = date;
-                },
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildDatePicker(
+                    context,
+                    "From: ",
+                    get<StockViewModel>().dateFromFilter,
+                    (date) {
+                      get<StockViewModel>().dateFromFilter = date;
+                    },
+                  ),
 
-              _buildDatePicker(
-                context,
-                "To: ",
-                get<StockViewModel>().dateToFilter,
-                (date) {
-                  get<StockViewModel>().dateToFilter = date;
-                },
+                  _buildDatePicker(
+                    context,
+                    "To: ",
+                    get<StockViewModel>().dateToFilter,
+                    (date) {
+                      get<StockViewModel>().dateToFilter = date;
+                    },
+                  ),
+                  GradientElevatedButton(
+                    // inactiveDelay: Duration.zero,
+                    buttonHeight: 34,
+                    onPressed: () {
+                      get<StockViewModel>().getStockBatches(
+                        context: context,
+                        status: 'completed',
+                        sortBy: null,
+                        sortOrder: null,
+                        page: null,
+                        limit: null,
+                      );
+                    },
+                    child: Icon(Icons.search, color: Colors.white, size: 30),
+                  ),
+                ],
               ),
-              GradientElevatedButton(
-                // inactiveDelay: Duration.zero,
-                buttonHeight: 34,
-                onPressed: () {
-                  get<StockViewModel>().getStockTable(
-                    context: context,
-                    status: 'settled',
-                    isClient: (get<SystemViewModel>().level ?? 0) < 4,
-                    salesId: null,
-                    agentId: null,
-                    subAgentId: null,
-                    stockEvent: null,
-                  );
-                },
-                child: Icon(Icons.search, color: Colors.white, size: 30),
-              ),
+              if (get<StockViewModel>().isBusy)
+                Center(
+                  child: SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
             ],
           ),
         ),
@@ -84,84 +109,283 @@ class TransactionResume extends StatelessWidget with GetItMixin {
                     double totalPrice = _generateTotalPrice(stocks, level);
                     int totalProduct = _generateTotalProduct(stocks);
                     int totalItem = _generateTotalItem(stocks);
-                    if (level > 3) {
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(stock['userDesc'] + ": "),
-                                        SizedBox(width: 10),
-                                        Text(stock['createdBy']),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          formatDateString(stock['createdAt']),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text("Total Product: $totalProduct"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text("Total Item: $totalItem"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Total Price: ${formatCurrency(totalPrice)}",
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: stocks.length,
-                                  itemBuilder: (context, index) {
-                                    var item = stocks[index];
-                                    return Text(
-                                      "${item['productName']} ${item['amount']} ${item['metricType']}",
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
+
+                    print(stock);
+
+                    return ResumeCard(
+                      stock: stock,
+                      totalProduct: totalProduct,
+                      totalItem: totalItem,
+                      totalPrice: totalPrice,
+                      stocks: stocks,
+                      onSelect: () async {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          constraints: BoxConstraints(
+                            minHeight: 600,
+                            maxHeight: 620,
                           ),
-                        ),
-                      );
-                      return StockTableCard(
-                        key: ValueKey(index + 14000),
-                        isMobile: true,
-                        stock: stock,
-                        stockStatus: 'settled',
-                      );
-                    } else {
-                      return Card(
-                        child: Column(
-                          children: [Text(stock['Stocks']['name'])],
-                        ),
-                      );
-                      return StockClientCard(
-                        key: ValueKey(index + 15000),
-                        stockStatus: 'settled',
-                        isMobile: true,
-                        stock: stock,
-                      );
-                    }
+                          context: context,
+                          builder: (context) {
+                            return Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      "Konfirmasi Pembayaran",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "Apakah pembayaran senilai: ",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15),
+                                    child: Text(
+                                      formatCurrency(totalPrice),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.blue.shade600,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Telah dilakukan?",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  Center(
+                                    child: Text(
+                                      "Pastikan pembayaran telah dilakukan!",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.amber.shade900,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 50),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 120,
+                                        child: GradientElevatedButton(
+                                          // inactiveDelay: Duration.zero,
+                                          onPressed:
+                                              () => Navigator.pop(context),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Icon(
+                                                Icons.close,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ),
+                                              Text(
+                                                "Tidak",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 30),
+                                      SizedBox(
+                                        width: 120,
+                                        child: GradientElevatedButton(
+                                          inactiveDelay: Durations.short1,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.green.shade400,
+                                              Colors.green.shade700,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          onPressed: () async {
+                                            bool? result =
+                                                await get<StockViewModel>()
+                                                    .settleStockBatch(
+                                                      batchId: stock['id'],
+                                                    );
+
+                                            if (result == true) {
+                                              await get<StockViewModel>()
+                                                  .getStockBatches(
+                                                    context: context,
+                                                    status: 'completed',
+                                                    sortBy: null,
+                                                    sortOrder: null,
+                                                    page: null,
+                                                    limit: null,
+                                                  );
+                                              get<StockViewModel>().isBusy =
+                                                  false;
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  showCloseIcon: true,
+                                                  backgroundColor:
+                                                      Colors.green.shade400,
+                                                  content: Text(
+                                                    "Konfirmasi pembayaran berhasil.",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  duration: Duration(
+                                                    seconds: 2,
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              get<StockViewModel>().isBusy =
+                                                  false;
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  showCloseIcon: true,
+                                                  backgroundColor:
+                                                      Colors.red.shade400,
+                                                  content: Text(
+                                                    "Konfirmasi pembayaran gagal, hubungi pengembang aplikasi",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  duration: Duration(
+                                                    seconds: 2,
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Icon(
+                                                Icons.check_rounded,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ),
+                                              // SizedBox(width: 5),
+                                              Text(
+                                                "Ya",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 50),
+                                  Center(
+                                    child: SizedBox(
+                                      width: 220,
+                                      child: GradientElevatedButton(
+                                        // inactiveDelay: Duration.zero,
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.red.shade300,
+                                            Colors.red.shade600,
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            constraints: BoxConstraints(
+                                              minHeight: 600,
+                                              maxHeight: 620,
+                                            ),
+                                            context: context,
+                                            builder: (context) {
+                                              return CancelingStock(
+                                                item: stock,
+                                                isBatch: true,
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Batalkan ",
+                                              // _isFactory
+                                              //     ? "Batalkan Pembelian  "
+                                              //     : "Batalkan Penjualan  ",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            Text(
+                                              "!",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                        // // print(stock);
+                        // bool? result = await get<StockViewModel>()
+                        //     .settleStockBatch(batchId: stock['id']);
+
+                        // if (result == true) {
+                        //   await get<StockViewModel>().getStockBatches(
+                        //     context: context,
+                        //     status: 'completed',
+                        //     sortBy: null,
+                        //     sortOrder: null,
+                        //     page: null,
+                        //     limit: null,
+                        //   );
+                        //   get<StockViewModel>().isBusy = false;
+                        // } else {
+                        //   get<StockViewModel>().isBusy = false;
+                        // }
+                      },
+                    );
                   },
                 ),
               ),

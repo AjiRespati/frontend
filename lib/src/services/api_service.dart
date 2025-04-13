@@ -690,6 +690,54 @@ class ApiService {
     }
   }
 
+  Future<bool?> settleStockBatch({required String batchId}) async {
+    String? token = await _getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/stocks/batch/$batchId/settle'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        return null;
+      }
+      return settleStockBatch(batchId: batchId);
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool?> cancelStockBatch({required String batchId}) async {
+    String? token = await _getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/stocks/batch/$batchId/cancel'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        return null;
+      }
+      return cancelStockBatch(batchId: batchId);
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /// Date String yyyy-mm-dd, 2025-03-01
   Future<List<dynamic>> getStockTable({
     required BuildContext context,

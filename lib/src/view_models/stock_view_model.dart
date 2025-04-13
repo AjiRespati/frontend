@@ -1354,6 +1354,18 @@ class StockViewModel extends ChangeNotifier {
     }
   }
 
+  Future<bool?> settleStockBatch({required String batchId}) async {
+    isBusy = true;
+
+    return await ApiService().settleStockBatch(batchId: batchId);
+  }
+
+  Future<bool?> cancelStockBatch({required String batchId}) async {
+    isBusy = true;
+
+    return await ApiService().cancelStockBatch(batchId: batchId);
+  }
+
   // /// --- NEW: Helper to recalculate summaries from the current _newTransactions list ---
   // void _recalculateSummaries() {
   //   double newSumTransactions = 0.0;
