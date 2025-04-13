@@ -20,7 +20,10 @@ class _StockState extends State<Stock> with GetItStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
       var user = get<SystemViewModel>().user;
-      var userClient = (user['levelDesc'] ?? "salesman").toLowerCase();
+      var userClient = (user?['levelDesc'] ?? "salesman")
+          .toLowerCase()
+          .replaceAll(" ", "");
+      print("APA INI CLIENTNNYA????? $userClient");
       get<StockViewModel>().getStockTable(
         context: context,
         status: 'created',

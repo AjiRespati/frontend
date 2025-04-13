@@ -23,6 +23,7 @@ class UpdateLevelContent extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _UpdateLevelContentState extends State<UpdateLevelContent>
     with GetItStateMixin {
+  bool _isBusy = false;
   final formKey = GlobalKey<FormState>();
   int levelChoosenInt = 0;
   String levelChoosen = "Basic";
@@ -70,22 +71,45 @@ class _UpdateLevelContentState extends State<UpdateLevelContent>
             SizedBox(height: 40),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: GradientElevatedButton(
-                // inactiveDelay: Duration.zero,
-                onPressed: () async {
-                  await get<SystemViewModel>().updateUser(
-                    context: context,
-                    id: widget.id,
-                    level: levelChoosenInt,
-                    status: null,
-                  );
-                  await get<SystemViewModel>().getAllUser(context);
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Update Level',
-                  style: TextStyle(color: Colors.white),
-                ),
+              child: Stack(
+                children: [
+                  GradientElevatedButton(
+                    // inactiveDelay: Duration.zero,
+                    onPressed: () async {
+                      setState(() => _isBusy = true);
+                      await get<SystemViewModel>().updateUser(
+                        context: context,
+                        id: widget.id,
+                        level: levelChoosenInt,
+                        status: null,
+                      );
+                      await get<SystemViewModel>().getAllUser(context);
+                      setState(() => _isBusy = false);
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Update Level',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  if (_isBusy)
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6, top: 5),
+                          child: Center(
+                            child: SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: CircularProgressIndicator(
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
               ),
             ),
           ],

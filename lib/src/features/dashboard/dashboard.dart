@@ -20,8 +20,8 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
     get<StockViewModel>().isBusy = true;
     await get<SystemViewModel>().self(context);
     var user = get<SystemViewModel>().user;
-    get<StockViewModel>().client =
-        (user?['levelDesc'] ?? "salesman").toLowerCase();
+    String client = (user?['levelDesc'] ?? "salesman").toLowerCase();
+    get<StockViewModel>().client = client.replaceAll(" ", "");
 
     get<StockViewModel>().salesId = get<SystemViewModel>().salesId;
     get<StockViewModel>().subAgentId = get<SystemViewModel>().subAgentId;
