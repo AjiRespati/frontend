@@ -36,7 +36,8 @@ class _TransactionMobileState extends State<TransactionMobile>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_level < 4 ? "Pemesanan" : "Pembelian"),
+        title: Text("Pemesanan"),
+        // title: Text(_level < 4 ? "Pemesanan" : "Pembelian"),
         actions: [
           if (watchOnly((StockViewModel x) => x.isBusy))
             Padding(
@@ -49,21 +50,22 @@ class _TransactionMobileState extends State<TransactionMobile>
             ),
         ],
         bottom:
-            _level < 4
-                ? null
-                : TabBar(
-                  labelColor: Colors.blue.shade800,
-                  unselectedLabelColor: Colors.grey.shade600,
-                  controller: _transactionTabController,
-                  indicatorColor: Colors.blue.shade700,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  indicatorWeight: 5,
-                  labelStyle: TextStyle(fontWeight: FontWeight.w500),
-                  tabs: [
-                    Tab(icon: Icon(Icons.note_alt_outlined), text: "Resume"),
-                    Tab(icon: Icon(Icons.sell), text: "Pembelian"),
-                  ],
-                ),
+        // _level < 4
+        //     ? null
+        //     :
+        TabBar(
+          labelColor: Colors.blue.shade800,
+          unselectedLabelColor: Colors.grey.shade600,
+          controller: _transactionTabController,
+          indicatorColor: Colors.blue.shade700,
+          indicatorSize: TabBarIndicatorSize.label,
+          indicatorWeight: 5,
+          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          tabs: [
+            Tab(icon: Icon(Icons.note_alt_outlined), text: "Resume"),
+            Tab(icon: Icon(Icons.sell), text: "Pembelian"),
+          ],
+        ),
       ),
       body: TabBarView(
         controller: _transactionTabController,

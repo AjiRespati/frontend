@@ -900,7 +900,9 @@ class StockViewModel extends ChangeNotifier {
 
   Future<bool> createShop({
     required BuildContext context,
-    required String salesId,
+    required String? salesId,
+    required String? subAgentId,
+    required String? agentId,
     required String name,
     required String address,
     required String phone,
@@ -912,6 +914,8 @@ class StockViewModel extends ChangeNotifier {
     final resp = await apiService.createShop(
       context: context,
       salesId: salesId,
+      subAgentId: subAgentId,
+      agentId: agentId,
       name: name,
       address: address,
       phone: phone,
@@ -940,6 +944,7 @@ class StockViewModel extends ChangeNotifier {
       salesId: salesId,
     );
 
+    print("APA INIIIIIIIIIII ?$shops");
     if (isActive == true) {
       shops.removeWhere((shop) {
         // The test function: return true if the item should be removed

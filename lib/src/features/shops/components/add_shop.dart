@@ -22,10 +22,14 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
   final ApiService apiService = ApiService();
 
   void _submit() async {
-    String salesId = get<SystemViewModel>().salesId ?? "-";
+    String? salesId = get<SystemViewModel>().salesId;
+    String? subAgentId = get<SystemViewModel>().salesId;
+    String? agentId = get<SystemViewModel>().salesId;
     await get<StockViewModel>().createShop(
       context: context,
       salesId: salesId,
+      subAgentId: subAgentId,
+      agentId: agentId,
       name: _nameController.text,
       address: _addressController.text,
       phone: _phoneController.text,
@@ -35,7 +39,7 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
     );
     await get<StockViewModel>().getShopsBySales(
       context: context,
-      salesId: salesId,
+      salesId: salesId ?? (subAgentId ?? (agentId ?? "")),
     );
 
     Navigator.pop(context);

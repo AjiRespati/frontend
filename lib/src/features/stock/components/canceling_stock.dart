@@ -42,7 +42,7 @@ class _AddProductScreenState extends State<CancelingStock>
         children: [
           Center(
             child: Text(
-              "Batalkan Pengiriman Stock",
+              "Batalkan Pembelian Stock",
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 20,
@@ -64,7 +64,7 @@ class _AddProductScreenState extends State<CancelingStock>
               children: [
                 Text(
                   widget.isBatch
-                      ? "${widget.item['itemCount']} item?"
+                      ? "${widget.item['itemCount']} produk?"
                       : widget.item['productName'],
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),

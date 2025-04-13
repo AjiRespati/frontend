@@ -19,6 +19,220 @@ class TransactionResume extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _TransactionResumeState extends State<TransactionResume>
     with GetItStateMixin {
+  String _messageSuccess = "";
+  String _messageError = "";
+
+  _handleBatchActions(Map<String, dynamic> stock, double totalPrice) async {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      constraints: BoxConstraints(minHeight: 600, maxHeight: 620),
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  "Konfirmasi Pembayaran",
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Apakah pembayaran senilai: ",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15),
+                child: Text(
+                  formatCurrency(totalPrice),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.blue.shade600,
+                  ),
+                ),
+              ),
+              Text(
+                "Telah dilakukan?",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 20),
+              Center(
+                child: Text(
+                  "Pastikan pembayaran telah dilakukan!",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.amber.shade900,
+                  ),
+                ),
+              ),
+              SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 120,
+                    child: GradientElevatedButton(
+                      // inactiveDelay: Duration.zero,
+                      onPressed: () => Navigator.pop(context),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(Icons.close, color: Colors.white, size: 20),
+                          Text(
+                            "Tidak",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 30),
+                  SizedBox(
+                    width: 120,
+                    child: GradientElevatedButton(
+                      inactiveDelay: Durations.short1,
+                      gradient: LinearGradient(
+                        colors: [Colors.green.shade400, Colors.green.shade700],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      onPressed: () async {
+                        bool? result = await get<StockViewModel>()
+                            .settleStockBatch(batchId: stock['id']);
+
+                        if (result == true) {
+                          await get<StockViewModel>().getStockBatches(
+                            context: context,
+                            status: 'completed',
+                            sortBy: null,
+                            sortOrder: null,
+                            page: null,
+                            limit: null,
+                          );
+                          _messageSuccess = "Konfirmasi pembayaran berhasil.";
+                          _messageError = "";
+                          get<StockViewModel>().reloadBuy = false;
+                          get<StockViewModel>().isBusy = false;
+                          get<StockViewModel>().reloadBuy = null;
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     showCloseIcon: true,
+                          //     backgroundColor: Colors.green.shade400,
+                          //     content: Text(
+                          //       "Konfirmasi pembayaran berhasil.",
+                          //       style: TextStyle(color: Colors.white),
+                          //     ),
+                          //     duration: Duration(seconds: 2),
+                          //   ),
+                          // );
+                        } else {
+                          _messageSuccess = "";
+                          _messageError =
+                              "Konfirmasi pembayaran gagal, hubungi pengembang aplikasi";
+                          get<StockViewModel>().reloadBuy = false;
+                          get<StockViewModel>().isBusy = false;
+                          get<StockViewModel>().reloadBuy = null;
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     showCloseIcon: true,
+                          //     backgroundColor: Colors.red.shade400,
+                          //     content: Text(
+                          //       "Konfirmasi pembayaran gagal, hubungi pengembang aplikasi",
+                          //       style: TextStyle(color: Colors.white),
+                          //     ),
+                          //     duration: Duration(seconds: 2),
+                          //   ),
+                          // );
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(
+                            Icons.check_rounded,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          // SizedBox(width: 5),
+                          Text(
+                            "Ya",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 50),
+              Center(
+                child: SizedBox(
+                  width: 220,
+                  child: GradientElevatedButton(
+                    // inactiveDelay: Duration.zero,
+                    gradient: LinearGradient(
+                      colors: [Colors.red.shade300, Colors.red.shade600],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        constraints: BoxConstraints(
+                          minHeight: 600,
+                          maxHeight: 620,
+                        ),
+                        context: context,
+                        builder: (context) {
+                          return CancelingStock(item: stock, isBatch: true);
+                        },
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Batalkan ",
+                          // _isFactory
+                          //     ? "Batalkan Pembelian  "
+                          //     : "Batalkan Penjualan  ",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          "!",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +242,7 @@ class _TransactionResumeState extends State<TransactionResume>
 
   @override
   Widget build(BuildContext context) {
+    watchOnly((StockViewModel x) => x.reloadBuy);
     return Column(
       children: [
         Padding(
@@ -118,272 +333,8 @@ class _TransactionResumeState extends State<TransactionResume>
                       totalItem: totalItem,
                       totalPrice: totalPrice,
                       stocks: stocks,
-                      onSelect: () async {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          constraints: BoxConstraints(
-                            minHeight: 600,
-                            maxHeight: 620,
-                          ),
-                          context: context,
-                          builder: (context) {
-                            return Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Center(
-                                    child: Text(
-                                      "Konfirmasi Pembayaran",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 20),
-                                  Text(
-                                    "Apakah pembayaran senilai: ",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Text(
-                                      formatCurrency(totalPrice),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.blue.shade600,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    "Telah dilakukan?",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(height: 20),
-                                  Center(
-                                    child: Text(
-                                      "Pastikan pembayaran telah dilakukan!",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.amber.shade900,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 50),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 120,
-                                        child: GradientElevatedButton(
-                                          // inactiveDelay: Duration.zero,
-                                          onPressed:
-                                              () => Navigator.pop(context),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Icon(
-                                                Icons.close,
-                                                color: Colors.white,
-                                                size: 20,
-                                              ),
-                                              Text(
-                                                "Tidak",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 30),
-                                      SizedBox(
-                                        width: 120,
-                                        child: GradientElevatedButton(
-                                          inactiveDelay: Durations.short1,
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.green.shade400,
-                                              Colors.green.shade700,
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                          ),
-                                          onPressed: () async {
-                                            bool? result =
-                                                await get<StockViewModel>()
-                                                    .settleStockBatch(
-                                                      batchId: stock['id'],
-                                                    );
-
-                                            if (result == true) {
-                                              await get<StockViewModel>()
-                                                  .getStockBatches(
-                                                    context: context,
-                                                    status: 'completed',
-                                                    sortBy: null,
-                                                    sortOrder: null,
-                                                    page: null,
-                                                    limit: null,
-                                                  );
-                                              get<StockViewModel>().isBusy =
-                                                  false;
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  showCloseIcon: true,
-                                                  backgroundColor:
-                                                      Colors.green.shade400,
-                                                  content: Text(
-                                                    "Konfirmasi pembayaran berhasil.",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  duration: Duration(
-                                                    seconds: 2,
-                                                  ),
-                                                ),
-                                              );
-                                            } else {
-                                              get<StockViewModel>().isBusy =
-                                                  false;
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  showCloseIcon: true,
-                                                  backgroundColor:
-                                                      Colors.red.shade400,
-                                                  content: Text(
-                                                    "Konfirmasi pembayaran gagal, hubungi pengembang aplikasi",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  duration: Duration(
-                                                    seconds: 2,
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Icon(
-                                                Icons.check_rounded,
-                                                color: Colors.white,
-                                                size: 20,
-                                              ),
-                                              // SizedBox(width: 5),
-                                              Text(
-                                                "Ya",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 50),
-                                  Center(
-                                    child: SizedBox(
-                                      width: 220,
-                                      child: GradientElevatedButton(
-                                        // inactiveDelay: Duration.zero,
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Colors.red.shade300,
-                                            Colors.red.shade600,
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            constraints: BoxConstraints(
-                                              minHeight: 600,
-                                              maxHeight: 620,
-                                            ),
-                                            context: context,
-                                            builder: (context) {
-                                              return CancelingStock(
-                                                item: stock,
-                                                isBatch: true,
-                                              );
-                                            },
-                                          );
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "Batalkan ",
-                                              // _isFactory
-                                              //     ? "Batalkan Pembelian  "
-                                              //     : "Batalkan Penjualan  ",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            Text(
-                                              "!",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w900,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                        // // print(stock);
-                        // bool? result = await get<StockViewModel>()
-                        //     .settleStockBatch(batchId: stock['id']);
-
-                        // if (result == true) {
-                        //   await get<StockViewModel>().getStockBatches(
-                        //     context: context,
-                        //     status: 'completed',
-                        //     sortBy: null,
-                        //     sortOrder: null,
-                        //     page: null,
-                        //     limit: null,
-                        //   );
-                        //   get<StockViewModel>().isBusy = false;
-                        // } else {
-                        //   get<StockViewModel>().isBusy = false;
-                        // }
+                      onSelect: () {
+                        _handleBatchActions(stock, totalPrice);
                       },
                     );
                   },

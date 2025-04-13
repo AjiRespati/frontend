@@ -1437,7 +1437,9 @@ class ApiService {
 
   Future<bool> createShop({
     required BuildContext context,
-    required String salesId,
+    required String? salesId,
+    required String? subAgentId,
+    required String? agentId,
     required String name,
     required String address,
     required String phone,
@@ -1455,6 +1457,8 @@ class ApiService {
       },
       body: jsonEncode({
         'salesId': salesId,
+        'subAgentId': subAgentId,
+        'agentId': agentId,
         'name': name,
         'address': address,
         'phone': phone,
@@ -1473,6 +1477,8 @@ class ApiService {
       return createShop(
         context: context,
         salesId: salesId,
+        subAgentId: subAgentId,
+        agentId: agentId,
         name: name,
         address: address,
         phone: phone,
