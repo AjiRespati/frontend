@@ -364,9 +364,18 @@ class _TransactionResumeState extends State<TransactionResume>
                   itemCount: get<StockViewModel>().responseBatch.length,
 
                   itemBuilder: (context, index) {
-                    int level = get<SystemViewModel>().level ?? 0;
                     Map<String, dynamic> stock =
                         get<StockViewModel>().responseBatch[index];
+
+                    int level =
+                        stock['userDesc'] == 'Salesman'
+                            ? 1
+                            : stock['userDesc'] == 'Sub Agent'
+                            ? 2
+                            : stock['userDesc'] == 'Agent'
+                            ? 3
+                            : 4;
+
                     List<dynamic> stocks = stock['Stocks'];
                     double totalPrice = _generateTotalPrice(stocks, level);
                     int totalProduct = _generateTotalProduct(stocks);

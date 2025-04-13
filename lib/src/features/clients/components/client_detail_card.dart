@@ -44,7 +44,7 @@ class ClientDetailCard extends StatelessWidget with GetItMixin {
               children: [
                 Text("Harga: "),
                 Text(
-                  formatCurrency(item['salesmanPrice'] ?? 0),
+                  formatCurrency(_generatePrice(item)),
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ],
@@ -53,7 +53,7 @@ class ClientDetailCard extends StatelessWidget with GetItMixin {
               children: [
                 Text("Komisi: "),
                 Text(
-                  formatCurrency(item['totalSalesShare'] ?? 0),
+                  formatCurrency(_generateKomisi(item)),
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: Colors.blue.shade700,
@@ -65,5 +65,33 @@ class ClientDetailCard extends StatelessWidget with GetItMixin {
         ),
       ),
     );
+  }
+
+  double _generatePrice(dynamic item) {
+    double result = 0;
+
+    if (item['salesmanPrice'] > 0) {
+      result = item['salesmanPrice'];
+    } else if (item['subAgentPrice'] > 0) {
+      result = item['subAgentPrice'];
+    } else if (item['agentPrice'] > 0) {
+      result = item['agentPrice'];
+    }
+
+    return result;
+  }
+
+  double _generateKomisi(dynamic item) {
+    double result = 0;
+
+    if (item['totalSalesShare'] != null) {
+      result = item['totalSalesShare'];
+    } else if (item['totalSubAgentShare'] != null) {
+      result = item['totalSubAgentShare'];
+    } else if (item['totalAgentShare'] != null) {
+      result = item['totalAgentShare'];
+    }
+
+    return result;
   }
 }
