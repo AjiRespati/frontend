@@ -15,7 +15,7 @@ class ApplicationInfo {
 
   static const isProduction = baseUrl == baseUrlProd;
 
-  static const appVersion = '1.0.0 ${isProduction ? "" : "DEV"}';
+  static const appVersion = '1.0.1 ${isProduction ? "" : "DEV"}';
 
   static const appName = "Gracia $appVersion";
 

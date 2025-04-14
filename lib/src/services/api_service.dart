@@ -641,7 +641,7 @@ class ApiService {
 
     final uri = Uri.parse(baseUrl).replace(
       path:
-          '/api/stocks/batches', // Or adjust if baseUrl already includes part of the path
+          'service/api/stocks/batches', // Or adjust if baseUrl already includes part of the path
       queryParameters: queryParameters,
     );
 
@@ -762,7 +762,7 @@ class ApiService {
 
     final uri = Uri.parse(baseUrl).replace(
       path:
-          '/api/stocks/table', // Or adjust if baseUrl already includes part of the path
+          'service/api/stocks/table', // Or adjust if baseUrl already includes part of the path
       queryParameters: queryParameters,
     );
 
@@ -834,7 +834,7 @@ class ApiService {
 
     final uri = Uri.parse(baseUrl).replace(
       path:
-          '/api/stocks/table/client', // Or adjust if baseUrl already includes part of the path
+          'service/api/stocks/table/client', // Or adjust if baseUrl already includes part of the path
       queryParameters: queryParameters,
     );
 

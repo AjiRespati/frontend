@@ -1,7 +1,7 @@
 name: frontend
-description: "A new Flutter project."
+description: "Gracia Rafflessia"
 publish_to: 'none'
-version: 1.0.0
+version: 1.0.1
 
 environment:
   sdk: ^3.7.0

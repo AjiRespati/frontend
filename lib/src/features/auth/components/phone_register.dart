@@ -27,6 +27,7 @@ class PhoneRegister extends StatelessWidget with GetItMixin {
         return null;
       },
       autofocus: true,
+      keyboardType: TextInputType.numberWithOptions(),
     );
   }
 }
