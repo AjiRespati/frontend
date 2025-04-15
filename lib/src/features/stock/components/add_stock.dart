@@ -6,22 +6,28 @@ import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 /// measurements is List of "kg", "g", "liter", "bucket", "carton", "box", "pcs".
-class AddStock extends StatelessWidget with GetItMixin {
+class AddStock extends StatefulWidget with GetItStatefulWidgetMixin {
   AddStock({required this.measurement, required this.mainProduct, super.key});
 
   final dynamic mainProduct;
   final String measurement;
 
   @override
+  State<AddStock> createState() => _AddStockState();
+}
+
+class _AddStockState extends State<AddStock> with GetItStateMixin {
+  final formKey = GlobalKey<FormState>();
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
-        key: get<StockViewModel>().formKey,
+        key: formKey,
         child: Column(
           children: [
             Text(
-              mainProduct?['productName'] ?? "N/A",
+              widget.mainProduct?['productName'] ?? "N/A",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             SizedBox(height: 20),
@@ -40,7 +46,7 @@ class AddStock extends StatelessWidget with GetItMixin {
                   ),
                 ),
                 SizedBox(width: 10),
-                Expanded(child: Text(measurement)),
+                Expanded(child: Text(widget.measurement)),
                 SizedBox(width: 10),
                 Expanded(child: SizedBox()),
                 SizedBox(width: 10),
@@ -88,7 +94,8 @@ class AddStock extends StatelessWidget with GetItMixin {
               ),
               // inactiveDelay: Duration.zero,
               onPressed: () async {
-                get<StockViewModel>().metricId = mainProduct?['metricId'];
+                get<StockViewModel>().metricId =
+                    widget.mainProduct?['metricId'];
                 get<StockViewModel>().stockEvent = 'stock_in';
                 await get<StockViewModel>().createStock(
                   // context: context,
@@ -96,7 +103,7 @@ class AddStock extends StatelessWidget with GetItMixin {
                 );
                 await get<StockViewModel>().fetchProduct(
                   context,
-                  mainProduct?['productId'],
+                  widget.mainProduct?['productId'],
                 );
                 get<StockViewModel>().fetchProducts(context);
               },
