@@ -25,75 +25,77 @@ class RegisterContent extends StatelessWidget with GetItMixin {
             child: CircularProgressIndicator(),
           ),
         )
-        : Column(
-          children: [
-            const SizedBox(height: 20),
-            const LoginTitle(title: "Register ${ApplicationInfo.appName}"),
-            const SizedBox(height: 20),
-            EmailRegister(),
-            const SizedBox(height: 20),
-            LoginPassword(),
-            const SizedBox(height: 20),
-            ConfirmPassword(),
-            const SizedBox(height: 20),
-            NameRegister(),
-            const SizedBox(height: 20),
-            PhoneRegister(),
-            const SizedBox(height: 20),
-            RegisterButton(
-              handleRegister: () async {
-                bool isRegistered = await get<SystemViewModel>().register();
+        : SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              const LoginTitle(title: "Register ${ApplicationInfo.appName}"),
+              const SizedBox(height: 20),
+              EmailRegister(),
+              const SizedBox(height: 20),
+              LoginPassword(),
+              const SizedBox(height: 20),
+              ConfirmPassword(),
+              const SizedBox(height: 20),
+              NameRegister(),
+              const SizedBox(height: 20),
+              PhoneRegister(),
+              const SizedBox(height: 20),
+              RegisterButton(
+                handleRegister: () async {
+                  bool isRegistered = await get<SystemViewModel>().register();
 
-                if (isRegistered) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      backgroundColor: Colors.green,
-                      content: Text("Registrasi sukses"),
-                      duration: Duration(
-                        seconds: 3,
-                      ), // Adjust duration as needed
-                    ),
-                  );
-                  get<SystemViewModel>().passwordController.text = "";
-                  await Future.delayed(Durations.medium1);
-                  get<SystemViewModel>().isLoginView = true;
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      showCloseIcon: true,
-                      backgroundColor: Colors.red.shade400,
-                      content: Text(
-                        "Registrasi gagal",
-                        style: TextStyle(color: Colors.white),
+                  if (isRegistered) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        backgroundColor: Colors.green,
+                        content: Text("Registrasi sukses"),
+                        duration: Duration(
+                          seconds: 3,
+                        ), // Adjust duration as needed
+                      ),
+                    );
+                    get<SystemViewModel>().passwordController.text = "";
+                    await Future.delayed(Durations.medium1);
+                    get<SystemViewModel>().isLoginView = true;
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        showCloseIcon: true,
+                        backgroundColor: Colors.red.shade400,
+                        content: Text(
+                          "Registrasi gagal",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      get<SystemViewModel>().isLoginView = true;
+                    },
+                    child: Text(
+                      "Login",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w700,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.blue,
+                        decorationThickness: 1.5,
                       ),
                     ),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    get<SystemViewModel>().isLoginView = true;
-                  },
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w700,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.blue,
-                      decorationThickness: 1.5,
-                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         );
   }
 }
