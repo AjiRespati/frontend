@@ -19,6 +19,15 @@ class ProductMobile extends StatelessWidget with GetItMixin {
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
         ),
         actions: [
+          if (watchOnly((StockViewModel x) => x.isBusy))
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(color: Colors.blue),
+              ),
+            ),
           Text("Add Product"),
           SizedBox(width: 5),
           AddButton(

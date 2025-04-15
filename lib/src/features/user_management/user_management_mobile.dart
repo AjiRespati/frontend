@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/user_management/components/user_table_card.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -14,7 +15,7 @@ class UserManagementMobile extends StatelessWidget with GetItMixin {
       appBar: AppBar(
         title: Text("User Management"),
         actions: [
-          if (watchOnly((SystemViewModel x) => x.isBusy))
+          if (watchOnly((StockViewModel x) => x.isBusy))
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: SizedBox(

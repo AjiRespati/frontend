@@ -51,25 +51,34 @@ class _ClientsMobileState extends State<ClientsMobile>
         ),
         title: const Text('Clients'),
         actions: [
-          AddButton(
-            size: 32,
-            message: "Add Product",
-            onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                constraints: BoxConstraints(maxHeight: 540),
-                context: context,
-                builder: (context) {
-                  return AddClient();
-                },
-              ).then((value) {
-                // mendengarkan tab setelah selesai request add
-                _tabController.index = watchOnly(
-                  (StockViewModel x) => x.clientTabIndex,
-                );
-              });
-            },
-          ),
+          if (watchOnly((StockViewModel x) => x.isBusy))
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(color: Colors.blue),
+              ),
+            ),
+          // AddButton(
+          //   size: 32,
+          //   message: "Add Product",
+          //   onPressed: () {
+          //     showModalBottomSheet(
+          //       isScrollControlled: true,
+          //       constraints: BoxConstraints(maxHeight: 540),
+          //       context: context,
+          //       builder: (context) {
+          //         return AddClient();
+          //       },
+          //     ).then((value) {
+          //       // mendengarkan tab setelah selesai request add
+          //       _tabController.index = watchOnly(
+          //         (StockViewModel x) => x.clientTabIndex,
+          //       );
+          //     });
+          //   },
+          // ),
           SizedBox(width: 20),
         ],
       ),
