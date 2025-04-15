@@ -44,124 +44,126 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                               ),
                             ],
                           )
-                          : Column(
+                          : ((model.level ?? 0) > 3)
+                          ? Column(
                             children: [
-                              if ((model.level ?? 0) > 3)
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      userManagementRoute,
-                                    );
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Text("User Management"),
-                                      Spacer(),
-                                      IconButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            userManagementRoute,
-                                          );
-                                        },
-                                        icon: Icon(
-                                          Icons.chevron_right_rounded,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              if ((model.level ?? 0) > 3) Divider(),
-                              if ((model.level ?? 0) > 3)
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      shopsRoute,
-                                      arguments: true,
-                                    );
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Text("Shop Management"),
-                                      Spacer(),
-                                      IconButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            shopsRoute,
-                                            arguments: true,
-                                          );
-                                        },
-                                        icon: Icon(
-                                          Icons.chevron_right_rounded,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              if ((model.level ?? 0) > 3) Divider(),
-                              if ((model.level ?? 0) > 3)
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, freezersRoute);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Text("Freezer Management"),
-                                      Spacer(),
-                                      IconButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            freezersRoute,
-                                          );
-                                        },
-                                        icon: Icon(
-                                          Icons.chevron_right_rounded,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              if ((model.level ?? 0) > 3) Divider(),
-                              if ((model.level ?? 0) > 3)
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, productsRoute);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Text("Product Management"),
-                                      Spacer(),
-                                      IconButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            productsRoute,
-                                          );
-                                        },
-                                        icon: Icon(
-                                          Icons.chevron_right_rounded,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              if ((model.level ?? 0) > 3) Divider(),
-                            ],
-                          ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    userManagementRoute,
+                                  );
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("User Management"),
 
-                      SizedBox(
-                        height:
-                            MediaQuery.of(context).size.height -
-                            ((model.level ?? 0) > 3 ? 700 : 550),
-                      ),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          userManagementRoute,
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.chevron_right_rounded,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(),
+
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    shopsRoute,
+                                    arguments: true,
+                                  );
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Shop Management"),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          shopsRoute,
+                                          arguments: true,
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.chevron_right_rounded,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(),
+
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(context, freezersRoute);
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Freezer Management"),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          freezersRoute,
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.chevron_right_rounded,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(),
+
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(context, productsRoute);
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Product Management"),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          productsRoute,
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.chevron_right_rounded,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(),
+                            ],
+                          )
+                          : SizedBox(),
+
+                      SizedBox(height: ((model.level ?? 0) > 3 ? 70 : 300)),
                       GradientElevatedButton(
                         onPressed: () async {
                           get<StockViewModel>().isBusy = true;

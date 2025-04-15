@@ -3,13 +3,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginPassword extends StatelessWidget with GetItMixin {
-  LoginPassword({super.key});
+  LoginPassword({required this.handleLogin, super.key});
+
+  final Function() handleLogin;
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +19,7 @@ class LoginPassword extends StatelessWidget with GetItMixin {
       controller: get<SystemViewModel>().passwordController,
       obscureText: !get<SystemViewModel>().showPassword,
       onEditingComplete: () async {
-        bool isLogin = await get<SystemViewModel>().onLogin();
-
-        if (isLogin) {
-          Navigator.pushReplacementNamed(context, dashboardRoute);
-        } else {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text("Invalid credentials")));
-        }
+        handleLogin();
       },
       onTap: () {
         log('tapped');

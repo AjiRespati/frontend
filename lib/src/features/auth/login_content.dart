@@ -30,7 +30,28 @@ class LoginContent extends StatelessWidget with GetItMixin {
             const SizedBox(height: 20),
             LoginUsername(),
             const SizedBox(height: 20),
-            LoginPassword(),
+            LoginPassword(
+              handleLogin: () async {
+                bool isLogin = await get<SystemViewModel>().onLogin();
+                if (isLogin) {
+                  get<SystemViewModel>().isBusy = false;
+                  Navigator.pushReplacementNamed(context, dashboardRoute);
+                } else {
+                  get<SystemViewModel>().isBusy = false;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      showCloseIcon: true,
+                      backgroundColor: Colors.red.shade400,
+                      content: Text(
+                        "Email atau password salah",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
             const SizedBox(height: 20),
             LoginButton(
               handleLogin: () async {

@@ -8,7 +8,7 @@ import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 /// measurements is List of "kg", "g", "liter", "bucket", "carton", "box", "pcs".
-class BuyProduct extends StatelessWidget with GetItMixin {
+class BuyProduct extends StatefulWidget with GetItStatefulWidgetMixin {
   BuyProduct({
     required this.measurement,
     required this.mainProduct,
@@ -23,20 +23,27 @@ class BuyProduct extends StatelessWidget with GetItMixin {
   final String? shopId;
 
   @override
+  State<BuyProduct> createState() => _BuyProductState();
+}
+
+class _BuyProductState extends State<BuyProduct> with GetItStateMixin {
+  final formKey = GlobalKey<FormState>();
+
+  @override
   Widget build(BuildContext context) {
     var client = get<StockViewModel>().client;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
-        key: get<StockViewModel>().formKey,
+        key: formKey,
         child: Column(
           children: [
             Text(
-              mainProduct?['productName'] ?? "N/A",
+              widget.mainProduct?['productName'] ?? "N/A",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             Text(
-              "Stock: ${(mainProduct?['totalStock'] ?? 0).toString()} $measurement",
+              "Stock: ${(widget.mainProduct?['totalStock'] ?? 0).toString()} ${widget.measurement}",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             SizedBox(height: 20),
@@ -45,7 +52,7 @@ class BuyProduct extends StatelessWidget with GetItMixin {
               children: [
                 SizedBox(width: 15),
                 Text(
-                  "${formatCurrency(_generatePrice(mainProduct, client))} / $measurement ",
+                  "${formatCurrency(_generatePrice(widget.mainProduct, client))} / ${widget.measurement} ",
                 ),
               ],
             ),
@@ -67,7 +74,7 @@ class BuyProduct extends StatelessWidget with GetItMixin {
                   ),
                 ),
                 SizedBox(width: 10),
-                Expanded(child: Text(measurement)),
+                Expanded(child: Text(widget.measurement)),
                 SizedBox(width: 10),
                 Expanded(
                   flex: 5,
@@ -90,7 +97,7 @@ class BuyProduct extends StatelessWidget with GetItMixin {
               children: [
                 SizedBox(width: 15),
                 Text(
-                  "${formatCurrency((_generatePrice(mainProduct, client)) * (watchOnly((StockViewModel x) => x.stockAmount)))} / $measurement ",
+                  "${formatCurrency((_generatePrice(widget.mainProduct, client)) * (watchOnly((StockViewModel x) => x.stockAmount)))} / ${widget.measurement} ",
                 ),
               ],
             ),
@@ -107,21 +114,22 @@ class BuyProduct extends StatelessWidget with GetItMixin {
                 if (get<StockViewModel>().stockAmount == 0) {
                 } else {
                   ProductTransaction val = ProductTransaction(
-                    productId: mainProduct?["productId"],
-                    shopId: shopId,
+                    productId: widget.mainProduct?["productId"],
+                    shopId: widget.shopId,
                     productAmount: get<StockViewModel>().stockAmount,
-                    productDetail: mainProduct,
-                    price: (_generatePrice(mainProduct, client)).toDouble(),
+                    productDetail: widget.mainProduct,
+                    price:
+                        (_generatePrice(widget.mainProduct, client)).toDouble(),
                     totalPrice:
-                        ((_generatePrice(mainProduct, client)) *
+                        ((_generatePrice(widget.mainProduct, client)) *
                                 (watchOnly(
                                   (StockViewModel x) => x.stockAmount,
                                 )))
                             .toDouble(),
-                    stockEvent: stockEvent,
+                    stockEvent: widget.stockEvent,
                   );
                   get<StockViewModel>().addProductTransaction(val);
-                  get<StockViewModel>().reloadBuy = mainProduct;
+                  get<StockViewModel>().reloadBuy = widget.mainProduct;
                   await Future.delayed(Durations.short1);
                   get<StockViewModel>().reloadBuy = null;
                   get<StockViewModel>().stockAmount = 0;

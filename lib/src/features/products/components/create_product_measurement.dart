@@ -6,7 +6,8 @@ import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 /// measurements is List of "kg", "g", "liter", "bucket", "carton", "box", "pcs".
-class CreateProductMeasurement extends StatelessWidget with GetItMixin {
+class CreateProductMeasurement extends StatefulWidget
+    with GetItStatefulWidgetMixin {
   CreateProductMeasurement({
     required this.measurements,
     required this.mainProduct,
@@ -17,16 +18,25 @@ class CreateProductMeasurement extends StatelessWidget with GetItMixin {
   final List<String> measurements;
 
   @override
+  State<CreateProductMeasurement> createState() =>
+      _CreateProductMeasurementState();
+}
+
+class _CreateProductMeasurementState extends State<CreateProductMeasurement>
+    with GetItStateMixin {
+  final formKey = GlobalKey<FormState>();
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
-        key: get<StockViewModel>().formKey,
+        key: formKey,
         child: Column(
           children: [
             SizedBox(height: 20),
             Text(
-              mainProduct?['productName'] ?? "N/A",
+              widget.mainProduct?['productName'] ?? "N/A",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             Text("Add Unit Measurement", style: TextStyle(fontSize: 12)),
@@ -62,7 +72,7 @@ class CreateProductMeasurement extends StatelessWidget with GetItMixin {
                     decoration: InputDecoration(isDense: true),
                     value: get<StockViewModel>().measurement,
                     items:
-                        measurements.map((item) {
+                        widget.measurements.map((item) {
                           return DropdownMenuItem<String>(
                             value: item,
                             child: Text(item),
@@ -166,17 +176,18 @@ class CreateProductMeasurement extends StatelessWidget with GetItMixin {
               child: GradientElevatedButton(
                 // inactiveDelay: Duration.zero,
                 onPressed: () async {
-                  get<StockViewModel>().metricId = mainProduct?['metricId'];
+                  get<StockViewModel>().metricId =
+                      widget.mainProduct?['metricId'];
                   await get<StockViewModel>().createMetric(
                     context: context,
-                    productId: mainProduct?['productId'],
+                    productId: widget.mainProduct?['productId'],
                     metricType: get<StockViewModel>().measurement,
                     price: get<StockViewModel>().price.toDouble(),
                   );
 
                   await get<StockViewModel>().fetchProduct(
                     context,
-                    mainProduct?['productId'],
+                    widget.mainProduct?['productId'],
                   );
                 },
                 child: Text(
