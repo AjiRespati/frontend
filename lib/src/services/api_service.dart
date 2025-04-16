@@ -1961,4 +1961,116 @@ class ApiService {
       return false;
     }
   }
+
+  Future<List<dynamic>> getAllPercentages() async {
+    String? token = await _getToken();
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/percentages'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        return [];
+      }
+      return getAllPercentages();
+    } else if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     showCloseIcon: true,
+      //     backgroundColor: Colors.red.shade400,
+      //     content: Text(
+      //       jsonDecode(response.body)['error'] ??
+      //           "Kesalahan system, hubungi pengembang aplikasi",
+      //     ),
+      //   ),
+      // );
+      return [];
+    }
+  }
+
+  Future<bool?> createPercentage({
+    required String key,
+    required int value,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/percentages'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({'key': key, 'value': value}),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        return null;
+      }
+      return createPercentage(key: key, value: value);
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     showCloseIcon: true,
+      //     backgroundColor: Colors.red.shade400,
+      //     content: Text(
+      //       jsonDecode(response.body)['error'] ??
+      //           "Kesalahan system, hubungi pengembang aplikasi",
+      //     ),
+      //   ),
+      // );
+      return false;
+    }
+  }
+
+  Future<bool> updatePercentage({
+    required BuildContext context,
+    required String id,
+    required int value,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/percentages/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({'value': value}),
+    );
+
+    if (response.statusCode == 401) {
+      token = await refreshAccessToken();
+      if (token == null) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      }
+      return updatePercentage(context: context, id: id, value: value);
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
+      return false;
+    }
+  }
 }

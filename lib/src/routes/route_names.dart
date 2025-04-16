@@ -16,3 +16,4 @@ const String shopsRoute = "/Shops";
 const String shopsDetailRoute = "/Shops/Detail";
 const String freezersRoute = "/Freezers";
 const String transactionsRoute = "/Transactions";
+const String percentagesRoute = "/Percentages";

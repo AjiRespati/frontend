@@ -102,6 +102,8 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> _freezers = [];
   List<dynamic> _idleFreezers = [];
 
+  List<dynamic> _percentages = [];
+
   //====================//
   //  GETTER n SETTER   //
   //====================//
@@ -443,6 +445,12 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> get idleFreezers => _idleFreezers;
   set idleFreezers(List<dynamic> val) {
     _idleFreezers = val;
+    notifyListeners();
+  }
+
+  List<dynamic> get percentages => _percentages;
+  set percentages(List<dynamic> val) {
+    _percentages = val;
     notifyListeners();
   }
 
@@ -1471,6 +1479,51 @@ class StockViewModel extends ChangeNotifier {
   //   _sumProducts = _newTransactions.length;
   //   // Do NOT call notifyListeners here, the caller should handle it.
   // }
+
+  Future<bool> fetchPercentages() async {
+    percentages = await ApiService().getAllPercentages();
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool?> createPercentages({
+    required String key,
+    required int value,
+  }) async {
+    isBusy = true;
+    bool? response;
+    bool? resp = await ApiService().createPercentage(key: key, value: value);
+
+    if (resp == true) {
+      percentages = await ApiService().getAllPercentages();
+    }
+
+    response = resp;
+
+    return response;
+  }
+
+  Future<bool> updatePercentages({
+    required BuildContext context,
+    required String id,
+    required int value,
+  }) async {
+    isBusy = true;
+    bool response;
+    bool resp = await ApiService().updatePercentage(
+      context: context,
+      id: id,
+      value: value,
+    );
+
+    if (resp == true) {
+      percentages = await ApiService().getAllPercentages();
+    }
+
+    response = resp;
+
+    return response;
+  }
 
   String generateDateString(DateTime time) {
     final formatter = DateFormat('yyyy-MM-dd');

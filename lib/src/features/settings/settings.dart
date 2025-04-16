@@ -20,9 +20,10 @@ class _SettingsState extends State<Settings> with GetItStateMixin {
     get<StockViewModel>().isBusy = true;
     await get<SystemViewModel>().self(context);
     if ((get<SystemViewModel>().level ?? 0) > 3) {
-      await get<SystemViewModel>().getAllUser(context);
-      await get<StockViewModel>().getAllFrezer(context);
-      await get<StockViewModel>().getAllShops(context: context);
+      get<SystemViewModel>().getAllUser(context);
+      get<StockViewModel>().getAllFrezer(context);
+      get<StockViewModel>().getAllShops(context: context);
+      get<StockViewModel>().fetchPercentages();
     }
 
     get<StockViewModel>().isBusy = false;

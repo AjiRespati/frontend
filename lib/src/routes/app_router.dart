@@ -3,6 +3,7 @@ import 'package:frontend/src/features/clients/client_detail/client_detail.dart';
 import 'package:frontend/src/features/clients/clients.dart';
 import 'package:frontend/src/features/dashboard/dashboard.dart';
 import 'package:frontend/src/features/freezer/freezer.dart';
+import 'package:frontend/src/features/percentages/percentages.dart';
 import 'package:frontend/src/features/products/components/add_product.dart';
 import 'package:frontend/src/features/products/product_detail/product_detail.dart';
 import 'package:frontend/src/features/settings/settings.dart';
@@ -76,6 +77,9 @@ class AppRouter {
           break;
         case transactionsRoute:
           screen = Transaction();
+          break;
+        case percentagesRoute:
+          screen = Percentages();
           break;
         default:
           screen = const NotFoundPage();
