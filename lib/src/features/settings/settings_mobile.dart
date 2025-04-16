@@ -159,6 +159,35 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                                 ),
                               ),
                               Divider(),
+
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    percentagesRoute,
+                                  );
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Percentages Management"),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          percentagesRoute,
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.chevron_right_rounded,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(),
                             ],
                           )
                           : SizedBox(),
