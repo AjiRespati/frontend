@@ -18,6 +18,8 @@ class Dashboard extends StatefulWidget with GetItStatefulWidgetMixin {
 class _DashboardState extends State<Dashboard> with GetItStateMixin {
   Future<void> _setup() async {
     get<StockViewModel>().isBusy = true;
+    get<SystemViewModel>().usernameController.text = "";
+    get<SystemViewModel>().passwordController.text = "";
     await get<SystemViewModel>().self(context);
     var user = get<SystemViewModel>().user;
     String client = (user?['levelDesc'] ?? "salesman").toLowerCase();

@@ -10,7 +10,23 @@ class LoginMobile extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Welcome"), automaticallyImplyLeading: false),
+      appBar: AppBar(
+        title: Text("Welcome"),
+        automaticallyImplyLeading: false,
+        actions: [
+          if (watchOnly((SystemViewModel x) => x.isBusy))
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(color: Colors.blue),
+              ),
+            ),
+
+          SizedBox(width: 20),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child:

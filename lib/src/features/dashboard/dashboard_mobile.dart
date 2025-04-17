@@ -15,117 +15,117 @@ class DashboardMobile extends StatelessWidget with GetItMixin {
       appBar: AppBar(
         title: Text("Dashboard"),
         automaticallyImplyLeading: false,
-      ),
-      body:
-          watchOnly((StockViewModel x) => x.isBusy)
-              ? Center(
-                child: SizedBox(
-                  width: 35,
-                  height: 35,
-                  child: CircularProgressIndicator(),
-                ),
-              )
-              : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Text(
-                      "WELCOME",
-                      // style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                    ),
-                    Text(
-                      get<SystemViewModel>().name ?? "",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(height: 40),
-
-                    if (get<SystemViewModel>().salesId != null)
-                      _buildCommissionCard(
-                        "Commission",
-                        (get<StockViewModel>()
-                                    .commissionData?['salesmanCommission'] ??
-                                0 as num)
-                            .toDouble(),
-                      ),
-
-                    if (get<SystemViewModel>().subAgentId != null)
-                      _buildCommissionCard(
-                        "SubAgent",
-                        (get<StockViewModel>()
-                                    .commissionData?['subAgentCommission'] ??
-                                0 as num)
-                            .toDouble(),
-                      ),
-
-                    if (get<SystemViewModel>().agentId != null)
-                      _buildCommissionCard(
-                        "Agent",
-                        (get<StockViewModel>()
-                                    .commissionData?['agentCommission'] ??
-                                0 as num)
-                            .toDouble(),
-                      ),
-
-                    isClient
-                        ? SizedBox()
-                        : _buildCommissionCard(
-                          "Total Commission",
-                          (get<StockViewModel>()
-                                      .commissionData?['totalCommission'] ??
-                                  0 as num)
-                              .toDouble(),
-                        ),
-                    isClient
-                        ? SizedBox()
-                        : _buildCommissionCard(
-                          "Distributor",
-                          (get<StockViewModel>()
-                                      .commissionData?['distributorCommission'] ??
-                                  0 as num)
-                              .toDouble(),
-                        ),
-                    isClient
-                        ? SizedBox()
-                        : _buildCommissionCard(
-                          "Agent",
-                          (get<StockViewModel>()
-                                      .commissionData?['agentCommission'] ??
-                                  0 as num)
-                              .toDouble(),
-                        ),
-                    isClient
-                        ? SizedBox()
-                        : _buildCommissionCard(
-                          "SubAgent",
-                          (get<StockViewModel>()
-                                      .commissionData?['subAgentCommission'] ??
-                                  0 as num)
-                              .toDouble(),
-                        ),
-                    isClient
-                        ? SizedBox()
-                        : _buildCommissionCard(
-                          "Salesman",
-                          (get<StockViewModel>()
-                                      .commissionData?['salesmanCommission'] ??
-                                  0 as num)
-                              .toDouble(),
-                        ),
-                    isClient
-                        ? SizedBox()
-                        : _buildCommissionCard(
-                          "Shop",
-                          (get<StockViewModel>()
-                                      .commissionData?['shopCommission'] ??
-                                  0 as num)
-                              .toDouble(),
-                        ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
+        actions: [
+          if (watchOnly((SystemViewModel x) => x.isBusy))
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(color: Colors.blue),
               ),
+            ),
+
+          SizedBox(width: 20),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "WELCOME",
+                  // style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                ),
+              ],
+            ),
+            Text(
+              get<SystemViewModel>().name ?? "",
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+            ),
+            SizedBox(height: 40),
+
+            if (get<SystemViewModel>().salesId != null)
+              _buildCommissionCard(
+                "Commission",
+                (get<StockViewModel>().commissionData?['salesmanCommission'] ??
+                        0 as num)
+                    .toDouble(),
+              ),
+
+            if (get<SystemViewModel>().subAgentId != null)
+              _buildCommissionCard(
+                "SubAgent",
+                (get<StockViewModel>().commissionData?['subAgentCommission'] ??
+                        0 as num)
+                    .toDouble(),
+              ),
+
+            if (get<SystemViewModel>().agentId != null)
+              _buildCommissionCard(
+                "Agent",
+                (get<StockViewModel>().commissionData?['agentCommission'] ??
+                        0 as num)
+                    .toDouble(),
+              ),
+
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "Total Commission",
+                  (get<StockViewModel>().commissionData?['totalCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "Distributor",
+                  (get<StockViewModel>()
+                              .commissionData?['distributorCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "Agent",
+                  (get<StockViewModel>().commissionData?['agentCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "SubAgent",
+                  (get<StockViewModel>()
+                              .commissionData?['subAgentCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "Salesman",
+                  (get<StockViewModel>()
+                              .commissionData?['salesmanCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            isClient
+                ? SizedBox()
+                : _buildCommissionCard(
+                  "Shop",
+                  (get<StockViewModel>().commissionData?['shopCommission'] ??
+                          0 as num)
+                      .toDouble(),
+                ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
       // watchOnly((StockViewModel x) => x.commissionData) == null
       //     ? const Center(child: CircularProgressIndicator())
       //     : Column(

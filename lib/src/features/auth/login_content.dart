@@ -15,90 +15,84 @@ class LoginContent extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    return watchOnly((SystemViewModel x) => x.isBusy)
-        ? const Center(
-          child: SizedBox(
-            width: 30,
-            height: 30,
-            child: CircularProgressIndicator(),
-          ),
-        )
-        : Column(
-          children: [
-            const SizedBox(height: 20),
-            const LoginTitle(title: ApplicationInfo.appName),
-            Text(ApplicationInfo.appVersion),
-            const SizedBox(height: 20),
-            LoginUsername(),
-            const SizedBox(height: 20),
-            LoginPassword(
-              handleLogin: () async {
-                bool isLogin = await get<SystemViewModel>().onLogin();
-                if (isLogin) {
-                  get<SystemViewModel>().isBusy = false;
-                  Navigator.pushReplacementNamed(context, dashboardRoute);
-                } else {
-                  get<SystemViewModel>().isBusy = false;
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      showCloseIcon: true,
-                      backgroundColor: Colors.red.shade400,
-                      content: Text(
-                        "Email atau password salah",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            LoginButton(
-              handleLogin: () async {
-                bool isLogin = await get<SystemViewModel>().onLogin();
-                if (isLogin) {
-                  get<SystemViewModel>().isBusy = false;
-                  Navigator.pushReplacementNamed(context, dashboardRoute);
-                } else {
-                  get<SystemViewModel>().isBusy = false;
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      showCloseIcon: true,
-                      backgroundColor: Colors.red.shade400,
-                      content: Text(
-                        "Email atau password salah",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    get<SystemViewModel>().isLoginView = false;
-                  },
-                  child: Text(
-                    "Register",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w700,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.blue,
-                      decorationThickness: 1.5,
-                    ),
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        const LoginTitle(title: ApplicationInfo.appName),
+        Text(ApplicationInfo.appVersion),
+        const SizedBox(height: 20),
+        LoginUsername(),
+        const SizedBox(height: 20),
+        LoginPassword(
+          handleLogin: () async {
+            bool isLogin = await get<SystemViewModel>().onLogin();
+            if (isLogin) {
+              get<SystemViewModel>().isBusy = false;
+              await Future.delayed(Durations.medium2);
+              Navigator.pushReplacementNamed(context, dashboardRoute);
+            } else {
+              get<SystemViewModel>().isBusy = false;
+              await Future.delayed(Durations.medium2);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  showCloseIcon: true,
+                  backgroundColor: Colors.red.shade400,
+                  content: Text(
+                    "Email atau password salah",
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-              ],
+              );
+            }
+          },
+        ),
+        const SizedBox(height: 20),
+        LoginButton(
+          handleLogin: () async {
+            bool isLogin = await get<SystemViewModel>().onLogin();
+            if (isLogin) {
+              get<SystemViewModel>().isBusy = false;
+              await Future.delayed(Durations.medium2);
+              Navigator.pushReplacementNamed(context, dashboardRoute);
+            } else {
+              get<SystemViewModel>().isBusy = false;
+              await Future.delayed(Durations.medium2);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  showCloseIcon: true,
+                  backgroundColor: Colors.red.shade400,
+                  content: Text(
+                    "Email atau password salah",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: () {
+                get<SystemViewModel>().isLoginView = false;
+              },
+              child: Text(
+                "Register",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.w700,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Colors.blue,
+                  decorationThickness: 1.5,
+                ),
+              ),
             ),
           ],
-        );
+        ),
+      ],
+    );
   }
 }
