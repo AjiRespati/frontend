@@ -187,8 +187,8 @@ class SystemViewModel extends ChangeNotifier {
 
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // String? refreshToken = prefs.getString('refreshToken');
-      usernameController.text = "";
-      passwordController.text = "";
+      // usernameController.text = "";
+      // passwordController.text = "";
 
       // user = await apiService.self(context, refreshToken ?? "-");
       return true;
