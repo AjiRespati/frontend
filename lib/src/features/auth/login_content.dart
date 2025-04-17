@@ -27,6 +27,7 @@ class LoginContent extends StatelessWidget with GetItMixin {
           children: [
             const SizedBox(height: 20),
             const LoginTitle(title: ApplicationInfo.appName),
+            Text(ApplicationInfo.appVersion),
             const SizedBox(height: 20),
             LoginUsername(),
             const SizedBox(height: 20),

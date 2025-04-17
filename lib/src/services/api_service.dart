@@ -74,11 +74,11 @@ class ApiService {
     );
 
     if (response.statusCode == 403) {
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return null;
-      }
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      Navigator.pushNamed(context, signInRoute);
+      return null;
+      // }
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {

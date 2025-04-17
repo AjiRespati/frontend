@@ -30,6 +30,7 @@ class RegisterContent extends StatelessWidget with GetItMixin {
             children: [
               const SizedBox(height: 20),
               const LoginTitle(title: "Register ${ApplicationInfo.appName}"),
+              Text(ApplicationInfo.appVersion),
               const SizedBox(height: 20),
               EmailRegister(),
               const SizedBox(height: 20),
