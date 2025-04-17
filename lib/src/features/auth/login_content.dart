@@ -101,6 +101,62 @@ class _LoginContentState extends State<LoginContent> with GetItStateMixin {
           },
         ),
         const SizedBox(height: 20),
+        // SizedBox(
+        //   width: double.infinity,
+        //   height: 44,
+        //   child: ElevatedButton(
+        //     style: ElevatedButton.styleFrom(
+        //       shape: RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(10),
+        //       ),
+        //       elevation: 10, // Shadow elevation
+        //       shadowColor: Colors.grey, // Shadow color
+        //       backgroundColor: Color.fromRGBO(30, 48, 241, 1),
+        //       foregroundColor: Colors.white,
+        //       iconColor: Colors.white, // Icon color
+        //     ),
+        //     onPressed: () async {
+        //       SystemViewModel model = get<SystemViewModel>();
+        //       model.isBusy = true;
+        //       var user = await ApiService().login(username.text, password.text);
+
+        //       if (user != null) {
+        //         model.isBusy = false;
+
+        //         model.name = user?['name'];
+        //         model.username = user?['username'];
+        //         model.email = user?['email'];
+        //         model.phone = user?['phone'];
+        //         model.address = user?['address'];
+        //         model.level = user?['level'];
+        //         model.salesId = user?['salesId'];
+        //         model.subAgentId = user?['subAgentId'];
+        //         model.agentId = user?['agentId'];
+
+        //         await Future.delayed(Durations.medium2);
+        //         Navigator.pushReplacementNamed(context, dashboardRoute);
+        //       } else {
+        //         model.isBusy = false;
+        //         if (mounted) {
+        //           ScaffoldMessenger.of(context).showSnackBar(
+        //             SnackBar(
+        //               showCloseIcon: true,
+        //               backgroundColor: Colors.red.shade400,
+        //               content: Text(
+        //                 "Email atau password salah",
+        //                 style: TextStyle(color: Colors.white),
+        //               ),
+        //             ),
+        //           );
+        //         }
+        //       }
+        //     },
+        //     child: const Text(
+        //       "Login",
+        //       style: TextStyle(fontSize: 16, color: Colors.white),
+        //     ),
+        //   ),
+        // ),
         SizedBox(
           width: double.infinity,
           height: 44,
