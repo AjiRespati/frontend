@@ -21,26 +21,26 @@ class ApiService {
     return prefs.getString('accessToken');
   }
 
-  Future<String?> refreshAccessToken() async {
-    return null;
+  // Future<String?> refreshAccessToken() async {
+  //   return null;
 
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // String? refreshToken = prefs.getString('refreshToken');
+  //   // SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   // String? refreshToken = prefs.getString('refreshToken');
 
-    // final response = await http.post(
-    //   Uri.parse('$baseUrl/auth/refresh'),
-    //   headers: {"Content-Type": "application/json"},
-    //   body: jsonEncode({"refreshToken": refreshToken}),
-    // );
+  //   // final response = await http.post(
+  //   //   Uri.parse('$baseUrl/auth/refresh'),
+  //   //   headers: {"Content-Type": "application/json"},
+  //   //   body: jsonEncode({"refreshToken": refreshToken}),
+  //   // );
 
-    // if (response.statusCode < 400) {
-    //   String newAccessToken = jsonDecode(response.body)['accessToken'];
-    //   await prefs.setString('accessToken', newAccessToken);
-    //   return newAccessToken;
-    // } else {
-    //   return null;
-    // }
-  }
+  //   // if (response.statusCode < 400) {
+  //   //   String newAccessToken = jsonDecode(response.body)['accessToken'];
+  //   //   await prefs.setString('accessToken', newAccessToken);
+  //   //   return newAccessToken;
+  //   // } else {
+  //   //   return null;
+  //   // }
+  // }
 
   /// AUTH ROUTES
   /// /register'
@@ -430,12 +430,12 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return createMetric(context, productId, metricType, price);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return createMetric(context, productId, metricType, price);
     } else if (response.statusCode == 200) {
       fetchProduct(context, productId);
       Navigator.pop(context);
@@ -473,12 +473,12 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return null;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return null;
-      }
-      return fetchStockByProduct(context, productId);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return null;
+      // }
+      // return fetchStockByProduct(context, productId);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -530,23 +530,23 @@ class ApiService {
 
     if (response.statusCode == 401) {
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        // Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return createStock(
-        // context: context,
-        metricId: metricId,
-        stockEvent: stockEvent,
-        amount: amount,
-        salesId: salesId,
-        subAgentId: subAgentId,
-        agentId: agentId,
-        shopId: shopId,
-        status: status,
-        description: description,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   // Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return createStock(
+      //   // context: context,
+      //   metricId: metricId,
+      //   stockEvent: stockEvent,
+      //   amount: amount,
+      //   salesId: salesId,
+      //   subAgentId: subAgentId,
+      //   agentId: agentId,
+      //   shopId: shopId,
+      //   status: status,
+      //   description: description,
+      // );
     } else if (response.statusCode == 200) {
       // Navigator.pop(context);
       return true;
@@ -586,12 +586,12 @@ class ApiService {
 
       if (response.statusCode == 401) {
         return false;
-        token = await refreshAccessToken();
-        if (token == null) {
-          // Navigator.pushNamed(context, signInRoute);
-          return false;
-        }
-        return createStockBatch(batchData: batchData);
+        // token = await refreshAccessToken();
+        // if (token == null) {
+        //   // Navigator.pushNamed(context, signInRoute);
+        //   return false;
+        // }
+        // return createStockBatch(batchData: batchData);
       } else if (response.statusCode >= 200 && response.statusCode < 300) {
         // Batch Success (e.g., 201 Created)
         if (kDebugMode) {
@@ -677,22 +677,22 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getStockBatches(
-        context: context,
-        createdBy: createdBy,
-        fromDate: fromDate,
-        toDate: toDate,
-        page: page,
-        limit: limit,
-        status: status,
-        sortBy: sortBy,
-        sortOrder: sortOrder,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getStockBatches(
+      //   context: context,
+      //   createdBy: createdBy,
+      //   fromDate: fromDate,
+      //   toDate: toDate,
+      //   page: page,
+      //   limit: limit,
+      //   status: status,
+      //   sortBy: sortBy,
+      //   sortOrder: sortOrder,
+      // );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -723,11 +723,11 @@ class ApiService {
 
     if (response.statusCode == 401) {
       return null;
-      token = await refreshAccessToken();
-      if (token == null) {
-        return null;
-      }
-      return settleStockBatch(batchId: batchId);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   return null;
+      // }
+      // return settleStockBatch(batchId: batchId);
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -748,11 +748,11 @@ class ApiService {
 
     if (response.statusCode == 401) {
       return null;
-      token = await refreshAccessToken();
-      if (token == null) {
-        return null;
-      }
-      return cancelStockBatch(batchId: batchId);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   return null;
+      // }
+      // return cancelStockBatch(batchId: batchId);
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -802,20 +802,20 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getStockTable(
-        context: context,
-        fromDate: fromDate,
-        toDate: toDate,
-        status: status,
-        salesId: salesId,
-        subAgentId: subAgentId,
-        agentId: agentId,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getStockTable(
+      //   context: context,
+      //   fromDate: fromDate,
+      //   toDate: toDate,
+      //   status: status,
+      //   salesId: salesId,
+      //   subAgentId: subAgentId,
+      //   agentId: agentId,
+      // );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -873,21 +873,21 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getStockClientTable(
-        context: context,
-        fromDate: fromDate,
-        toDate: toDate,
-        status: status,
-        salesId: salesId,
-        subAgentId: subAgentId,
-        agentId: agentId,
-        stockEvent: stockEvent,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getStockClientTable(
+      //   context: context,
+      //   fromDate: fromDate,
+      //   toDate: toDate,
+      //   status: status,
+      //   salesId: salesId,
+      //   subAgentId: subAgentId,
+      //   agentId: agentId,
+      //   stockEvent: stockEvent,
+      // );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -928,18 +928,18 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getStockHistoryTable(
-        context: context,
-        fromDate: fromDate,
-        toDate: toDate,
-        metricId: metricId,
-        status: status,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getStockHistoryTable(
+      //   context: context,
+      //   fromDate: fromDate,
+      //   toDate: toDate,
+      //   metricId: metricId,
+      //   status: status,
+      // );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -976,16 +976,16 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return settlingStock(
-        context: context,
-        stockId: stockId,
-        metricId: metricId,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return settlingStock(
+      //   context: context,
+      //   stockId: stockId,
+      //   metricId: metricId,
+      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -1022,16 +1022,16 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return cancelingStock(
-        context: context,
-        stockId: stockId,
-        description: description,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return cancelingStock(
+      //   context: context,
+      //   stockId: stockId,
+      //   description: description,
+      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -1080,20 +1080,20 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return null;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return null;
-      }
-      return getStockResume(
-        context: context,
-        fromDate: fromDate,
-        toDate: toDate,
-        salesId: salesId,
-        agentId: agentId,
-        subAgentId: subAgentId,
-        shopId: shopId,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return null;
+      // }
+      // return getStockResume(
+      //   context: context,
+      //   fromDate: fromDate,
+      //   toDate: toDate,
+      //   salesId: salesId,
+      //   agentId: agentId,
+      //   subAgentId: subAgentId,
+      //   shopId: shopId,
+      // );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1135,17 +1135,17 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getTableBySalesId(
-        context: context,
-        fromDate: fromDate,
-        toDate: toDate,
-        salesId: salesId,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getTableBySalesId(
+      //   context: context,
+      //   fromDate: fromDate,
+      //   toDate: toDate,
+      //   salesId: salesId,
+      // );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1187,17 +1187,17 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getTableBySubAgentId(
-        context: context,
-        fromDate: fromDate,
-        toDate: toDate,
-        subAgentId: subAgentId,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getTableBySubAgentId(
+      //   context: context,
+      //   fromDate: fromDate,
+      //   toDate: toDate,
+      //   subAgentId: subAgentId,
+      // );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1239,17 +1239,17 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getTableByAgentId(
-        context: context,
-        fromDate: fromDate,
-        toDate: toDate,
-        agentId: agentId,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getTableByAgentId(
+      //   context: context,
+      //   fromDate: fromDate,
+      //   toDate: toDate,
+      //   agentId: agentId,
+      // );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1291,17 +1291,17 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getTableByShopId(
-        context: context,
-        fromDate: fromDate,
-        toDate: toDate,
-        shopId: shopId,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getTableByShopId(
+      //   context: context,
+      //   fromDate: fromDate,
+      //   toDate: toDate,
+      //   shopId: shopId,
+      // );
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1349,18 +1349,18 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return createSalesman(
-        context: context,
-        name: name,
-        address: address,
-        phone: phone,
-        email: email,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return createSalesman(
+      //   context: context,
+      //   name: name,
+      //   address: address,
+      //   phone: phone,
+      //   email: email,
+      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -1422,18 +1422,18 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return createSubAgent(
-        context: context,
-        name: name,
-        address: address,
-        phone: phone,
-        email: email,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return createSubAgent(
+      //   context: context,
+      //   name: name,
+      //   address: address,
+      //   phone: phone,
+      //   email: email,
+      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -1468,12 +1468,12 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getSubAgents(context, status);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getSubAgents(context, status);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1517,18 +1517,18 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return createAgent(
-        context: context,
-        name: name,
-        address: address,
-        phone: phone,
-        email: email,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return createAgent(
+      //   context: context,
+      //   name: name,
+      //   address: address,
+      //   phone: phone,
+      //   email: email,
+      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -1560,12 +1560,12 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getAgents(context, status);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getAgents(context, status);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1623,23 +1623,23 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return createShop(
-        context: context,
-        salesId: salesId,
-        subAgentId: subAgentId,
-        agentId: agentId,
-        name: name,
-        address: address,
-        phone: phone,
-        email: email,
-        imageUrl: imageUrl,
-        coordinates: coordinates,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return createShop(
+      //   context: context,
+      //   salesId: salesId,
+      //   subAgentId: subAgentId,
+      //   agentId: agentId,
+      //   name: name,
+      //   address: address,
+      //   phone: phone,
+      //   email: email,
+      //   imageUrl: imageUrl,
+      //   coordinates: coordinates,
+      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -1674,12 +1674,12 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getAllShopsBySales(context: context, salesId: salesId);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getAllShopsBySales(context: context, salesId: salesId);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1711,12 +1711,12 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getAllShops(context: context);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getAllShops(context: context);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1767,22 +1767,22 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return updateShop(
-        id: id,
-        context: context,
-        name: name,
-        image: image,
-        address: address,
-        coordinates: coordinates,
-        phone: phone,
-        email: email,
-        status: status,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return updateShop(
+      //   id: id,
+      //   context: context,
+      //   name: name,
+      //   image: image,
+      //   address: address,
+      //   coordinates: coordinates,
+      //   phone: phone,
+      //   email: email,
+      //   status: status,
+      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -1818,12 +1818,12 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return getAllFreezer(context);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return getAllFreezer(context);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -1867,18 +1867,18 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return addFrezer(
-        context: context,
-        name: name,
-        capacity: capacity,
-        serialNumber: serialNumber,
-        coordinates: coordinates,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return addFrezer(
+      //   context: context,
+      //   name: name,
+      //   capacity: capacity,
+      //   serialNumber: serialNumber,
+      //   coordinates: coordinates,
+      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -1916,17 +1916,17 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return updateFreezerShop(
-        context: context,
-        id: id,
-        shopId: shopId,
-        status: status,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return updateFreezerShop(
+      //   context: context,
+      //   id: id,
+      //   shopId: shopId,
+      //   status: status,
+      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -1961,12 +1961,12 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return returnFreezer(context: context, id: id);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return returnFreezer(context: context, id: id);
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -2004,17 +2004,17 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return updateFreezerStatus(
-        context: context,
-        id: id,
-        status: status,
-        description: description,
-      );
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return updateFreezerStatus(
+      //   context: context,
+      //   id: id,
+      //   status: status,
+      //   description: description,
+      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -2045,11 +2045,11 @@ class ApiService {
 
     if (response.statusCode == 401) {
       return [];
-      token = await refreshAccessToken();
-      if (token == null) {
-        return [];
-      }
-      return getAllPercentages();
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   return [];
+      // }
+      // return getAllPercentages();
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -2084,11 +2084,11 @@ class ApiService {
 
     if (response.statusCode == 401) {
       return null;
-      token = await refreshAccessToken();
-      if (token == null) {
-        return null;
-      }
-      return createPercentage(key: key, value: value);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   return null;
+      // }
+      // return createPercentage(key: key, value: value);
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -2125,12 +2125,12 @@ class ApiService {
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      }
-      return updatePercentage(context: context, id: id, value: value);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // }
+      // return updatePercentage(context: context, id: id, value: value);
     } else if (response.statusCode == 200) {
       return true;
     } else {
