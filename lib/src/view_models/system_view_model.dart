@@ -191,6 +191,16 @@ class SystemViewModel extends ChangeNotifier {
       // passwordController.text = "";
 
       // user = await apiService.self(context, refreshToken ?? "-");
+
+      name = user?['name'];
+      username = user?['username'];
+      email = user?['email'];
+      phone = user?['phone'];
+      address = user?['address'];
+      level = user?['level'];
+      salesId = user?['salesId'];
+      subAgentId = user?['subAgentId'];
+      agentId = user?['agentId'];
       return true;
     } else {
       isBusy = false;

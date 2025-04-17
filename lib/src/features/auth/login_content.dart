@@ -10,9 +10,14 @@ import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
-class LoginContent extends StatelessWidget with GetItMixin {
+class LoginContent extends StatefulWidget with GetItStatefulWidgetMixin {
   LoginContent({super.key});
 
+  @override
+  State<LoginContent> createState() => _LoginContentState();
+}
+
+class _LoginContentState extends State<LoginContent> with GetItStateMixin {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -32,17 +37,21 @@ class LoginContent extends StatelessWidget with GetItMixin {
               Navigator.pushReplacementNamed(context, dashboardRoute);
             } else {
               get<SystemViewModel>().isBusy = false;
-              await Future.delayed(Durations.medium2);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  showCloseIcon: true,
-                  backgroundColor: Colors.red.shade400,
-                  content: Text(
-                    "Email atau password salah",
-                    style: TextStyle(color: Colors.white),
+              // await Future.delayed(Durations.medium2);
+
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    showCloseIcon: true,
+                    backgroundColor: Colors.red.shade400,
+                    content: Text(
+                      "Email atau password salah",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    duration: Duration(seconds: 1),
                   ),
-                ),
-              );
+                );
+              }
             }
           },
         ),
