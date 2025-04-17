@@ -142,11 +142,12 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return null;
-      }
+      Navigator.pushNamed(context, signInRoute);
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return null;
+      // }
       return getAllUser(context);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -183,18 +184,20 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return false;
-      } else {
-        return updateUser(
-          context: context,
-          id: id,
-          level: level,
-          status: status,
-        );
-      }
+      Navigator.pushNamed(context, signInRoute);
+      return false;
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return false;
+      // } else {
+      //   return updateUser(
+      //     context: context,
+      //     id: id,
+      //     level: level,
+      //     status: status,
+      //   );
+      // }
     } else if (response.statusCode == 200) {
       return true;
     } else {
@@ -224,12 +227,14 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return null;
-      }
-      return fetchProduct(context, productId);
+      Navigator.pushNamed(context, signInRoute);
+      return null;
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return null;
+      // }
+      // return fetchProduct(context, productId);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -256,12 +261,14 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return [];
-      }
-      return fetchProducts(context);
+      Navigator.pushNamed(context, signInRoute);
+      return [];
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return [];
+      // }
+      // return fetchProducts(context);
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -363,16 +370,18 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
-      token = await refreshAccessToken();
-      if (token == null) {
-        Navigator.pushNamed(context, signInRoute);
-        return {};
-      }
-      return fetchCommissionSummary(
-        context: context,
-        fromDate: fromDate,
-        toDate: toDate,
-      );
+      Navigator.pushNamed(context, signInRoute);
+      return {};
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   Navigator.pushNamed(context, signInRoute);
+      //   return {};
+      // }
+      // return fetchCommissionSummary(
+      //   context: context,
+      //   fromDate: fromDate,
+      //   toDate: toDate,
+      // );
     } else if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
@@ -419,6 +428,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -460,6 +471,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return null;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -516,6 +529,7 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         // Navigator.pushNamed(context, signInRoute);
@@ -571,6 +585,7 @@ class ApiService {
           ); // Adjust timeout for potentially longer batch operations
 
       if (response.statusCode == 401) {
+        return false;
         token = await refreshAccessToken();
         if (token == null) {
           // Navigator.pushNamed(context, signInRoute);
@@ -660,6 +675,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -705,6 +722,7 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      return null;
       token = await refreshAccessToken();
       if (token == null) {
         return null;
@@ -729,6 +747,7 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      return null;
       token = await refreshAccessToken();
       if (token == null) {
         return null;
@@ -781,6 +800,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -850,6 +871,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -903,6 +926,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -949,6 +974,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -993,6 +1020,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1049,6 +1078,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return null;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1102,6 +1133,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1152,6 +1185,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1202,6 +1237,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1252,6 +1289,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1308,6 +1347,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1379,6 +1420,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1423,6 +1466,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1470,6 +1515,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1511,6 +1558,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1572,6 +1621,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1621,6 +1672,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1656,6 +1709,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1710,6 +1765,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1759,6 +1816,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1806,6 +1865,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1853,6 +1914,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1896,6 +1959,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1937,6 +2002,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
@@ -1977,6 +2044,7 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      return [];
       token = await refreshAccessToken();
       if (token == null) {
         return [];
@@ -2015,6 +2083,7 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      return null;
       token = await refreshAccessToken();
       if (token == null) {
         return null;
@@ -2054,6 +2123,8 @@ class ApiService {
     );
 
     if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
       token = await refreshAccessToken();
       if (token == null) {
         Navigator.pushNamed(context, signInRoute);
