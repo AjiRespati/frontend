@@ -22,22 +22,24 @@ class ApiService {
   }
 
   Future<String?> refreshAccessToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? refreshToken = prefs.getString('refreshToken');
+    return null;
 
-    final response = await http.post(
-      Uri.parse('$baseUrl/auth/refresh'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"refreshToken": refreshToken}),
-    );
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String? refreshToken = prefs.getString('refreshToken');
 
-    if (response.statusCode < 400) {
-      String newAccessToken = jsonDecode(response.body)['accessToken'];
-      await prefs.setString('accessToken', newAccessToken);
-      return newAccessToken;
-    } else {
-      return null;
-    }
+    // final response = await http.post(
+    //   Uri.parse('$baseUrl/auth/refresh'),
+    //   headers: {"Content-Type": "application/json"},
+    //   body: jsonEncode({"refreshToken": refreshToken}),
+    // );
+
+    // if (response.statusCode < 400) {
+    //   String newAccessToken = jsonDecode(response.body)['accessToken'];
+    //   await prefs.setString('accessToken', newAccessToken);
+    //   return newAccessToken;
+    // } else {
+    //   return null;
+    // }
   }
 
   /// AUTH ROUTES
@@ -82,6 +84,7 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      Navigator.pushNamed(context, signInRoute);
       return null;
     }
   }
