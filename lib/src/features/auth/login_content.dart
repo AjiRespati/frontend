@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
 import 'package:frontend/src/routes/route_names.dart';
+import 'package:frontend/src/services/api_service.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -106,13 +107,27 @@ class _LoginContentState extends State<LoginContent> with GetItStateMixin {
           child: GradientElevatedButton(
             inactiveDelay: Duration.zero,
             onPressed: () async {
-              bool isLogin = await get<SystemViewModel>().onLogin();
-              if (isLogin) {
-                get<SystemViewModel>().isBusy = false;
+              SystemViewModel model = get<SystemViewModel>();
+              model.isBusy = true;
+              var user = await ApiService().login(username.text, password.text);
+
+              if (user != null) {
+                model.isBusy = false;
+
+                model.name = user?['name'];
+                model.username = user?['username'];
+                model.email = user?['email'];
+                model.phone = user?['phone'];
+                model.address = user?['address'];
+                model.level = user?['level'];
+                model.salesId = user?['salesId'];
+                model.subAgentId = user?['subAgentId'];
+                model.agentId = user?['agentId'];
+
                 await Future.delayed(Durations.medium2);
                 Navigator.pushReplacementNamed(context, dashboardRoute);
               } else {
-                get<SystemViewModel>().isBusy = false;
+                model.isBusy = false;
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
