@@ -34,7 +34,7 @@ class RegisterContent extends StatelessWidget with GetItMixin {
               const SizedBox(height: 20),
               EmailRegister(),
               const SizedBox(height: 20),
-              LoginPassword(handleLogin: () {}),
+              LoginPassword(),
               const SizedBox(height: 20),
               ConfirmPassword(),
               const SizedBox(height: 20),

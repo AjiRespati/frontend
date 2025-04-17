@@ -23,38 +23,13 @@ class _LoginContentState extends State<LoginContent> with GetItStateMixin {
     return Column(
       children: [
         const SizedBox(height: 20),
+
         const LoginTitle(title: ApplicationInfo.appName),
         Text(ApplicationInfo.appVersion),
         const SizedBox(height: 20),
         LoginUsername(),
         const SizedBox(height: 20),
-        LoginPassword(
-          handleLogin: () async {
-            bool isLogin = await get<SystemViewModel>().onLogin();
-            if (isLogin) {
-              get<SystemViewModel>().isBusy = false;
-              await Future.delayed(Durations.medium2);
-              Navigator.pushReplacementNamed(context, dashboardRoute);
-            } else {
-              get<SystemViewModel>().isBusy = false;
-              // await Future.delayed(Durations.medium2);
-
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    showCloseIcon: true,
-                    backgroundColor: Colors.red.shade400,
-                    content: Text(
-                      "Email atau password salah",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    duration: Duration(seconds: 1),
-                  ),
-                );
-              }
-            }
-          },
-        ),
+        LoginPassword(),
         const SizedBox(height: 20),
         LoginButton(
           handleLogin: () async {
@@ -65,17 +40,18 @@ class _LoginContentState extends State<LoginContent> with GetItStateMixin {
               Navigator.pushReplacementNamed(context, dashboardRoute);
             } else {
               get<SystemViewModel>().isBusy = false;
-              await Future.delayed(Durations.medium2);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  showCloseIcon: true,
-                  backgroundColor: Colors.red.shade400,
-                  content: Text(
-                    "Email atau password salah",
-                    style: TextStyle(color: Colors.white),
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    showCloseIcon: true,
+                    backgroundColor: Colors.red.shade400,
+                    content: Text(
+                      "Email atau password salah",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             }
           },
         ),
