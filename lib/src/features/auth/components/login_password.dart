@@ -8,9 +8,7 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginPassword extends StatelessWidget with GetItMixin {
-  LoginPassword({required this.handleLogin, super.key});
-
-  final Function() handleLogin;
+  LoginPassword({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +16,6 @@ class LoginPassword extends StatelessWidget with GetItMixin {
     return TextFormField(
       controller: get<SystemViewModel>().passwordController,
       obscureText: !get<SystemViewModel>().showPassword,
-      onEditingComplete: () async {
-        handleLogin();
-      },
       onTap: () {
         log('tapped');
       },

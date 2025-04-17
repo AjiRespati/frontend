@@ -17,7 +17,7 @@ class Dashboard extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _DashboardState extends State<Dashboard> with GetItStateMixin {
   Future<void> _setup() async {
-    // get<StockViewModel>().isBusy = true;
+    get<StockViewModel>().isBusy = true;
     get<SystemViewModel>().usernameController.text = "";
     get<SystemViewModel>().passwordController.text = "";
     await get<SystemViewModel>().self(context);
