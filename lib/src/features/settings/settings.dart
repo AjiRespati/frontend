@@ -18,7 +18,7 @@ class Settings extends StatefulWidget with GetItStatefulWidgetMixin {
 class _SettingsState extends State<Settings> with GetItStateMixin {
   Future<void> _setup() async {
     get<StockViewModel>().isBusy = true;
-    // await get<SystemViewModel>().self(context);
+    await get<SystemViewModel>().self(context);
     if ((get<SystemViewModel>().level ?? 0) > 3) {
       get<SystemViewModel>().getAllUser(context);
       get<StockViewModel>().getAllFrezer(context);

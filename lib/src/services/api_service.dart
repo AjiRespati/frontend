@@ -215,6 +215,24 @@ class ApiService {
     }
   }
 
+  Future<bool> deleteUser(String id) async {
+    String? token = await _getToken();
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl/users/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // TODO: PRODUCTS ROUTES
   /// GET /
   /// POST /

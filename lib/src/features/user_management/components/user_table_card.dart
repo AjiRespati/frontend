@@ -63,6 +63,21 @@ class UserTableCard extends StatelessWidget with GetItMixin {
                         ),
                         SizedBox(width: 20),
                         CopyToClipboard(user['phone'], isMobile: true),
+                        //TODO: BUKA HANYA KALAU MAU DELETE USER
+                        // SizedBox(width: 20),
+                        // SizedBox(
+                        //   height: 25,
+                        //   width: 25,
+                        //   child: InkWell(
+                        //     borderRadius: BorderRadius.circular(18),
+                        //     onTap: () async {
+                        //       print(user['id']);
+                        //       await ApiService().deleteUser(user['id']);
+                        //       get<SystemViewModel>().getAllUser(context);
+                        //     },
+                        //     child: Icon(Icons.delete_forever, size: 26),
+                        //   ),
+                        // ),
                       ],
                     ),
                     Row(
