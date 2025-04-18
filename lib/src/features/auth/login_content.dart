@@ -168,7 +168,7 @@ class _LoginContentState extends State<LoginContent> with GetItStateMixin {
               var user = await ApiService().login(username.text, password.text);
 
               if (user != null) {
-                model.isBusy = false;
+                // model.isBusy = false;
 
                 model.name = user?['name'];
                 model.username = user?['username'];
