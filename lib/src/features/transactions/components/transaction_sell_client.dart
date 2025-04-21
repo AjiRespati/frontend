@@ -3,6 +3,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/transactions/components/buy_product.dart';
+import 'package:frontend/src/features/transactions/components/transaction_buy.dart';
 import 'package:frontend/src/models/product_transaction.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/utils/helpers.dart';
@@ -38,40 +39,29 @@ class _TransactionSellClientState extends State<TransactionSellClient>
         allProducts?.map((e) => e['metricType'].toLowerCase()).toList();
 
     if (allMetrics != null && allMetrics.length > 1) {
-      await showModalBottomSheet(
+      bool isReturn = await showModalBottomSheet(
         isScrollControlled: true,
-        constraints: BoxConstraints(maxHeight: 540),
+        constraints: BoxConstraints(maxHeight: 340),
         context: context,
         builder: (context) {
-          return Column(
-            children: [
-              Row(children: [Text("Pilih Satuan Unit:")]),
-              Row(
-                children:
-                    allMetrics!.map((language) {
-                      return Expanded(
-                        child: RadioListTile<String>(
-                          dense: true,
-                          title: Text(language),
-                          value: language,
-                          groupValue: _selectedMetric,
-                          onChanged: (String? value) {
-                            setState(() {
-                              _selectedMetric = value!;
-                            });
-                          },
-                        ),
-                      );
-                    }).toList(),
-              ),
-            ],
+          return SelectMetric(
+            allMetrics: allMetrics,
+            onChooseMetric: (metric) {
+              _selectedMetric = metric;
+            },
           );
         },
       );
+
+      if (isReturn) {
+        return;
+      }
+
+      var idx = allMetrics.indexOf(_selectedMetric);
+      _productDetail = get<StockViewModel>().productsDetail?[idx];
+    } else {
+      _productDetail = get<StockViewModel>().productsDetail?[0];
     }
-
-    _productDetail = get<StockViewModel>().productsDetail?[0];
-
     await Future.delayed(Durations.short3);
     // print(_productDetail);
     showModalBottomSheet(

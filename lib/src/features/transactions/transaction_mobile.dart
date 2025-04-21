@@ -63,7 +63,7 @@ class _TransactionMobileState extends State<TransactionMobile>
           labelStyle: TextStyle(fontWeight: FontWeight.w500),
           tabs: [
             Tab(icon: Icon(Icons.note_alt_outlined), text: "Resume"),
-            Tab(icon: Icon(Icons.sell), text: "Pembelian"),
+            Tab(icon: Icon(Icons.sell), text: "Pemesanan"),
           ],
         ),
       ),
@@ -74,7 +74,7 @@ class _TransactionMobileState extends State<TransactionMobile>
           _level < 4 ? TransactionSellClient() : TransactionBuy(),
         ],
       ),
-      bottomNavigationBar: MobileNavbar(),
+      bottomNavigationBar: MobileNavbar(key: ValueKey(100008)),
     );
   }
 }

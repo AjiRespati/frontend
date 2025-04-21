@@ -343,17 +343,22 @@ class _SelectMetricState extends State<SelectMetric> {
         ? Column(
           children: [
             SizedBox(height: 40),
-            Text("Pilih Satuan Unit:"),
+            Text(
+              "Pilih Satuan Unit:",
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+            ),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Row(
                 children:
-                    widget.allMetrics!.map((language) {
+                    widget.allMetrics!.map((metric) {
                       return Expanded(
                         child: RadioListTile<String>(
                           dense: true,
-                          title: Text(language),
-                          value: language,
+                          radioScaleFactor: 0.8,
+                          activeColor: Colors.blue.shade700,
+                          title: Text(metric.toUpperCase()),
+                          value: metric,
                           groupValue: _selectedMetric,
                           onChanged: (String? value) {
                             setState(() {

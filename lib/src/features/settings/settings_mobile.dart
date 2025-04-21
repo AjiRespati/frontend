@@ -222,7 +222,7 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                 )
                 : SizedBox(),
       ),
-      bottomNavigationBar: MobileNavbar(),
+      bottomNavigationBar: MobileNavbar(key: ValueKey(100005)),
     );
   }
 }

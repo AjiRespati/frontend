@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/canceling_stock.dart';
 import 'package:frontend/src/features/transactions/components/resume_card.dart';
@@ -19,6 +18,7 @@ class TransactionResume extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _TransactionResumeState extends State<TransactionResume>
     with GetItStateMixin {
+  String? _selectedStatus = 'all';
   String _messageSuccess = "";
   String _messageError = "";
   bool isClient = true;
@@ -324,7 +324,7 @@ class _TransactionResumeState extends State<TransactionResume>
                         get<StockViewModel>().getStockBatches(
                           context: context,
                           isClient: isClient,
-                          status: 'all',
+                          status: _selectedStatus ?? "all",
                           sortBy: null,
                           sortOrder: null,
                           page: null,
@@ -347,6 +347,31 @@ class _TransactionResumeState extends State<TransactionResume>
             ],
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8, right: 60),
+          child: Row(
+            children:
+                ['all', 'completed'].map((status) {
+                  return Flexible(
+                    child: RadioListTile<String>(
+                      dense: true,
+                      radioScaleFactor: 0.8,
+                      activeColor: Colors.blue.shade700,
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(status.toUpperCase()),
+                      value: status,
+                      groupValue: _selectedStatus,
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedStatus = value!;
+                        });
+                      },
+                    ),
+                  );
+                }).toList(),
+          ),
+        ),
+
         watchOnly((StockViewModel x) => x.responseBatch).isEmpty
             ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -358,46 +383,41 @@ class _TransactionResumeState extends State<TransactionResume>
               ],
             )
             : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height:
-                    (MediaQuery.of(context).size.height - 280) -
-                    (kIsWeb ? 0 : 50),
-                child: ListView.builder(
-                  itemCount: get<StockViewModel>().responseBatch.length,
+              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: get<StockViewModel>().responseBatch.length,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> stock =
+                      get<StockViewModel>().responseBatch[index];
 
-                  itemBuilder: (context, index) {
-                    Map<String, dynamic> stock =
-                        get<StockViewModel>().responseBatch[index];
+                  int level =
+                      stock['userDesc'] == 'Salesman'
+                          ? 1
+                          : stock['userDesc'] == 'Sub Agent'
+                          ? 2
+                          : stock['userDesc'] == 'Agent'
+                          ? 3
+                          : 4;
 
-                    int level =
-                        stock['userDesc'] == 'Salesman'
-                            ? 1
-                            : stock['userDesc'] == 'Sub Agent'
-                            ? 2
-                            : stock['userDesc'] == 'Agent'
-                            ? 3
-                            : 4;
+                  List<dynamic> stocks = stock['Stocks'];
+                  double totalPrice = _generateTotalPrice(stocks, level);
+                  int totalProduct = _generateTotalProduct(stocks);
+                  int totalItem = _generateTotalItem(stocks);
 
-                    List<dynamic> stocks = stock['Stocks'];
-                    double totalPrice = _generateTotalPrice(stocks, level);
-                    int totalProduct = _generateTotalProduct(stocks);
-                    int totalItem = _generateTotalItem(stocks);
-
-                    return ResumeCard(
-                      stock: stock,
-                      totalProduct: totalProduct,
-                      totalItem: totalItem,
-                      totalPrice: totalPrice,
-                      stocks: stocks,
-                      onSelect: () {
-                        if (!isClient && (stock['status'] == 'completed')) {
-                          _handleBatchActions(stock, totalPrice);
-                        }
-                      },
-                    );
-                  },
-                ),
+                  return ResumeCard(
+                    stock: stock,
+                    totalProduct: totalProduct,
+                    totalItem: totalItem,
+                    totalPrice: totalPrice,
+                    stocks: stocks,
+                    onSelect: () {
+                      if (!isClient && (stock['status'] == 'completed')) {
+                        _handleBatchActions(stock, totalPrice);
+                      }
+                    },
+                  );
+                },
               ),
             ),
       ],

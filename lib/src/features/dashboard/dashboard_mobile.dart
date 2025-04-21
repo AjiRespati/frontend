@@ -176,7 +176,7 @@ class DashboardMobile extends StatelessWidget with GetItMixin {
       //         // ),
       //       ],
       //     ),
-      bottomNavigationBar: MobileNavbar(),
+      bottomNavigationBar: MobileNavbar(key: ValueKey(100002)),
     );
   }
 

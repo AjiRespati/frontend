@@ -376,7 +376,7 @@ class _PercentagesMobileState extends State<PercentagesMobile>
           ),
         ],
       ),
-      bottomNavigationBar: MobileNavbar(),
+      bottomNavigationBar: MobileNavbar(key: ValueKey(100003)),
     );
   }
 }

@@ -84,7 +84,7 @@ class _ClientsMobileState extends State<ClientsMobile>
         controller: _tabController,
         children: [SalesmenView(), SubAgentView(), AgentView()],
       ),
-      bottomNavigationBar: MobileNavbar(),
+      bottomNavigationBar: MobileNavbar(key: ValueKey(100001)),
     );
   }
 }
