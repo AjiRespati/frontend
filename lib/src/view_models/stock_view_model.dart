@@ -12,7 +12,7 @@ class StockViewModel extends ChangeNotifier {
   final ApiService apiService = ApiService();
   // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _isBusy = false;
-  bool _isLoading = true;
+  // bool _isLoading = true;
   final formKey = GlobalKey<FormState>();
 
   Map<String, dynamic>? _commissionData;
@@ -262,11 +262,11 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isLoading => _isLoading;
-  set isLoading(bool val) {
-    _isLoading = val;
-    notifyListeners();
-  }
+  // bool get isLoading => _isLoading;
+  // set isLoading(bool val) {
+  //   _isLoading = val;
+  //   notifyListeners();
+  // }
 
   Map<String, dynamic>? get commissionData => _commissionData;
   set commissionData(Map<String, dynamic>? val) {
@@ -459,7 +459,7 @@ class StockViewModel extends ChangeNotifier {
   //====================//
 
   fetchCommissionData({required BuildContext context}) async {
-    isLoading = true;
+    isBusy = true;
     commissionData = null;
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
@@ -469,7 +469,7 @@ class StockViewModel extends ChangeNotifier {
       toDate: toDate,
     );
 
-    isLoading = false;
+    isBusy = false;
     commissionData = data;
 
     // if (data['message'] == "Invalid token") {
@@ -482,7 +482,7 @@ class StockViewModel extends ChangeNotifier {
   }
 
   fetchProducts(BuildContext context) async {
-    isLoading = true;
+    isBusy = true;
     products = [];
     // List<dynamic> datas = await apiService.fetchProducts(context);
     // Set<String> productIds = {};
@@ -496,11 +496,15 @@ class StockViewModel extends ChangeNotifier {
     // products = data;
 
     products = await apiService.fetchProducts(context);
-    isLoading = false;
+    isBusy = false;
   }
 
-  Future<dynamic> fetchProduct(BuildContext context, String productId) async {
-    isLoading = true;
+  Future<dynamic> fetchProduct(
+    BuildContext context,
+    String productId,
+    bool isBuying,
+  ) async {
+    isBusy = true;
     productsDetail = [];
     dynamic data = await apiService.fetchProduct(context, productId);
     productsDetail = data;
@@ -510,16 +514,17 @@ class StockViewModel extends ChangeNotifier {
         var item = productsDetail![i];
         usedMetric.add(item['metricType']);
       }
-
-      List<String> measurementLeft =
-          measurements
-              .where((measurement) => !usedMetric.contains(measurement))
-              .toList();
-      measurement = measurementLeft.first;
-      availableMeasurement = measurementLeft;
+      if (!isBuying) {
+        List<String> measurementLeft =
+            measurements
+                .where((measurement) => !usedMetric.contains(measurement))
+                .toList();
+        measurement = measurementLeft.first;
+        availableMeasurement = measurementLeft;
+      }
     }
 
-    isLoading = false;
+    isBusy = false;
     return;
   }
 
@@ -561,7 +566,7 @@ class StockViewModel extends ChangeNotifier {
     required bool isAdmin,
   }) async {
     try {
-      isLoading = true;
+      isBusy = true;
       if (stockEvent == 'stock_out') {
         if (isAdmin) {
           _generateClientId();
@@ -586,13 +591,13 @@ class StockViewModel extends ChangeNotifier {
       );
 
       if (resp) {
-        isLoading = false;
+        isBusy = false;
       } else {
-        isLoading = false;
+        isBusy = false;
       }
     } catch (e) {
       print(e);
-      isLoading = false;
+      isBusy = false;
     }
   }
 
@@ -636,7 +641,7 @@ class StockViewModel extends ChangeNotifier {
   }
 
   fetchSalesmen({required bool isInitial, required String? status}) async {
-    isLoading = true;
+    isBusy = true;
     salesmen = [];
     salesmanNames = [];
 
@@ -652,7 +657,7 @@ class StockViewModel extends ChangeNotifier {
     } else {
       clientTabIndex = 0;
     }
-    isLoading = false;
+    isBusy = false;
     return;
   }
 
@@ -661,7 +666,7 @@ class StockViewModel extends ChangeNotifier {
     required bool isInitial,
     required String? status,
   }) async {
-    isLoading = true;
+    isBusy = true;
     subAgents = [];
     subAgentNames = [];
 
@@ -677,7 +682,7 @@ class StockViewModel extends ChangeNotifier {
     } else {
       clientTabIndex = 0;
     }
-    isLoading = false;
+    isBusy = false;
     return;
   }
 
@@ -686,7 +691,7 @@ class StockViewModel extends ChangeNotifier {
     required String? status,
     required bool isInitial,
   }) async {
-    isLoading = true;
+    isBusy = true;
     agents = [];
     agentNames = [];
 
@@ -701,7 +706,7 @@ class StockViewModel extends ChangeNotifier {
     } else {
       clientTabIndex = 0;
     }
-    isLoading = false;
+    isBusy = false;
     return;
   }
 
@@ -1156,7 +1161,10 @@ class StockViewModel extends ChangeNotifier {
     // Find the index of an existing transaction with the same productId
     // Returns -1 if no matching element is found.
     int existingIndex = _newTransactions.indexWhere(
-      (el) => el.productId == val.productId,
+      (el) =>
+          ((el.productId == val.productId) &&
+              (el.productDetail['metricType'] ==
+                  val.productDetail['metricType'])),
     );
 
     if (existingIndex != -1) {

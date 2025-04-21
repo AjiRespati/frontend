@@ -29,6 +29,7 @@ class ResumeCard extends StatelessWidget with GetItMixin {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 flex: 4,
@@ -90,22 +91,40 @@ class ResumeCard extends StatelessWidget with GetItMixin {
               ),
               Expanded(
                 flex: 5,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: stocks.length,
-                  itemBuilder: (context, index) {
-                    var item = stocks[index];
-                    return Row(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Flexible(
-                          child: Text(
-                            "${item['amount']} ${item['metricType']}, ${item['productName']}",
-                            overflow: TextOverflow.ellipsis,
+                        Text(
+                          stock['status'].toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14,
+                            color: _statusColorGenerator(stock['status']),
                           ),
                         ),
                       ],
-                    );
-                  },
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: stocks.length,
+                      itemBuilder: (context, index) {
+                        var item = stocks[index];
+                        return Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                "${item['amount']} ${item['metricType']}, ${item['productName']}",
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -113,5 +132,23 @@ class ResumeCard extends StatelessWidget with GetItMixin {
         ),
       ),
     );
+  }
+
+  Color _statusColorGenerator(String? status) {
+    // 'processing', 'completed', 'failed', 'settled', 'canceled'
+    switch (status) {
+      case "completed":
+        return Colors.lightBlue.shade700;
+      case "processing":
+        return Colors.yellow.shade400;
+      case "failed":
+        return Colors.red;
+      case "settled":
+        return Colors.green;
+      case "canceled":
+        return Colors.orangeAccent;
+      default:
+        return Colors.black;
+    }
   }
 }

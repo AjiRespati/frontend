@@ -104,6 +104,7 @@ class _AddStockState extends State<AddStock> with GetItStateMixin {
                 await get<StockViewModel>().fetchProduct(
                   context,
                   widget.mainProduct?['productId'],
+                  false,
                 );
                 get<StockViewModel>().fetchProducts(context);
               },

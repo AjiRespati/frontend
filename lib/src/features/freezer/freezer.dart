@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/freezer/freezer_desktop.dart';
 import 'package:frontend/src/features/freezer/freezer_mobile.dart';
 import 'package:frontend/src/utils/responsive_layout.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class Freezer extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -16,7 +17,7 @@ class _FreezerState extends State<Freezer> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // get<StockViewModel>().getAllFrezer(context);
+      get<StockViewModel>().getAllFrezer(context);
     });
   }
 

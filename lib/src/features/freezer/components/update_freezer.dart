@@ -27,6 +27,26 @@ class _UpdateFreezerState extends State<UpdateFreezer> with GetItStateMixin {
     var freezerInfo = widget.freezer;
     var shopInfo = _selectedShop;
 
+    if (oldStatus == "IDLE") {
+      bool result = await get<StockViewModel>().returnFreezer(
+        context: context,
+        id: freezerInfo['id'],
+      );
+
+      if (result) {
+        await get<StockViewModel>().getAllFrezer(context);
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.red.shade400,
+            content: Text("Kesalahan system, gagal update freezer"),
+            duration: const Duration(seconds: 3), // Adjust duration as needed
+          ),
+        );
+      }
+    } else
     // Hanya update freezer
     if (shopInfo == null) {
       bool result = await ApiService().updateFreezerStatus(

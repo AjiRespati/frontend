@@ -40,11 +40,11 @@ class _BuyProductState extends State<BuyProduct> with GetItStateMixin {
           children: [
             Text(
               widget.mainProduct?['productName'] ?? "N/A",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             ),
             Text(
               "Stock: ${(widget.mainProduct?['totalStock'] ?? 0).toString()} ${widget.measurement}",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
             ),
             SizedBox(height: 20),
             Row(children: [Text("Harga:")]),
@@ -87,6 +87,16 @@ class _BuyProductState extends State<BuyProduct> with GetItStateMixin {
                               style: TextStyle(color: Colors.red),
                             ),
                           )
+                          : ((widget.mainProduct?['totalStock'] ?? 0) <
+                                  get<StockViewModel>().stockAmount) &&
+                              (widget.stockEvent == "stock_out")
+                          ? Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              "Jumlah product melebihi stock",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          )
                           : SizedBox(),
                 ),
               ],
@@ -97,7 +107,10 @@ class _BuyProductState extends State<BuyProduct> with GetItStateMixin {
               children: [
                 SizedBox(width: 15),
                 Text(
-                  "${formatCurrency((_generatePrice(widget.mainProduct, client)) * (watchOnly((StockViewModel x) => x.stockAmount)))} / ${widget.measurement} ",
+                  formatCurrency(
+                    (_generatePrice(widget.mainProduct, client)) *
+                        (watchOnly((StockViewModel x) => x.stockAmount)),
+                  ),
                 ),
               ],
             ),
@@ -111,7 +124,10 @@ class _BuyProductState extends State<BuyProduct> with GetItStateMixin {
               ),
               // inactiveDelay: Duration.zero,
               onPressed: () async {
-                if (get<StockViewModel>().stockAmount == 0) {
+                if ((get<StockViewModel>().stockAmount == 0) ||
+                    (((widget.mainProduct?['totalStock'] ?? 0) <
+                            get<StockViewModel>().stockAmount) &&
+                        (widget.stockEvent == "stock_out"))) {
                 } else {
                   ProductTransaction val = ProductTransaction(
                     productId: widget.mainProduct?["productId"],

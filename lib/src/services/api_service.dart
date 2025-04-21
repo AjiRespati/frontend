@@ -75,13 +75,13 @@ class ApiService {
       body: jsonEncode({"refreshToken": refreshToken}),
     );
 
-    if (response.statusCode == 403) {
+    if (response.statusCode == 401) {
       // token = await refreshAccessToken();
       // if (token == null) {
       Navigator.pushNamed(context, signInRoute);
       return null;
       // }
-    } else if (response.statusCode == 200) {
+    } else if (response.statusCode < 400) {
       return jsonDecode(response.body);
     } else {
       Navigator.pushNamed(context, signInRoute);
@@ -612,9 +612,9 @@ class ApiService {
         // return createStockBatch(batchData: batchData);
       } else if (response.statusCode >= 200 && response.statusCode < 300) {
         // Batch Success (e.g., 201 Created)
-        if (kDebugMode) {
-          print('Batch API Call Success: ${response.body}');
-        }
+        // if (kDebugMode) {
+        //   print('Batch API Call Success: ${response.body}');
+        // }
         // Optionally parse response.body if backend sends back created items
         // var responseData = jsonDecode(response.body);
         return true; // Indicate success

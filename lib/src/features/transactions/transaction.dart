@@ -27,7 +27,7 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
       get<StockViewModel>().getStockBatches(
         context: context,
         isClient: isClient,
-        status: 'completed',
+        status: 'all',
         sortBy: null,
         sortOrder: null,
         page: null,

@@ -17,7 +17,7 @@ class ProductDesktop extends StatelessWidget with GetItMixin {
         setSidebarExpanding: true,
         showMenubutton: true,
         mainSection:
-            watchOnly((StockViewModel x) => x.isLoading)
+            watchOnly((StockViewModel x) => x.isBusy)
                 ? const Center(child: CircularProgressIndicator())
                 : get<StockViewModel>().products.isEmpty
                 ? Padding(

@@ -3,6 +3,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/transactions/components/buy_product.dart';
+import 'package:frontend/src/features/transactions/components/transaction_buy.dart';
 import 'package:frontend/src/models/product_transaction.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/utils/helpers.dart';
@@ -28,11 +29,39 @@ class _TransactionSellClientState extends State<TransactionSellClient>
   String? _selectedShopId;
   dynamic _productDetail;
 
+  String? _selectedMetric;
+
   _onSelect() async {
-    await get<StockViewModel>().fetchProduct(context, _selectedId ?? "-");
+    await get<StockViewModel>().fetchProduct(context, _selectedId ?? "-", true);
+    List<dynamic>? allProducts = get<StockViewModel>().productsDetail;
+    List<dynamic>? allMetrics;
+    allMetrics =
+        allProducts?.map((e) => e['metricType'].toLowerCase()).toList();
 
-    _productDetail = get<StockViewModel>().productsDetail?[0];
+    if (allMetrics != null && allMetrics.length > 1) {
+      bool isReturn = await showModalBottomSheet(
+        isScrollControlled: true,
+        constraints: BoxConstraints(maxHeight: 340),
+        context: context,
+        builder: (context) {
+          return SelectMetric(
+            allMetrics: allMetrics,
+            onChooseMetric: (metric) {
+              _selectedMetric = metric;
+            },
+          );
+        },
+      );
 
+      if (isReturn) {
+        return;
+      }
+
+      var idx = allMetrics.indexOf(_selectedMetric);
+      _productDetail = get<StockViewModel>().productsDetail?[idx];
+    } else {
+      _productDetail = get<StockViewModel>().productsDetail?[0];
+    }
     await Future.delayed(Durations.short3);
     // print(_productDetail);
     showModalBottomSheet(

@@ -106,6 +106,7 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
           SizedBox(height: 4),
           TextFormField(
             controller: _addressController,
+            minLines: 1,
             maxLines: 3,
             decoration: InputDecoration(labelText: "Alamat"),
             validator: (value) {
@@ -127,6 +128,7 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
               return null;
             },
             autovalidateMode: AutovalidateMode.always,
+            keyboardType: TextInputType.phone,
           ),
           SizedBox(height: 4),
           TextFormField(

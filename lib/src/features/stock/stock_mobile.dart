@@ -89,7 +89,7 @@ class _StockMobileState extends State<StockMobile>
           StockCanceledView(),
         ],
       ),
-      bottomNavigationBar: MobileNavbar(),
+      bottomNavigationBar: MobileNavbar(key: ValueKey(100007)),
     );
   }
 }

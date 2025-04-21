@@ -36,7 +36,7 @@ class ShopsMobile extends StatelessWidget with GetItMixin {
               onPressed: () {
                 showModalBottomSheet(
                   isScrollControlled: true,
-                  constraints: BoxConstraints(maxHeight: 540),
+                  constraints: BoxConstraints(maxHeight: 740),
                   context: context,
                   builder: (context) {
                     return Padding(
@@ -75,7 +75,7 @@ class ShopsMobile extends StatelessWidget with GetItMixin {
           ),
         ],
       ),
-      bottomNavigationBar: MobileNavbar(),
+      bottomNavigationBar: MobileNavbar(key: ValueKey(100006)),
     );
   }
 }

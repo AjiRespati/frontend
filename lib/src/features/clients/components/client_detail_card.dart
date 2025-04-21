@@ -70,12 +70,12 @@ class ClientDetailCard extends StatelessWidget with GetItMixin {
   double _generatePrice(dynamic item) {
     double result = 0;
 
-    if (item['salesmanPrice'] > 0) {
-      result = item['salesmanPrice'];
-    } else if (item['subAgentPrice'] > 0) {
-      result = item['subAgentPrice'];
-    } else if (item['agentPrice'] > 0) {
-      result = item['agentPrice'];
+    if (item['salesmanPrice'].toDouble() > 0) {
+      result = item['salesmanPrice'].toDouble();
+    } else if (item['subAgentPrice'].toDouble() > 0) {
+      result = item['subAgentPrice'].toDouble();
+    } else if (item['agentPrice'].toDouble() > 0) {
+      result = item['agentPrice'].toDouble();
     }
 
     return result;
@@ -84,12 +84,12 @@ class ClientDetailCard extends StatelessWidget with GetItMixin {
   double _generateKomisi(dynamic item) {
     double result = 0;
 
-    if (item['totalSalesShare'] != null) {
-      result = item['totalSalesShare'];
-    } else if (item['totalSubAgentShare'] != null) {
-      result = item['totalSubAgentShare'];
-    } else if (item['totalAgentShare'] != null) {
-      result = item['totalAgentShare'];
+    if (item['totalSalesShare'].toDouble() != null) {
+      result = item['totalSalesShare'].toDouble();
+    } else if (item['totalSubAgentShare'].toDouble() != null) {
+      result = item['totalSubAgentShare'].toDouble();
+    } else if (item['totalAgentShare'].toDouble() != null) {
+      result = item['totalAgentShare'].toDouble();
     }
 
     return result;

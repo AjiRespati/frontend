@@ -146,7 +146,7 @@ class SystemViewModel extends ChangeNotifier {
   //====================//
 
   /// call this method after mounted
-  Future<bool> checkSessionx({required BuildContext context}) async {
+  Future<bool> checkSession({required BuildContext context}) async {
     isBusy = true;
     SharedPreferences prefs = await _prefs;
     String? token = prefs.getString('accessToken');

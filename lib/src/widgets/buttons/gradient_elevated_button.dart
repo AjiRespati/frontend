@@ -14,6 +14,7 @@ class GradientElevatedButton extends StatefulWidget {
     this.borderRadius = 10.0,
     this.buttonHeight = 40,
     this.inactiveDelay = Durations.extralong4,
+    this.padding,
   });
 
   final VoidCallback? onPressed;
@@ -23,6 +24,7 @@ class GradientElevatedButton extends StatefulWidget {
   final double borderRadius;
   final double buttonHeight;
   final Duration inactiveDelay;
+  final EdgeInsetsGeometry? padding;
 
   @override
   State<GradientElevatedButton> createState() => _GradientElevatedButtonState();
@@ -52,6 +54,7 @@ class _GradientElevatedButtonState extends State<GradientElevatedButton> {
 
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
+          padding: widget.padding,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius),
           ),

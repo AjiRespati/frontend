@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/src/features/stock/components/add_stock.dart';
-import 'package:frontend/src/features/stock/components/send_stock.dart';
 import 'package:frontend/src/utils/helpers.dart';
-import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ProductDetailCard extends StatelessWidget with GetItMixin {
@@ -18,7 +15,6 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +37,7 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                   children: [
                     Text("Harga awal: "),
                     Text(
-                      "${formatCurrency(product['price'])} / ",
+                      "${formatCurrency(product['price'] ?? 0)} / ",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -62,7 +58,7 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                   children: [
                     Text("Harga: "),
                     Text(
-                      "${formatCurrency(product['netPrice'])} / ",
+                      "${formatCurrency(product['netPrice'] ?? 0)} / ",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -95,93 +91,96 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                 ),
               ],
             ),
-            Column(
-              children: [
-                SizedBox(
-                  width: 120,
-                  child: GradientElevatedButton(
-                    // inactiveDelay: Duration.zero,
-                    buttonHeight: 25,
-                    onPressed: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        constraints: BoxConstraints(maxHeight: 540),
-                        context: context,
-                        builder: (context) {
-                          return AddStock(
-                            measurement:
-                                product['metricType'].toString().toLowerCase(),
-                            mainProduct: product,
-                          );
-                        },
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.add_circle_outline_rounded,
-                          size: 18,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          "Add Stock",
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                SizedBox(
-                  width: 120,
-                  child: GradientElevatedButton(
-                    gradient: LinearGradient(
-                      colors: [Colors.green.shade300, Colors.green.shade700],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    // inactiveDelay: Duration.zero,
-                    buttonHeight: 25,
-                    onPressed:
-                        product['totalStock'] == null ||
-                                product['totalStock'] == 0
-                            ? null
-                            : () {
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                constraints: BoxConstraints(maxHeight: 540),
-                                context: context,
-                                builder: (context) {
-                                  return SendStock(
-                                    measurement:
-                                        product['metricType']
-                                            .toString()
-                                            .toLowerCase(),
-                                    mainProduct: product,
-                                    stockOnHand: product['totalStock'] ?? 0,
-                                  );
-                                },
-                              );
-                            },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.shopping_cart_checkout_rounded,
-                          size: 18,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          "Send Stock",
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // Column(
+            //   children: [
+            //     SizedBox(
+            //       width: 120,
+            //       child: GradientElevatedButton(
+            //         padding: EdgeInsets.zero,
+            //         buttonHeight: 25,
+            //         onPressed: () {
+            //           showModalBottomSheet(
+            //             isScrollControlled: true,
+            //             constraints: BoxConstraints(maxHeight: 540),
+            //             context: context,
+            //             builder: (context) {
+            //               return AddStock(
+            //                 measurement:
+            //                     product['metricType'].toString().toLowerCase(),
+            //                 mainProduct: product,
+            //               );
+            //             },
+            //           );
+            //         },
+            //         child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             Icon(
+            //               Icons.add_circle_outline_rounded,
+            //               size: 18,
+            //               color: Colors.white,
+            //             ),
+            //             SizedBox(width: 5),
+            //             Text(
+            //               "Add Stock",
+            //               style: TextStyle(color: Colors.white, fontSize: 12),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //     SizedBox(height: 10),
+            //     SizedBox(
+            //       width: 120,
+            //       child: GradientElevatedButton(
+            //         padding: EdgeInsets.zero,
+            //         gradient: LinearGradient(
+            //           colors: [Colors.green.shade300, Colors.green.shade700],
+            //           begin: Alignment.topLeft,
+            //           end: Alignment.bottomRight,
+            //         ),
+            //         // inactiveDelay: Duration.zero,
+            //         buttonHeight: 25,
+            //         onPressed:
+            //             product['totalStock'] == null ||
+            //                     product['totalStock'] == 0
+            //                 ? null
+            //                 : () {
+            //                   showModalBottomSheet(
+            //                     isScrollControlled: true,
+            //                     constraints: BoxConstraints(maxHeight: 540),
+            //                     context: context,
+            //                     builder: (context) {
+            //                       return SendStock(
+            //                         measurement:
+            //                             product['metricType']
+            //                                 .toString()
+            //                                 .toLowerCase(),
+            //                         mainProduct: product,
+            //                         stockOnHand: product['totalStock'] ?? 0,
+            //                       );
+            //                     },
+            //                   );
+            //                 },
+            //         child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             Icon(
+            //               Icons.shopping_cart_checkout_rounded,
+            //               size: 18,
+            //               color: Colors.white,
+            //             ),
+            //             SizedBox(width: 5),
+            //             Text(
+            //               "Send Stock",
+            //               style: TextStyle(color: Colors.white, fontSize: 12),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),
