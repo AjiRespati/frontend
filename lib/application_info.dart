@@ -13,8 +13,8 @@ class ApplicationInfo {
   static const baseUrlProd = "https://gracia.id/service/api";
 
   //TODO: Ganti manual untuk prod/dev
-  static const baseUrl = baseUrlDev;
-  // static const baseUrl = baseUrlProd;
+  // static const baseUrl = baseUrlDev;
+  static const baseUrl = baseUrlProd;
 
   static const isProduction = baseUrl == baseUrlProd;
 
