@@ -371,55 +371,68 @@ class _TransactionResumeState extends State<TransactionResume>
                 }).toList(),
           ),
         ),
+        Expanded(
+          child: SingleChildScrollView(
+            child:
+                watchOnly((StockViewModel x) => x.responseBatch).isEmpty
+                    ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 30,
+                          child: Text("Tidak ada stok pada tanggal dipilih."),
+                        ),
+                      ],
+                    )
+                    : Padding(
+                      padding: const EdgeInsets.only(
+                        left: 8,
+                        right: 8,
+                        bottom: 10,
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: get<StockViewModel>().responseBatch.length,
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> stock =
+                              get<StockViewModel>().responseBatch[index];
 
-        watchOnly((StockViewModel x) => x.responseBatch).isEmpty
-            ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 30,
-                  child: Text("Tidak ada stok pada tanggal dipilih."),
-                ),
-              ],
-            )
-            : Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: get<StockViewModel>().responseBatch.length,
-                itemBuilder: (context, index) {
-                  Map<String, dynamic> stock =
-                      get<StockViewModel>().responseBatch[index];
+                          int level =
+                              stock['userDesc'] == 'Salesman'
+                                  ? 1
+                                  : stock['userDesc'] == 'Sub Agent'
+                                  ? 2
+                                  : stock['userDesc'] == 'Agent'
+                                  ? 3
+                                  : 4;
 
-                  int level =
-                      stock['userDesc'] == 'Salesman'
-                          ? 1
-                          : stock['userDesc'] == 'Sub Agent'
-                          ? 2
-                          : stock['userDesc'] == 'Agent'
-                          ? 3
-                          : 4;
+                          List<dynamic> stocks = stock['Stocks'];
+                          double totalPrice = _generateTotalPrice(
+                            stocks,
+                            level,
+                          );
+                          int totalProduct = _generateTotalProduct(stocks);
+                          int totalItem = _generateTotalItem(stocks);
 
-                  List<dynamic> stocks = stock['Stocks'];
-                  double totalPrice = _generateTotalPrice(stocks, level);
-                  int totalProduct = _generateTotalProduct(stocks);
-                  int totalItem = _generateTotalItem(stocks);
-
-                  return ResumeCard(
-                    stock: stock,
-                    totalProduct: totalProduct,
-                    totalItem: totalItem,
-                    totalPrice: totalPrice,
-                    stocks: stocks,
-                    onSelect: () {
-                      if (!isClient && (stock['status'] == 'completed')) {
-                        _handleBatchActions(stock, totalPrice);
-                      }
-                    },
-                  );
-                },
-              ),
-            ),
+                          return ResumeCard(
+                            stock: stock,
+                            totalProduct: totalProduct,
+                            totalItem: totalItem,
+                            totalPrice: totalPrice,
+                            stocks: stocks,
+                            onSelect: () {
+                              if (!isClient &&
+                                  (stock['status'] == 'completed')) {
+                                _handleBatchActions(stock, totalPrice);
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
+          ),
+        ),
       ],
     );
   }
