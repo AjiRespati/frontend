@@ -81,7 +81,7 @@ class ApiService {
       Navigator.pushNamed(context, signInRoute);
       return null;
       // }
-    } else if (response.statusCode == 200) {
+    } else if (response.statusCode < 400) {
       return jsonDecode(response.body);
     } else {
       Navigator.pushNamed(context, signInRoute);

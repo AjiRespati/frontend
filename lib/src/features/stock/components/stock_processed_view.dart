@@ -54,7 +54,6 @@ class _StockProcessedViewState extends State<StockProcessedView>
                   get<StockViewModel>().dateFromFilter = date;
                 },
               ),
-              SizedBox(width: 4),
               _buildDatePicker(
                 context,
                 "To: ",
@@ -63,10 +62,9 @@ class _StockProcessedViewState extends State<StockProcessedView>
                   get<StockViewModel>().dateToFilter = date;
                 },
               ),
-              SizedBox(width: 4),
 
               GradientElevatedButton(
-                // inactiveDelay: Duration.zero,
+                padding: EdgeInsets.zero,
                 buttonHeight: 34,
                 onPressed: () {
                   bool isClient = (get<SystemViewModel>().level ?? 0) < 4;

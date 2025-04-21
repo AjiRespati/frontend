@@ -153,7 +153,7 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
             NavigationDestination(icon: Icon(Icons.home), label: "Dashboard"),
             NavigationDestination(
               icon: Icon(Icons.sell_outlined),
-              label: "Pemesanan",
+              label: "Pembelian",
             ),
             NavigationDestination(
               icon: Icon(Icons.shopping_cart_checkout_rounded),

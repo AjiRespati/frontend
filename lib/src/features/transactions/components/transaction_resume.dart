@@ -315,21 +315,24 @@ class _TransactionResumeState extends State<TransactionResume>
                       get<StockViewModel>().dateToFilter = date;
                     },
                   ),
-                  GradientElevatedButton(
-                    // inactiveDelay: Duration.zero,
-                    buttonHeight: 34,
-                    onPressed: () {
-                      get<StockViewModel>().getStockBatches(
-                        context: context,
-                        isClient: isClient,
-                        status: 'completed',
-                        sortBy: null,
-                        sortOrder: null,
-                        page: null,
-                        limit: null,
-                      );
-                    },
-                    child: Icon(Icons.search, color: Colors.white, size: 30),
+                  SizedBox(
+                    width: 50,
+                    child: GradientElevatedButton(
+                      padding: EdgeInsets.zero,
+                      buttonHeight: 34,
+                      onPressed: () {
+                        get<StockViewModel>().getStockBatches(
+                          context: context,
+                          isClient: isClient,
+                          status: 'completed',
+                          sortBy: null,
+                          sortOrder: null,
+                          page: null,
+                          limit: null,
+                        );
+                      },
+                      child: Icon(Icons.search, color: Colors.white, size: 30),
+                    ),
                   ),
                 ],
               ),

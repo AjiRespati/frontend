@@ -188,6 +188,7 @@ class _CreateProductMeasurementState extends State<CreateProductMeasurement>
                   await get<StockViewModel>().fetchProduct(
                     context,
                     widget.mainProduct?['productId'],
+                    false,
                   );
                 },
                 child: Text(
@@ -196,6 +197,7 @@ class _CreateProductMeasurementState extends State<CreateProductMeasurement>
                 ),
               ),
             ),
+            SizedBox(height: 20),
           ],
         ),
       ),

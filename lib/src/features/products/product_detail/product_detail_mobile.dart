@@ -66,7 +66,7 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                         SizedBox(width: 20),
                         Flexible(
                           child: Text(
-                            mainProduct['productName'],
+                            mainProduct?['productName'] ?? "",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -106,7 +106,7 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                       ),
                     ),
                     SizedBox(height: 2),
-                    Text(mainProduct['description']),
+                    Text(mainProduct?['description'] ?? ""),
                     SizedBox(height: 10),
 
                     Row(
@@ -121,14 +121,24 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
                           onPressed: () {
                             showModalBottomSheet(
                               isScrollControlled: true,
-                              constraints: BoxConstraints(maxHeight: 340),
+                              constraints: BoxConstraints(maxHeight: 600),
                               context: context,
                               builder: (context) {
-                                return CreateProductMeasurement(
-                                  mainProduct: mainProduct,
-                                  measurements:
-                                      get<StockViewModel>()
-                                          .availableMeasurement,
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom:
+                                        MediaQuery.of(
+                                          context,
+                                        ).viewInsets.bottom,
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: CreateProductMeasurement(
+                                      mainProduct: mainProduct,
+                                      measurements:
+                                          get<StockViewModel>()
+                                              .availableMeasurement,
+                                    ),
+                                  ),
                                 );
                               },
                             );

@@ -36,7 +36,7 @@ class _TransactionMobileState extends State<TransactionMobile>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pemesanan"),
+        title: Text("Pembelian"),
         // title: Text(_level < 4 ? "Pemesanan" : "Pembelian"),
         actions: [
           if (watchOnly((StockViewModel x) => x.isBusy))

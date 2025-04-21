@@ -76,7 +76,11 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
             Row(
               children: [
                 Text('Total komisi: '),
-                Text(formatCurrency(_generateTotalKomisi(mainItem, level))),
+                Text(
+                  formatCurrency(
+                    _generateTotalKomisi(mainItem, level).toDouble(),
+                  ),
+                ),
               ],
             ),
             // Row(
@@ -224,19 +228,19 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
     double totalKomisi = 0;
     switch (level) {
       case 5:
-        totalKomisi;
+        totalKomisi.toDouble();
         break;
       case 4:
-        totalKomisi;
+        totalKomisi.toDouble();
         break;
       case 3:
-        totalKomisi = mainItem['totalAgentCommission'];
+        totalKomisi = mainItem['totalAgentCommission'].toDouble();
         break;
       case 2:
-        totalKomisi = mainItem['totalSubAgentCommission'];
+        totalKomisi = mainItem['totalSubAgentCommission'].toDouble();
         break;
       case 1:
-        totalKomisi = mainItem['totalSalesmanCommission'];
+        totalKomisi = mainItem['totalSalesmanCommission'].toDouble();
         break;
       default:
         totalKomisi;

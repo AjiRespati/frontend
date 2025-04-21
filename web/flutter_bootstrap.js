@@ -2,7 +2,7 @@
 {{flutter_build_config}}
 
 //TODO: APP VERSION
-const appVersion = "1.0.10";
+const appVersion = "1.0.11";
 
 // Get the domain
 var domain = window.location.hostname;

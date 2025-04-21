@@ -183,13 +183,14 @@ class _AddProductScreenState extends State<AddProductScreen>
           GradientElevatedButton(
             onPressed: _submit,
             child: Text(
-              "Create Product",
+              "Add Product",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
+          SizedBox(height: 30),
         ],
       ),
     );

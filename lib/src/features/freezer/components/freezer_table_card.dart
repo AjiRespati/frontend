@@ -158,10 +158,12 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
                             ),
                             Row(
                               children: [
-                                Text(
-                                  freezer['Shop']['address'],
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 3,
+                                Flexible(
+                                  child: Text(
+                                    freezer['Shop']['address'],
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 3,
+                                  ),
                                 ),
                               ],
                             ),

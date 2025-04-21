@@ -36,10 +36,15 @@ class ProductMobile extends StatelessWidget with GetItMixin {
             onPressed: () {
               showModalBottomSheet(
                 isScrollControlled: true,
-                constraints: BoxConstraints(minHeight: 600, maxHeight: 620),
+                constraints: BoxConstraints(maxHeight: 720),
                 context: context,
                 builder: (context) {
-                  return AddProductScreen();
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: SingleChildScrollView(child: AddProductScreen()),
+                  );
                 },
               );
             },
@@ -48,7 +53,7 @@ class ProductMobile extends StatelessWidget with GetItMixin {
         ],
       ),
       body:
-          watchOnly((StockViewModel x) => x.isLoading)
+          watchOnly((StockViewModel x) => x.isBusy)
               ? const Center(child: CircularProgressIndicator())
               : watchOnly((StockViewModel x) => x.products).isEmpty
               ? Padding(

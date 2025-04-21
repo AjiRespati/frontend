@@ -22,11 +22,42 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
   dynamic _selectedProduct;
   String? _selectedId;
   dynamic _productDetail;
+  String? _selectedMetric;
+  final String _measurement = "";
 
   _onSelect() async {
-    await get<StockViewModel>().fetchProduct(context, _selectedId ?? "-");
+    await get<StockViewModel>().fetchProduct(context, _selectedId ?? "-", true);
+    List<dynamic>? allProducts = get<StockViewModel>().productsDetail;
+    List<dynamic>? allMetrics;
+    allMetrics =
+        allProducts?.map((e) => e['metricType'].toLowerCase()).toList();
 
-    _productDetail = get<StockViewModel>().productsDetail?[0];
+    if (allMetrics != null && allMetrics.length > 1) {
+      bool isReturn = await showModalBottomSheet(
+        isScrollControlled: true,
+        constraints: BoxConstraints(maxHeight: 340),
+        context: context,
+        builder: (context) {
+          return SelectMetric(
+            allMetrics: allMetrics,
+            onChooseMetric: (metric) {
+              print('dipilih');
+              print(metric);
+              _selectedMetric = metric;
+            },
+          );
+        },
+      );
+
+      if (isReturn) {
+        return;
+      }
+
+      var idx = allMetrics.indexOf(_selectedMetric);
+      _productDetail = get<StockViewModel>().productsDetail?[idx];
+    } else {
+      _productDetail = get<StockViewModel>().productsDetail?[0];
+    }
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -289,5 +320,83 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
         ),
       ),
     );
+  }
+}
+
+class SelectMetric extends StatefulWidget {
+  const SelectMetric({
+    required this.allMetrics,
+    required this.onChooseMetric,
+    super.key,
+  });
+
+  final List<dynamic>? allMetrics;
+  final Function(String) onChooseMetric;
+
+  @override
+  State<SelectMetric> createState() => _SelectMetricState();
+}
+
+class _SelectMetricState extends State<SelectMetric> {
+  String? _selectedMetric;
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.allMetrics != null && widget.allMetrics!.isNotEmpty
+        ? Column(
+          children: [
+            SizedBox(height: 40),
+            Text("Pilih Satuan Unit:"),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children:
+                    widget.allMetrics!.map((language) {
+                      return Expanded(
+                        child: RadioListTile<String>(
+                          dense: true,
+                          title: Text(language),
+                          value: language,
+                          groupValue: _selectedMetric,
+                          onChanged: (String? value) {
+                            setState(() {
+                              _selectedMetric = value!;
+                            });
+                          },
+                        ),
+                      );
+                    }).toList(),
+              ),
+            ),
+            SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GradientElevatedButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: Text("Batal"),
+                ),
+                SizedBox(width: 40),
+                GradientElevatedButton(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.greenAccent.shade400,
+                      Colors.greenAccent.shade700,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+
+                  onPressed: () {
+                    widget.onChooseMetric(_selectedMetric ?? "");
+                    Navigator.pop(context, false);
+                  },
+                  child: Text("Pilih"),
+                ),
+              ],
+            ),
+          ],
+        )
+        : SizedBox();
   }
 }

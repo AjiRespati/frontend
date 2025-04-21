@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/auth/login_desktop.dart';
 import 'package:frontend/src/features/auth/login_mobile.dart';
 import 'package:frontend/src/utils/responsive_layout.dart';
-// import 'package:frontend/src/view_models/system_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget with GetItStatefulWidgetMixin {
   LoginScreen({super.key});
@@ -18,19 +17,8 @@ class _LoginScreenState extends State<LoginScreen> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // get<SystemViewModel>().checkSession(context: context);
-
-      SharedPreferences.getInstance().then((prefs) {
-        prefs.remove('refreshToken');
-      });
+      get<SystemViewModel>().checkSession(context: context);
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    // get<SystemViewModel>().usernameController.dispose();
-    // get<SystemViewModel>().passwordController.dispose();
   }
 
   @override

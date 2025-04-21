@@ -97,7 +97,10 @@ class _BuyProductState extends State<BuyProduct> with GetItStateMixin {
               children: [
                 SizedBox(width: 15),
                 Text(
-                  "${formatCurrency((_generatePrice(widget.mainProduct, client)) * (watchOnly((StockViewModel x) => x.stockAmount)))} / ${widget.measurement} ",
+                  formatCurrency(
+                    (_generatePrice(widget.mainProduct, client)) *
+                        (watchOnly((StockViewModel x) => x.stockAmount)),
+                  ),
                 ),
               ],
             ),

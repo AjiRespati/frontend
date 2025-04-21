@@ -28,8 +28,47 @@ class _TransactionSellClientState extends State<TransactionSellClient>
   String? _selectedShopId;
   dynamic _productDetail;
 
+  String? _selectedMetric;
+
   _onSelect() async {
-    await get<StockViewModel>().fetchProduct(context, _selectedId ?? "-");
+    await get<StockViewModel>().fetchProduct(context, _selectedId ?? "-", true);
+    List<dynamic>? allProducts = get<StockViewModel>().productsDetail;
+    List<dynamic>? allMetrics;
+    allMetrics =
+        allProducts?.map((e) => e['metricType'].toLowerCase()).toList();
+
+    if (allMetrics != null && allMetrics.length > 1) {
+      await showModalBottomSheet(
+        isScrollControlled: true,
+        constraints: BoxConstraints(maxHeight: 540),
+        context: context,
+        builder: (context) {
+          return Column(
+            children: [
+              Row(children: [Text("Pilih Satuan Unit:")]),
+              Row(
+                children:
+                    allMetrics!.map((language) {
+                      return Expanded(
+                        child: RadioListTile<String>(
+                          dense: true,
+                          title: Text(language),
+                          value: language,
+                          groupValue: _selectedMetric,
+                          onChanged: (String? value) {
+                            setState(() {
+                              _selectedMetric = value!;
+                            });
+                          },
+                        ),
+                      );
+                    }).toList(),
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     _productDetail = get<StockViewModel>().productsDetail?[0];
 
