@@ -36,20 +36,43 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
           },
           selectedIndex: get<SystemViewModel>().currentPageIndex,
           destinations: [
-            NavigationDestination(icon: Icon(Icons.home), label: "Dashboard"),
+            NavigationDestination(
+              icon: Icon(Icons.home),
+              selectedIcon: Icon(Icons.home, color: Colors.blueAccent.shade700),
+              label: "Dashboard",
+            ),
             NavigationDestination(
               icon: Icon(Icons.sell_outlined),
+              selectedIcon: Icon(
+                Icons.sell_outlined,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Pembelian",
             ),
             NavigationDestination(
               icon: Icon(Icons.shopping_cart_checkout_rounded),
+              selectedIcon: Icon(
+                Icons.shopping_cart_checkout_rounded,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Stock",
             ),
             NavigationDestination(
               icon: Icon(Icons.store_rounded),
+              selectedIcon: Icon(
+                Icons.store_rounded,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Clients",
             ),
-            NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
+            NavigationDestination(
+              icon: Icon(Icons.settings),
+              selectedIcon: Icon(
+                Icons.settings,
+                color: Colors.blueAccent.shade700,
+              ),
+              label: "Setting",
+            ),
           ],
         );
       case 4:
@@ -78,20 +101,43 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
           },
           selectedIndex: get<SystemViewModel>().currentPageIndex,
           destinations: [
-            NavigationDestination(icon: Icon(Icons.home), label: "Dashboard"),
+            NavigationDestination(
+              icon: Icon(Icons.home),
+              selectedIcon: Icon(Icons.home, color: Colors.blueAccent.shade700),
+              label: "Dashboard",
+            ),
             NavigationDestination(
               icon: Icon(Icons.sell_outlined),
+              selectedIcon: Icon(
+                Icons.sell_outlined,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Pembelian",
             ),
             NavigationDestination(
               icon: Icon(Icons.shopping_cart_checkout_rounded),
+              selectedIcon: Icon(
+                Icons.shopping_cart_checkout_rounded,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Stock",
             ),
             NavigationDestination(
               icon: Icon(Icons.store_rounded),
+              selectedIcon: Icon(
+                Icons.store_rounded,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Clients",
             ),
-            NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
+            NavigationDestination(
+              icon: Icon(Icons.settings),
+              selectedIcon: Icon(
+                Icons.settings,
+                color: Colors.blueAccent.shade700,
+              ),
+              label: "Setting",
+            ),
           ],
         );
       case 0:
@@ -114,13 +160,28 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
           destinations: [
             NavigationDestination(
               icon: Icon(Icons.sell_outlined),
+              selectedIcon: Icon(
+                Icons.sell_outlined,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Sell",
             ),
             NavigationDestination(
               icon: Icon(Icons.store_rounded),
+              selectedIcon: Icon(
+                Icons.store_rounded,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Clients",
             ),
-            NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
+            NavigationDestination(
+              icon: Icon(Icons.settings),
+              selectedIcon: Icon(
+                Icons.settings,
+                color: Colors.blueAccent.shade700,
+              ),
+              label: "Setting",
+            ),
           ],
         );
 
@@ -150,20 +211,43 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
           },
           selectedIndex: get<SystemViewModel>().currentPageIndex,
           destinations: [
-            NavigationDestination(icon: Icon(Icons.home), label: "Dashboard"),
+            NavigationDestination(
+              icon: Icon(Icons.home),
+              selectedIcon: Icon(Icons.home, color: Colors.blueAccent.shade700),
+              label: "Dashboard",
+            ),
             NavigationDestination(
               icon: Icon(Icons.sell_outlined),
+              selectedIcon: Icon(
+                Icons.sell_outlined,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Pembelian",
             ),
             NavigationDestination(
               icon: Icon(Icons.shopping_cart_checkout_rounded),
+              selectedIcon: Icon(
+                Icons.shopping_cart_checkout_rounded,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Stock",
             ),
             NavigationDestination(
               icon: Icon(Icons.store_rounded),
+              selectedIcon: Icon(
+                Icons.store_rounded,
+                color: Colors.blueAccent.shade700,
+              ),
               label: "Toko",
             ),
-            NavigationDestination(icon: Icon(Icons.settings), label: "Setting"),
+            NavigationDestination(
+              icon: Icon(Icons.settings),
+              selectedIcon: Icon(
+                Icons.settings,
+                color: Colors.blueAccent.shade700,
+              ),
+              label: "Setting",
+            ),
           ],
         );
     }

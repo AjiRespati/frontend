@@ -515,7 +515,6 @@ class StockViewModel extends ChangeNotifier {
         usedMetric.add(item['metricType']);
       }
       if (!isBuying) {
-        print("KOK NYAMPEK SINI ????");
         List<String> measurementLeft =
             measurements
                 .where((measurement) => !usedMetric.contains(measurement))
@@ -1162,7 +1161,10 @@ class StockViewModel extends ChangeNotifier {
     // Find the index of an existing transaction with the same productId
     // Returns -1 if no matching element is found.
     int existingIndex = _newTransactions.indexWhere(
-      (el) => el.productId == val.productId,
+      (el) =>
+          ((el.productId == val.productId) &&
+              (el.productDetail['metricType'] ==
+                  val.productDetail['metricType'])),
     );
 
     if (existingIndex != -1) {

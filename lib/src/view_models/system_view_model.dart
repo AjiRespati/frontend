@@ -152,7 +152,7 @@ class SystemViewModel extends ChangeNotifier {
     String? token = prefs.getString('accessToken');
 
     if (token != null) {
-      if (isTokenExpired(token)) {
+      if (!isTokenExpired(token)) {
         Navigator.pushNamed(context, dashboardRoute);
         isBusy = false;
         return true;

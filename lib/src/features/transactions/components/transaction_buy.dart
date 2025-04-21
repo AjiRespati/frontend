@@ -23,7 +23,6 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
   String? _selectedId;
   dynamic _productDetail;
   String? _selectedMetric;
-  final String _measurement = "";
 
   _onSelect() async {
     await get<StockViewModel>().fetchProduct(context, _selectedId ?? "-", true);
@@ -41,8 +40,6 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
           return SelectMetric(
             allMetrics: allMetrics,
             onChooseMetric: (metric) {
-              print('dipilih');
-              print(metric);
               _selectedMetric = metric;
             },
           );

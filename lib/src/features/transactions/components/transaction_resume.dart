@@ -160,7 +160,7 @@ class _TransactionResumeState extends State<TransactionResume>
                           await get<StockViewModel>().getStockBatches(
                             context: context,
                             isClient: isClient,
-                            status: 'completed',
+                            status: 'all',
                             sortBy: null,
                             sortOrder: null,
                             page: null,
@@ -324,7 +324,7 @@ class _TransactionResumeState extends State<TransactionResume>
                         get<StockViewModel>().getStockBatches(
                           context: context,
                           isClient: isClient,
-                          status: 'completed',
+                          status: 'all',
                           sortBy: null,
                           sortOrder: null,
                           page: null,
@@ -391,7 +391,7 @@ class _TransactionResumeState extends State<TransactionResume>
                       totalPrice: totalPrice,
                       stocks: stocks,
                       onSelect: () {
-                        if (!isClient) {
+                        if (!isClient && (stock['status'] == 'completed')) {
                           _handleBatchActions(stock, totalPrice);
                         }
                       },

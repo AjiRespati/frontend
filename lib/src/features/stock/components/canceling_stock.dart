@@ -149,7 +149,7 @@ class _AddProductScreenState extends State<CancelingStock>
                       await get<StockViewModel>().getStockBatches(
                         context: context,
                         isClient: isClient,
-                        status: 'completed',
+                        status: 'all',
                         sortBy: null,
                         sortOrder: null,
                         page: null,
