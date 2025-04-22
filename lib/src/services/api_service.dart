@@ -75,7 +75,7 @@ class ApiService {
       body: jsonEncode({"refreshToken": refreshToken}),
     );
 
-    if (response.statusCode == 401) {
+    if (response.statusCode == 401 || response.statusCode == 403) {
       // token = await refreshAccessToken();
       // if (token == null) {
       Navigator.pushNamed(context, signInRoute);

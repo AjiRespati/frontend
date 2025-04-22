@@ -20,7 +20,9 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
     get<StockViewModel>().isBusy = true;
     get<SystemViewModel>().usernameController.text = "";
     get<SystemViewModel>().passwordController.text = "";
-    await get<SystemViewModel>().self(context);
+    var result = await get<SystemViewModel>().self(context);
+    print("APA INI HASIL SELF....");
+    print(result);
     var user = get<SystemViewModel>().user;
     String client = (user?['levelDesc'] ?? "salesman").toLowerCase();
     get<StockViewModel>().client = client.replaceAll(" ", "");
