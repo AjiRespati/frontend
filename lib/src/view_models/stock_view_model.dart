@@ -528,6 +528,19 @@ class StockViewModel extends ChangeNotifier {
     return;
   }
 
+  Future<bool> updatePrice(
+    BuildContext context,
+    String productId,
+    String priceId,
+    double price,
+  ) async {
+    return await apiService.updatePrice(
+      context: context,
+      priceId: priceId,
+      price: price,
+    );
+  }
+
   /// Generate client id by client choosen name
   _generateClientId() {
     switch (client) {

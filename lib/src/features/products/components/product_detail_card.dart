@@ -1,14 +1,39 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/src/utils/helpers.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
+import 'package:frontend/src/widgets/buttons/add_button.dart';
+import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
-class ProductDetailCard extends StatelessWidget with GetItMixin {
+class ProductDetailCard extends StatefulWidget with GetItStatefulWidgetMixin {
   ProductDetailCard({required this.product, super.key});
   final dynamic product;
+
+  @override
+  State<ProductDetailCard> createState() => _ProductDetailCardState();
+}
+
+class _ProductDetailCardState extends State<ProductDetailCard>
+    with GetItStateMixin {
+  final TextEditingController _priceController = TextEditingController();
+  String _productId = "";
+  String _priceId = "";
   // final List<dynamic>? stock;
 
   @override
+  void initState() {
+    super.initState();
+    _priceId = widget.product['priceId'];
+    _productId = widget.product['productId'];
+  }
+
+  @override
   Widget build(BuildContext context) {
+    bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
+    print(widget.product);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
@@ -23,7 +48,7 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                   children: [
                     Text("Jenis Ukuran Unit:  "),
                     Text(
-                      product['metricType'].toString().toLowerCase(),
+                      widget.product['metricType'].toString().toLowerCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -35,9 +60,9 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                 SizedBox(height: 5),
                 Row(
                   children: [
-                    Text("Harga awal: "),
+                    Text("Harga: "),
                     Text(
-                      "${formatCurrency(product['price'] ?? 0)} / ",
+                      "${formatCurrency(widget.product['price'] ?? 0)} / ",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -45,20 +70,149 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                       ),
                     ),
                     Text(
-                      product['metricType'].toString().toLowerCase(),
+                      widget.product['metricType'].toString().toLowerCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                         color: Colors.blue[900],
                       ),
                     ),
+                    SizedBox(width: 20),
+                    if (!isClient)
+                      AddButton(
+                        color: Colors.grey,
+                        altIcon: Icons.edit,
+                        size: 20,
+                        message: "Edit Product Price",
+                        onPressed: () {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            constraints: BoxConstraints(
+                              maxHeight: 700,
+                              minHeight: 550,
+                            ),
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom,
+                                ),
+                                child: SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 30),
+                                        Icon(
+                                          Icons.edit,
+                                          size: 38,
+                                          color: Colors.amber,
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text(widget.product?['productName']),
+                                        Text(
+                                          "Ganti Harga Product",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        TextField(
+                                          controller: _priceController,
+                                          decoration: InputDecoration(
+                                            labelText: "Harga",
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                        SizedBox(height: 30),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              height: 40,
+                                              width: 90,
+                                              child: GradientElevatedButton(
+                                                // inactiveDelay: Duration.zero,
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text(
+                                                  "No",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 15),
+                                            SizedBox(
+                                              height: 40,
+                                              width: 90,
+                                              child: GradientElevatedButton(
+                                                // inactiveDelay: Duration.zero,
+                                                gradient: const LinearGradient(
+                                                  colors: [
+                                                    Color.fromRGBO(
+                                                      30,
+                                                      241,
+                                                      107,
+                                                      1,
+                                                    ),
+                                                    Colors.green,
+                                                  ],
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                ),
+                                                onPressed: () async {
+                                                  //TODO: KIRIM UPDATE
+                                                  await get<StockViewModel>()
+                                                      .updatePrice(
+                                                        context,
+                                                        _productId,
+                                                        _priceId,
+                                                        double.parse(
+                                                          _priceController.text,
+                                                        ),
+                                                      );
+                                                  await get<StockViewModel>()
+                                                      .fetchProduct(
+                                                        context,
+                                                        _productId,
+                                                        false,
+                                                      );
+                                                  Navigator.pop(context, true);
+                                                },
+                                                child: Text(
+                                                  "Yes",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 30),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
                   ],
                 ),
                 Row(
                   children: [
-                    Text("Harga: "),
+                    Text("Harga konsumen: "),
                     Text(
-                      "${formatCurrency(product['netPrice'] ?? 0)} / ",
+                      "${formatCurrency(widget.product['netPrice'] ?? 0)} / ",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -66,7 +220,7 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                       ),
                     ),
                     Text(
-                      product['metricType'].toString().toLowerCase(),
+                      widget.product['metricType'].toString().toLowerCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -80,7 +234,7 @@ class ProductDetailCard extends StatelessWidget with GetItMixin {
                   children: [
                     Text("Stock On Hand:  "),
                     Text(
-                      (product['totalStock'] ?? 0).toString(),
+                      (widget.product['totalStock'] ?? 0).toString(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,

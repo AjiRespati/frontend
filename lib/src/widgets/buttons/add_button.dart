@@ -6,6 +6,7 @@ class AddButton extends StatelessWidget {
     required this.message,
     required this.onPressed,
     this.color,
+    this.altIcon,
     super.key,
   });
 
@@ -13,6 +14,7 @@ class AddButton extends StatelessWidget {
   final String? message;
   final Color? color;
   final Function() onPressed;
+  final IconData? altIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class AddButton extends StatelessWidget {
           ),
           onPressed: onPressed,
           child: Icon(
-            Icons.add,
+            altIcon ?? Icons.add,
             color: Colors.white,
             size: size == null ? 20 : size! * 0.8,
           ),

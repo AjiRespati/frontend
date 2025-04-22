@@ -421,6 +421,37 @@ class ApiService {
     }
   }
 
+  Future<bool> updatePrice({
+    required BuildContext context,
+    required String priceId,
+    required double price,
+  }) async {
+    String? token = await _getToken();
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/prices/$priceId'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({'price': price}),
+    );
+
+    if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
+      // token = await refreshAccessToken();
+      // if (token == null) {
+      //   return null;
+      // }
+      // return settleStockBatch(batchId: batchId);
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // TODO: METRIC ROUTES
   /// GET /
   /// POST /
