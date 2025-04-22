@@ -16,6 +16,7 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
     dynamic user = watchOnly((SystemViewModel x) => x.level);
     SystemViewModel model = get<SystemViewModel>();
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(title: Text("Settings")),
       body: SingleChildScrollView(
         child:

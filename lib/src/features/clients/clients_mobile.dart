@@ -38,6 +38,7 @@ class _ClientsMobileState extends State<ClientsMobile>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         bottom: TabBar(
           controller: _tabController,

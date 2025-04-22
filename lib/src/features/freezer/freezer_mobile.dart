@@ -13,6 +13,7 @@ class FreezerMobile extends StatelessWidget with GetItMixin {
   Widget build(BuildContext context) {
     watchOnly((StockViewModel x) => x.freezers);
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text("Freezer"),
         actions: [

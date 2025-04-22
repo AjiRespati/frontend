@@ -12,6 +12,7 @@ class UserManagementMobile extends StatelessWidget with GetItMixin {
   Widget build(BuildContext context) {
     watchOnly((SystemViewModel x) => x.users);
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text("User Management"),
         actions: [

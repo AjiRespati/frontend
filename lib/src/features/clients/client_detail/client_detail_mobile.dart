@@ -23,6 +23,7 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
             : get<StockViewModel>().agentStockTable;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text("Client Detail"),
         actions: [

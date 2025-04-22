@@ -69,6 +69,7 @@ class _ShopDetailMobileState extends State<ShopDetailMobile>
     watchOnly((StockViewModel x) => x.shopStockTable);
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(title: Text("Detail Toko")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

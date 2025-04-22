@@ -12,6 +12,7 @@ class DashboardMobile extends StatelessWidget with GetItMixin {
   Widget build(BuildContext context) {
     bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text("Dashboard"),
         automaticallyImplyLeading: false,

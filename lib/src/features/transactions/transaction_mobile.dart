@@ -35,6 +35,7 @@ class _TransactionMobileState extends State<TransactionMobile>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text("Pembelian"),
         // title: Text(_level < 4 ? "Pemesanan" : "Pembelian"),

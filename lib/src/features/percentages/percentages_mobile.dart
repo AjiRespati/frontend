@@ -55,6 +55,7 @@ class _PercentagesMobileState extends State<PercentagesMobile>
   Widget build(BuildContext context) {
     watchOnly((StockViewModel x) => x.percentages);
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
           "Percentages",

@@ -7,6 +7,7 @@ class LoginDesktop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Row(
         children: [
           const SizedBox(width: 900),

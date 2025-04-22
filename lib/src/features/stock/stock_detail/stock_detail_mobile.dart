@@ -11,6 +11,7 @@ class StockDetailMobile extends StatelessWidget with GetItMixin {
   Widget build(BuildContext context) {
     var stocks = get<StockViewModel>().stockHistoryTable;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
           "Stock Detail",

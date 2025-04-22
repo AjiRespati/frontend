@@ -40,6 +40,7 @@ class _StockMobileState extends State<StockMobile>
     watchOnly((StockViewModel x) => x.dateFromFilter);
     watchOnly((StockViewModel x) => x.dateToFilter);
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text("Stock"),
         actions: [

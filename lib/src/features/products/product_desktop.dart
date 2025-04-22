@@ -13,6 +13,7 @@ class ProductDesktop extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: PageContainer(
         setSidebarExpanding: true,
         showMenubutton: true,

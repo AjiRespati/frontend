@@ -26,6 +26,7 @@ class ProductDetailMobile extends StatelessWidget with GetItMixin {
     String imageUrl = ApplicationInfo.baseUrl + (mainProduct?['image'] ?? '');
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
           "Product Detail",
