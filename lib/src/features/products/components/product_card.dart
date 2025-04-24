@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/remove_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import '../../../../application_info.dart';
@@ -159,23 +160,25 @@ class ProductCard extends StatelessWidget with GetItMixin {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: RemoveButton(
-              toolTip: "Hapus product ini?\n${product['productName']}",
-              title: "Hapus Product",
-              onPressed: () async {
-                await get<StockViewModel>().removeProduct(
-                  context: context,
-                  productId: product['productId'],
-                  name: null,
-                  status: 'inactive',
-                  description: null,
-                );
-                Navigator.pushNamed(context, productsRoute);
-              },
+          if ((watchOnly((SystemViewModel x) => x.level) ?? 0) > 3)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RemoveButton(
+                size: 21,
+                toolTip: "Hapus product ini?\n${product['productName']}",
+                title: "Hapus Product",
+                onPressed: () async {
+                  await get<StockViewModel>().removeProduct(
+                    context: context,
+                    productId: product['productId'],
+                    name: null,
+                    status: 'inactive',
+                    description: null,
+                  );
+                  Navigator.pushNamed(context, productsRoute);
+                },
+              ),
             ),
-          ),
         ],
       ),
     );
