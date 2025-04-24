@@ -519,7 +519,7 @@ class StockViewModel extends ChangeNotifier {
             measurements
                 .where((measurement) => !usedMetric.contains(measurement))
                 .toList();
-        measurement = measurementLeft.first;
+        measurement = measurementLeft.isEmpty ? "" : measurementLeft.first;
         availableMeasurement = measurementLeft;
       }
     }
@@ -538,6 +538,22 @@ class StockViewModel extends ChangeNotifier {
       context: context,
       priceId: priceId,
       price: price,
+    );
+  }
+
+  Future<bool> removeProduct({
+    required BuildContext context,
+    required String productId,
+    required String? name,
+    required String? status,
+    required String? description,
+  }) async {
+    return await apiService.updateProduct(
+      context: context,
+      productId: productId,
+      name: name,
+      description: description,
+      status: status,
     );
   }
 
