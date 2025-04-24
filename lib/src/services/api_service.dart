@@ -452,6 +452,44 @@ class ApiService {
     }
   }
 
+  Future<bool> updateProduct({
+    required BuildContext context,
+    required String productId,
+    required String? name,
+    required String? status,
+    required String? description,
+  }) async {
+    String? token = await _getToken();
+
+    Map<String, dynamic> body = {};
+    if (name != null) {
+      body['name'] = name;
+    }
+    if (status != null) {
+      body['status'] = status;
+    }
+    if (description != null) {
+      body['description'] = description;
+    }
+    final response = await http.put(
+      Uri.parse('$baseUrl/products/$productId'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // TODO: METRIC ROUTES
   /// GET /
   /// POST /
