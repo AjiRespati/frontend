@@ -106,6 +106,7 @@ class _PercentagesMobileState extends State<PercentagesMobile>
                           items:
                               [
                                 "supplier",
+                                "distributor",
                                 "shop",
                                 "agent",
                                 "subAgent",
