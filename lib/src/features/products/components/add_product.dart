@@ -19,9 +19,12 @@ class AddProductScreen extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _AddProductScreenState extends State<AddProductScreen>
     with GetItStateMixin {
+  String _errorMessage = "";
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _shopPriceController = TextEditingController();
+  final TextEditingController _netPriceController = TextEditingController();
   String _selectedMetric = "carton"; // ✅ Default metric
   final ApiService apiService = ApiService();
 
@@ -49,25 +52,50 @@ class _AddProductScreenState extends State<AddProductScreen>
     }
   }
 
+  bool _isAddParamsComplete() {
+    return _nameController.text.isNotEmpty &&
+        _priceController.text.isNotEmpty &&
+        _shopPriceController.text.isNotEmpty &&
+        _netPriceController.text.isNotEmpty;
+  }
+
   // ✅ Submit Form
   void _submit() async {
-    bool success = await apiService.createProduct(
-      context: context,
-      name: _nameController.text,
-      description: _descriptionController.text,
-      metric: _selectedMetric,
-      price: double.parse(_priceController.text),
-      imageWeb: _imageWeb,
-      imageDevice: _imageMobile,
-    );
+    if (_isAddParamsComplete()) {
+      bool success = await apiService.createProduct(
+        context: context,
+        name: _nameController.text,
+        description: _descriptionController.text,
+        metricType: _selectedMetric,
+        price: double.parse(_priceController.text),
+        netPrice: double.parse(_netPriceController.text),
+        shopPrice: double.parse(_shopPriceController.text),
+        imageWeb: _imageWeb,
+        imageDevice: _imageMobile,
+      );
 
-    if (success) {
-      await get<StockViewModel>().fetchProducts(context);
-      Navigator.pop(context);
+      if (success) {
+        await get<StockViewModel>().fetchProducts(context);
+        Navigator.pop(context);
+      } else {
+        setState(() {
+          _errorMessage = "Kesalahan harga.";
+        });
+        Future.delayed(Duration(seconds: 3), () {
+          setState(() {
+            _errorMessage = "";
+          });
+        });
+      }
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Failed to create product")));
+      setState(() {
+        _errorMessage = "Pengisian data belum lengkap";
+      });
+      Future.delayed(Duration(seconds: 3), () {
+        setState(() {
+          _errorMessage = "";
+        });
+      });
     }
   }
 
@@ -76,6 +104,8 @@ class _AddProductScreenState extends State<AddProductScreen>
     super.dispose();
     _nameController.dispose();
     _priceController.dispose();
+    _netPriceController.dispose();
+    _shopPriceController.dispose();
     _descriptionController.dispose();
   }
 
@@ -146,11 +176,20 @@ class _AddProductScreenState extends State<AddProductScreen>
                 ),
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(
+            height: 18,
+            child: Text(
+              _errorMessage,
+              style: TextStyle(
+                color: Colors.redAccent.shade700,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
 
           TextField(
             controller: _nameController,
-            decoration: InputDecoration(labelText: "Name"),
+            decoration: InputDecoration(labelText: "Nama"),
           ),
           SizedBox(height: 4),
           TextField(
@@ -158,13 +197,6 @@ class _AddProductScreenState extends State<AddProductScreen>
             decoration: InputDecoration(labelText: "Description"),
           ),
           SizedBox(height: 4),
-          TextField(
-            controller: _priceController,
-            decoration: InputDecoration(labelText: "Price"),
-            keyboardType: TextInputType.number,
-          ),
-          SizedBox(height: 4),
-
           // ✅ Metric Dropdown
           DropdownButtonFormField<String>(
             value: _selectedMetric,
@@ -179,6 +211,26 @@ class _AddProductScreenState extends State<AddProductScreen>
                 }).toList(),
             decoration: InputDecoration(labelText: "Metric"),
           ),
+          SizedBox(height: 4),
+          TextField(
+            controller: _priceController,
+            decoration: InputDecoration(labelText: "Harga Jual Pabrik"),
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 4),
+          TextField(
+            controller: _shopPriceController,
+            decoration: InputDecoration(labelText: "Harga Jual Distributor"),
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 4),
+          TextField(
+            controller: _netPriceController,
+            decoration: InputDecoration(labelText: "Harga Jual Toko"),
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 4),
+
           SizedBox(height: 30),
           GradientElevatedButton(
             onPressed: _submit,

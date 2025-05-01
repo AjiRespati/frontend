@@ -501,14 +501,25 @@ class _TransactionSellClientState extends State<TransactionSellClient>
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       // You might want to prevent interaction if isDisabled is true,
       // though the dropdown often handles this already.
-      child: Text(
-        item['productName'] ?? item['name'],
-        style: TextStyle(
-          fontSize: 16,
-          color: textColor, // Use the determined color
-          fontWeight: fontWeight, // Use the determined weight
-          // decoration: isDisabled ? TextDecoration.lineThrough : null, // Optional: strike-through
-        ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              item['produsctName'] ?? item['name'],
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 16,
+                color: textColor, // Use the determined color
+                fontWeight: fontWeight, // Use the determined weight
+                // decoration: isDisabled ? TextDecoration.lineThrough : null, // Optional: strike-through
+              ),
+            ),
+          ),
+
+          SizedBox(width: 15),
+          Text("Stock: "),
+          Text(item['totalStock'] == null ? "" : item['totalStock'].toString()),
+        ],
       ),
     );
   }
