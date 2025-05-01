@@ -37,7 +37,6 @@ class ProductMobile extends StatelessWidget with GetItMixin {
             onPressed: () {
               showModalBottomSheet(
                 isScrollControlled: true,
-                constraints: BoxConstraints(maxHeight: 720),
                 context: context,
                 builder: (context) {
                   return Padding(
@@ -67,33 +66,21 @@ class ProductMobile extends StatelessWidget with GetItMixin {
                       size: 30,
                       message: "Add Product",
                       onPressed: () {
-                        if (kIsWeb) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                backgroundColor: Colors.white,
-                                child: SizedBox(
-                                  width: 600,
-                                  // height: 450,
-                                  child: AddProductScreen(),
-                                ),
-                              );
-                            },
-                          );
-                        } else {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            constraints: BoxConstraints(
-                              minHeight: 600,
-                              maxHeight: 620,
-                            ),
-                            context: context,
-                            builder: (context) {
-                              return AddProductScreen();
-                            },
-                          );
-                        }
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom,
+                              ),
+                              child: SingleChildScrollView(
+                                child: AddProductScreen(),
+                              ),
+                            );
+                          },
+                        );
                       },
                     ),
                   ],

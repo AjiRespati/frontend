@@ -305,12 +305,15 @@ class ApiService {
   }
 
   // ✅ Create Product API with Image Upload
+  //  name, description, price, shopPrice, netPrice, metricType
   Future<bool> createProduct({
     required BuildContext context,
     required String name,
     required String description,
-    required String metric,
+    required String metricType,
     required double price,
+    required double shopPrice,
+    required double netPrice,
     required Uint8List? imageWeb,
     required XFile? imageDevice,
   }) async {
@@ -327,7 +330,9 @@ class ApiService {
     //TODO: ambil dari user JWT
     request.fields["updateBy"] = "ambil dari user";
     request.fields["price"] = price.toString();
-    request.fields["metricType"] = metric; // ✅ Add metric field
+    request.fields["shopPrice"] = shopPrice.toString();
+    request.fields["netPrice"] = netPrice.toString();
+    request.fields["metricType"] = metricType; // ✅ Add metric field
 
     // ✅ Handle Web (File Picker)
     if (kIsWeb && imageWeb != null) {
@@ -353,8 +358,42 @@ class ApiService {
       );
     }
 
-    var response = await request.send();
-    return response.statusCode == 200;
+    // --- Send the Request ---
+    try {
+      var streamedResponse = await request.send();
+
+      // --- Process the Response ---
+      // Convert the streamed response to a standard HTTP response
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      } else if (response.statusCode == 200) {
+        return true;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.red.shade400,
+            content: Text(
+              jsonDecode(response.body)['error'] ??
+                  "Kesalahan system, hubungi pengembang aplikasi",
+            ),
+          ),
+        );
+        return false;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text("Kesalahan system, hubungi pengembang aplikasi"),
+        ),
+      );
+      return false;
+    }
   }
 
   // ✅ Pick Image for Mobile (Gallery & Camera)
