@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:frontend/application_info.dart';
+import 'package:frontend/src/features/settings/components/truncate_table.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
@@ -190,8 +192,10 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                               ),
                               Divider(),
 
-                              if (model.username == 'aji@mail.com' ||
-                                  model.username == 'aji.b.respati@gmail.com')
+                              if (ApplicationInfo.isDevelOn &&
+                                  (model.username == 'aji@mail.com' ||
+                                      model.username ==
+                                          'aji.b.respati@gmail.com'))
                                 InkWell(
                                   onTap: () {
                                     showModalBottomSheet(
@@ -232,8 +236,10 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                                     ],
                                   ),
                                 ),
-                              if (model.username == 'aji@mail.com' ||
-                                  model.username == 'aji.b.respati@gmail.com')
+                              if (ApplicationInfo.isDevelOn &&
+                                  (model.username == 'aji@mail.com' ||
+                                      model.username ==
+                                          'aji.b.respati@gmail.com'))
                                 Divider(),
                             ],
                           )
@@ -270,111 +276,6 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                 : SizedBox(),
       ),
       bottomNavigationBar: MobileNavbar(key: ValueKey(100005)),
-    );
-  }
-}
-
-class TruncateTable extends StatefulWidget with GetItStatefulWidgetMixin {
-  TruncateTable({super.key});
-
-  @override
-  State<TruncateTable> createState() => _TruncateTableState();
-}
-
-class _TruncateTableState extends State<TruncateTable> with GetItStateMixin {
-  String? message;
-  String? tableChoosen;
-  List<String> tables = [
-    'User',
-    'Salesman',
-    'SubAgent',
-    'Agent',
-    'Shop',
-    'SalesmanCommission',
-    'SubAgentCommission',
-    'AgentCommission',
-    'DistributorCommission',
-    'ShopAllCommission',
-    'StockBatch',
-    'Stock',
-    'Price',
-    'Metric',
-    'Product',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          SizedBox(height: 40),
-          Text(
-            "Table Table",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          Text(message ?? "-", style: TextStyle(color: Colors.red.shade800)),
-          SizedBox(height: 40),
-          DropdownButtonFormField<String>(
-            decoration: InputDecoration(isDense: true),
-            value: tableChoosen,
-            items:
-                tables.map((item) {
-                  return DropdownMenuItem<String>(
-                    value: item,
-                    child: Text(item),
-                  );
-                }).toList(),
-            onChanged: (value) {
-              tableChoosen = value;
-              setState(() {});
-            },
-          ),
-
-          SizedBox(height: 40),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              GradientElevatedButton(
-                gradient: LinearGradient(
-                  colors: [Colors.green, Colors.lightGreen],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text("CANCEL"),
-              ),
-              GradientElevatedButton(
-                onPressed: () async {
-                  bool result = await get<SystemViewModel>().genericTable(
-                    context: context,
-                    table: tableChoosen ?? "-",
-                  );
-
-                  if (result) {
-                    setState(() {
-                      message = "Truncate success";
-                    });
-                  } else {
-                    setState(() {
-                      message = "Truncate error";
-                    });
-                  }
-                  await Future.delayed(Duration(seconds: 2));
-                },
-                child: Text("TRUNCATE"),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 40),
-
-          SizedBox(height: 60),
-        ],
-      ),
     );
   }
 }

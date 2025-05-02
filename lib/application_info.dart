@@ -34,4 +34,7 @@ class ApplicationInfo {
     // "box",
     // "pcs",
   ];
+
+  //TODO: DEVELOPER SWITCH
+  static const isDevelOn = false;
 }
