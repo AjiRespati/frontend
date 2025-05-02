@@ -42,7 +42,7 @@ class ApiService {
   //   // }
   // }
 
-  /// AUTH ROUTES
+  /// TODO: AUTH ROUTES
   /// /register'
   /// /login',
   /// /refresh',
@@ -229,6 +229,36 @@ class ApiService {
     if (response.statusCode == 200) {
       return true;
     } else {
+      return false;
+    }
+  }
+
+  Future<bool> generic(BuildContext context, String table) async {
+    String? token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/generic'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({"table": table}),
+    );
+    if (response.statusCode == 401 || response.statusCode == 403) {
+      Navigator.pushNamed(context, signInRoute);
+      return false;
+    } else if (response.statusCode == 200) {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text(
+            jsonDecode(response.body)['error'] ??
+                "Kesalahan system, hubungi pengembang aplikasi",
+          ),
+        ),
+      );
       return false;
     }
   }

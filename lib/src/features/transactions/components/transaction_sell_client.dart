@@ -505,7 +505,7 @@ class _TransactionSellClientState extends State<TransactionSellClient>
         children: [
           Expanded(
             child: Text(
-              item['produsctName'] ?? item['name'],
+              item['productName'] ?? item['name'],
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 16,
