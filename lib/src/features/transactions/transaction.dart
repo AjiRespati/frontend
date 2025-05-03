@@ -21,6 +21,18 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isClient = (get<SystemViewModel>().level ?? 0) < 4;
+      DateTime dateFromFilter = DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        1,
+      );
+      DateTime dateToFilter = DateTime(
+        DateTime.now().year,
+        DateTime.now().month + 1,
+        1,
+      ).subtract(Duration(days: 1));
+      get<StockViewModel>().dateFromFilter = dateFromFilter;
+      get<StockViewModel>().dateToFilter = dateToFilter;
 
       get<StockViewModel>().createdBy = get<SystemViewModel>().email;
 
