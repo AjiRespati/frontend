@@ -17,6 +17,7 @@ class StockViewModel extends ChangeNotifier {
 
   Map<String, dynamic>? _commissionData;
   List<dynamic>? _clientCommissionData;
+  double _totalClientCommission = 0;
   List<dynamic> _products = [];
   List<dynamic>? _productsDetail;
   List<dynamic> _salesmen = [];
@@ -281,6 +282,12 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  double get totalClientCommission => _totalClientCommission;
+  set totalClientCommission(double val) {
+    _totalClientCommission = val;
+    notifyListeners();
+  }
+
   List<dynamic> get products => _products;
   set products(List<dynamic> val) {
     _products = val;
@@ -497,6 +504,11 @@ class StockViewModel extends ChangeNotifier {
 
     isBusy = false;
     clientCommissionData = data;
+    final int sum = data
+        .map((item) => item['totalSalesShareSum'] as int)
+        .fold(0, (total, amount) => total + amount);
+
+    totalClientCommission = sum.toDouble();
   }
 
   fetchProducts(BuildContext context) async {

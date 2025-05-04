@@ -92,6 +92,7 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
     }
 
     get<StockViewModel>().isBusy = false;
+    setState(() {});
   }
 
   @override

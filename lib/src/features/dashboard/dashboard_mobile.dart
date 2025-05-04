@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/src/features/dashboard/components/client_content.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
@@ -109,13 +110,7 @@ class _DashboardMobileState extends State<DashboardMobile>
                 ],
               ),
             ),
-            if (get<SystemViewModel>().salesId != null)
-              _buildCommissionCard(
-                "Commission",
-                (get<StockViewModel>().commissionData?['salesmanCommission'] ??
-                        0 as num)
-                    .toDouble(),
-              ),
+            ClientContent(),
 
             if (get<SystemViewModel>().subAgentId != null)
               _buildCommissionCard(
