@@ -443,53 +443,6 @@ class ApiService {
     return null;
   }
 
-  Future<Map<String, dynamic>> fetchCommissionSummary({
-    required BuildContext context,
-    required String fromDate,
-    required String toDate,
-  }) async {
-    String? token = await _getToken();
-    final response = await http.get(
-      Uri.parse(
-        '$baseUrl/dashboard/commissionSummary?fromDate=$fromDate&toDate=$toDate',
-      ),
-      headers: {"Authorization": "Bearer $token"},
-    );
-
-    if (response.statusCode == 401) {
-      Navigator.pushNamed(context, signInRoute);
-      return {};
-      // token = await refreshAccessToken();
-      // if (token == null) {
-      //   Navigator.pushNamed(context, signInRoute);
-      //   return {};
-      // }
-      // return fetchCommissionSummary(
-      //   context: context,
-      //   fromDate: fromDate,
-      //   toDate: toDate,
-      // );
-    } else if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      if (response.body.contains("Invalid token")) {
-        return json.decode(response.body);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            showCloseIcon: true,
-            backgroundColor: Colors.red.shade400,
-            content: Text(
-              jsonDecode(response.body)['error'] ??
-                  "Kesalahan system, hubungi pengembang aplikasi",
-            ),
-          ),
-        );
-        throw Exception('Failed to fetch commission data');
-      }
-    }
-  }
-
   Future<bool> updatePrice({
     required BuildContext context,
     required String priceId,
@@ -2301,6 +2254,97 @@ class ApiService {
         ),
       );
       return false;
+    }
+  }
+
+  // TODO Dashboard Routes
+
+  Future<Map<String, dynamic>> fetchCommissionSummary({
+    required BuildContext context,
+    required String fromDate,
+    required String toDate,
+  }) async {
+    String? token = await _getToken();
+    final response = await http.get(
+      Uri.parse(
+        '$baseUrl/dashboard/commissionSummary?fromDate=$fromDate&toDate=$toDate',
+      ),
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return {};
+    } else if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      if (response.body.contains("Invalid token")) {
+        return json.decode(response.body);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.red.shade400,
+            content: Text(
+              jsonDecode(response.body)['error'] ??
+                  "Kesalahan system, hubungi pengembang aplikasi",
+            ),
+          ),
+        );
+        throw Exception('Failed to fetch commission data');
+      }
+    }
+  }
+
+  Future<List<dynamic>> fetchClientCommission({
+    required BuildContext context,
+    required String id,
+    required String clientType,
+    required String startDate,
+    required String endDate,
+  }) async {
+    String? token = await _getToken();
+
+    // Build the query parameters map conditionally
+    final Map<String, dynamic> queryParameters = {
+      'id': id,
+      'clientType': clientType,
+      'startDate': startDate,
+      'endDate': endDate,
+    };
+
+    final uri = Uri.parse(baseUrl).replace(
+      path:
+          'service/api/dashboard/clientDetail', // Or adjust if baseUrl already includes part of the path
+      queryParameters: queryParameters,
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    if (response.statusCode == 401) {
+      Navigator.pushNamed(context, signInRoute);
+      return [];
+    } else if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      if (response.body.contains("Invalid token")) {
+        return json.decode(response.body);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.red.shade400,
+            content: Text(
+              jsonDecode(response.body)['error'] ??
+                  "Kesalahan system, hubungi pengembang aplikasi",
+            ),
+          ),
+        );
+        throw Exception('Failed to fetch commission data');
+      }
     }
   }
 }

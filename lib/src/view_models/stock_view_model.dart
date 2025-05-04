@@ -16,6 +16,7 @@ class StockViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
 
   Map<String, dynamic>? _commissionData;
+  List<dynamic>? _clientCommissionData;
   List<dynamic> _products = [];
   List<dynamic>? _productsDetail;
   List<dynamic> _salesmen = [];
@@ -274,6 +275,12 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<dynamic>? get clientCommissionData => _clientCommissionData;
+  set clientCommissionData(List<dynamic>? val) {
+    _clientCommissionData = val;
+    notifyListeners();
+  }
+
   List<dynamic> get products => _products;
   set products(List<dynamic> val) {
     _products = val;
@@ -471,14 +478,25 @@ class StockViewModel extends ChangeNotifier {
 
     isBusy = false;
     commissionData = data;
+  }
 
-    // if (data['message'] == "Invalid token") {
-    //   isLoading = false;
-    //   Navigator.pushReplacementNamed(context, signInRoute);
-    // } else {
-    //   isLoading = false;
-    //   commissionData = data;
-    // }
+  fetchClientCommissionData({
+    required BuildContext context,
+    required String id,
+    required String clientType,
+  }) async {
+    isBusy = true;
+    clientCommissionData = null;
+    final data = await apiService.fetchClientCommission(
+      context: context,
+      id: id,
+      clientType: clientType,
+      startDate: generateDateString(dateFromFilter),
+      endDate: generateDateString(dateToFilter.add(Duration(days: 1))),
+    );
+
+    isBusy = false;
+    clientCommissionData = data;
   }
 
   fetchProducts(BuildContext context) async {

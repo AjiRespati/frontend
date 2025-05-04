@@ -40,11 +40,11 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
     get<StockViewModel>().salesId = get<SystemViewModel>().salesId;
     get<StockViewModel>().subAgentId = get<SystemViewModel>().subAgentId;
     get<StockViewModel>().agentId = get<SystemViewModel>().agentId;
-
-    get<StockViewModel>().fetchCommissionData(context: context);
+    get<StockViewModel>().shopId = get<SystemViewModel>().shopId;
 
     bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
     if (!isClient) {
+      get<StockViewModel>().fetchCommissionData(context: context);
       get<StockViewModel>().fetchSalesmen(isInitial: true, status: 'active');
       get<StockViewModel>().fetchSubAgents(
         context: context,
@@ -56,6 +56,39 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
         isInitial: true,
         status: 'active',
       );
+    } else {
+      if (get<SystemViewModel>().salesId != null &&
+          get<SystemViewModel>().salesId!.isNotEmpty) {
+        await get<StockViewModel>().fetchClientCommissionData(
+          context: context,
+          id: get<SystemViewModel>().salesId!,
+          clientType: "salesman",
+        );
+      }
+      if (get<SystemViewModel>().subAgentId != null &&
+          get<SystemViewModel>().subAgentId!.isNotEmpty) {
+        await get<StockViewModel>().fetchClientCommissionData(
+          context: context,
+          id: get<SystemViewModel>().subAgentId!,
+          clientType: "subAgent",
+        );
+      }
+      if (get<SystemViewModel>().agentId != null &&
+          get<SystemViewModel>().agentId!.isNotEmpty) {
+        await get<StockViewModel>().fetchClientCommissionData(
+          context: context,
+          id: get<SystemViewModel>().agentId!,
+          clientType: "agent",
+        );
+      }
+      if (get<SystemViewModel>().shopId != null &&
+          get<SystemViewModel>().shopId!.isNotEmpty) {
+        await get<StockViewModel>().fetchClientCommissionData(
+          context: context,
+          id: get<SystemViewModel>().shopId!,
+          clientType: "shop",
+        );
+      }
     }
 
     get<StockViewModel>().isBusy = false;
