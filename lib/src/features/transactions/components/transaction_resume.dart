@@ -83,26 +83,31 @@ class _TransactionResumeState extends State<TransactionResume>
                     ),
                   ],
                 ),
+              SizedBox(height: 10),
               if (stock['Stocks']?[0]?['stockEvent'] == 'stock_out')
                 Row(
                   children: [
+                    Text("Oleh ", style: TextStyle(fontSize: 16)),
                     Text(
-                      "Oleh ",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      "${stock['userDesc']} ${stock['createdBy']}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.green.shade600,
-                      ),
+                      "${stock['userDesc']}:",
+                      style: TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
+              Row(
+                children: [
+                  SizedBox(width: 20),
+                  Text(
+                    "${stock['createdBy']}",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.green.shade600,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
               Text(
                 "Telah dilakukan?",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),

@@ -44,6 +44,7 @@ class SystemViewModel extends ChangeNotifier {
   String? _salesId;
   String? _subAgentId;
   String? _agentId;
+  String? _shopId;
 
   //====================//
   //  GETTER n SETTER   //
@@ -136,6 +137,12 @@ class SystemViewModel extends ChangeNotifier {
   String? get agentId => _agentId;
   set agentId(String? val) {
     _agentId = val;
+    notifyListeners();
+  }
+
+  String? get shopId => _shopId;
+  set shopId(String? val) {
+    _shopId = val;
     notifyListeners();
   }
 

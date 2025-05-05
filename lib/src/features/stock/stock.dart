@@ -19,6 +19,18 @@ class _StockState extends State<Stock> with GetItStateMixin {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
+      DateTime dateFromFilter = DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        1,
+      );
+      DateTime dateToFilter = DateTime(
+        DateTime.now().year,
+        DateTime.now().month + 1,
+        1,
+      ).subtract(Duration(days: 1));
+      get<StockViewModel>().dateFromFilter = dateFromFilter;
+      get<StockViewModel>().dateToFilter = dateToFilter;
       var user = get<SystemViewModel>().user;
       var userClient = (user?['levelDesc'] ?? "salesman")
           .toLowerCase()

@@ -89,6 +89,7 @@ class ResumeCard extends StatelessWidget with GetItMixin {
                   ],
                 ),
               ),
+              SizedBox(width: 10),
               Expanded(
                 flex: 5,
                 child: Column(
@@ -101,7 +102,7 @@ class ResumeCard extends StatelessWidget with GetItMixin {
                           stock['status'].toUpperCase(),
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
-                            fontSize: 14,
+                            fontSize: 16,
                             color: _statusColorGenerator(stock['status']),
                           ),
                         ),
@@ -138,13 +139,13 @@ class ResumeCard extends StatelessWidget with GetItMixin {
     // 'processing', 'completed', 'failed', 'settled', 'canceled'
     switch (status) {
       case "completed":
-        return Colors.lightBlue.shade700;
+        return Colors.amber.shade900;
       case "processing":
-        return Colors.yellow.shade400;
+        return Colors.yellow.shade900;
       case "failed":
         return Colors.red;
       case "settled":
-        return Colors.green;
+        return Colors.green.shade700;
       case "canceled":
         return Colors.orangeAccent;
       default:

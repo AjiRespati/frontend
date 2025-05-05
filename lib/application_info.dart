@@ -18,7 +18,7 @@ class ApplicationInfo {
 
   static const isProduction = baseUrl == baseUrlProd;
 
-  static const appVersion = '1.0.18 ${isProduction ? "" : "DEV"}';
+  static const appVersion = '1.0.19 ${isProduction ? "" : "DEV"}';
 
   static const appName = "Gracia Rafflesia";
 
@@ -34,4 +34,7 @@ class ApplicationInfo {
     // "box",
     // "pcs",
   ];
+
+  //TODO: DEVELOPER SWITCH
+  static const isDevelOn = false;
 }

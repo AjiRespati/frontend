@@ -16,6 +16,8 @@ class StockViewModel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
 
   Map<String, dynamic>? _commissionData;
+  List<dynamic>? _clientCommissionData;
+  double _totalClientCommission = 0;
   List<dynamic> _products = [];
   List<dynamic>? _productsDetail;
   List<dynamic> _salesmen = [];
@@ -274,6 +276,18 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<dynamic>? get clientCommissionData => _clientCommissionData;
+  set clientCommissionData(List<dynamic>? val) {
+    _clientCommissionData = val;
+    notifyListeners();
+  }
+
+  double get totalClientCommission => _totalClientCommission;
+  set totalClientCommission(double val) {
+    _totalClientCommission = val;
+    notifyListeners();
+  }
+
   List<dynamic> get products => _products;
   set products(List<dynamic> val) {
     _products = val;
@@ -471,14 +485,37 @@ class StockViewModel extends ChangeNotifier {
 
     isBusy = false;
     commissionData = data;
+  }
 
-    // if (data['message'] == "Invalid token") {
-    //   isLoading = false;
-    //   Navigator.pushReplacementNamed(context, signInRoute);
-    // } else {
-    //   isLoading = false;
-    //   commissionData = data;
-    // }
+  fetchClientCommissionData({
+    required BuildContext context,
+    required String id,
+    required String clientType,
+  }) async {
+    isBusy = true;
+    clientCommissionData = null;
+    final data = await apiService.fetchClientCommission(
+      context: context,
+      id: id,
+      clientType: clientType,
+      startDate: generateDateString(dateFromFilter),
+      endDate: generateDateString(dateToFilter),
+    );
+
+    Map<String, dynamic> mapTypeShare = {
+      "salesman": "totalSalesShareSum",
+      "subAgent": "totalSubAgentShareSum",
+      "agent": "totalAgentShareSum",
+      "shop": "totalShopShareSum",
+    };
+
+    isBusy = false;
+    clientCommissionData = data;
+    final int sum = data
+        .map((item) => item[mapTypeShare[clientType]] as int)
+        .fold(0, (total, amount) => total + amount);
+
+    totalClientCommission = sum.toDouble();
   }
 
   fetchProducts(BuildContext context) async {
