@@ -499,13 +499,20 @@ class StockViewModel extends ChangeNotifier {
       id: id,
       clientType: clientType,
       startDate: generateDateString(dateFromFilter),
-      endDate: generateDateString(dateToFilter.add(Duration(days: 1))),
+      endDate: generateDateString(dateToFilter),
     );
+
+    Map<String, dynamic> mapTypeShare = {
+      "salesman": "totalSalesShareSum",
+      "subAgent": "totalSubAgentShareSum",
+      "agent": "totalAgentShareSum",
+      "shop": "totalShopShareSum",
+    };
 
     isBusy = false;
     clientCommissionData = data;
     final int sum = data
-        .map((item) => item['totalSalesShareSum'] as int)
+        .map((item) => item[mapTypeShare[clientType]] as int)
         .fold(0, (total, amount) => total + amount);
 
     totalClientCommission = sum.toDouble();

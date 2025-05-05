@@ -3,9 +3,16 @@ import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 
 class ClientContentDetail extends StatelessWidget {
-  const ClientContentDetail({super.key, required this.item});
+  const ClientContentDetail({
+    super.key,
+    required this.item,
+    required this.com,
+    required this.subCom,
+  });
 
   final dynamic item;
+  final String com;
+  final String subCom;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,7 @@ class ClientContentDetail extends StatelessWidget {
               Text("Komisi: "),
               SizedBox(width: 5),
               Text(
-                formatCurrency(item['totalSalesShareSum']),
+                formatCurrency(item[com]),
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
@@ -41,11 +48,10 @@ class ClientContentDetail extends StatelessWidget {
             itemCount: item['Stocks'].length,
             itemBuilder: (context, index) {
               var stock = item['Stocks'][index];
-              print(stock);
               return Row(
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: Text(
                       stock['productName'],
                       overflow: TextOverflow.ellipsis,
@@ -56,15 +62,14 @@ class ClientContentDetail extends StatelessWidget {
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(formatCurrency(stock['totalSalesShare'])),
-                      ],
+                      children: [Text(formatCurrency(stock[subCom] ?? 0))],
                     ),
                   ),
                 ],
               );
             },
           ),
+          SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

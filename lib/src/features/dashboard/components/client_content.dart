@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/dashboard/components/client_content_detail.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
-import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ClientContent extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -13,15 +12,33 @@ class ClientContent extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _ClientContentState extends State<ClientContent> with GetItStateMixin {
+  String _client = "";
+  final Map<String, dynamic> _mapClientCom = {
+    "": "totalSalesShareSum",
+    "salesman": "totalSalesShareSum",
+    "subagent": "totalSubAgentShareSum",
+    "agent": "totalAgentShareSum",
+    "shop": "totalShopShareSum",
+  };
+
+  final Map<String, dynamic> _mapClientSubCom = {
+    "": "totalSalesShare",
+    "salesman": "totalSalesShare",
+    "subagent": "totalSubAgentShare",
+    "agent": "totalAgentShare",
+    "shop": "totalShopShare",
+  };
+
   @override
   Widget build(BuildContext context) {
+    _client = watchOnly((StockViewModel x) => x.client);
     return Column(
       children: [
-        if (get<SystemViewModel>().salesId != null)
-          _buildCommissionCard(
-            "Komisi",
-            (get<StockViewModel>().totalClientCommission),
-          ),
+        // if (get<SystemViewModel>().salesId != null)
+        _buildCommissionCard(
+          "Komisi",
+          (get<StockViewModel>().totalClientCommission),
+        ),
         ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
@@ -41,7 +58,11 @@ class _ClientContentState extends State<ClientContent> with GetItStateMixin {
                           bottom: MediaQuery.of(context).viewInsets.bottom,
                         ),
                         child: SingleChildScrollView(
-                          child: ClientContentDetail(item: item),
+                          child: ClientContentDetail(
+                            item: item,
+                            com: _mapClientCom[_client],
+                            subCom: _mapClientSubCom[_client],
+                          ),
                         ),
                       );
                     },
@@ -70,7 +91,7 @@ class _ClientContentState extends State<ClientContent> with GetItStateMixin {
                       Expanded(
                         child: Column(
                           children: [
-                            Text(formatCurrency(item['totalSalesShareSum'])),
+                            Text(formatCurrency(item[_mapClientCom[_client]])),
                           ],
                         ),
                       ),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/dashboard/components/client_content.dart';
 import 'package:frontend/src/utils/helpers.dart';
@@ -66,7 +68,8 @@ class _DashboardMobileState extends State<DashboardMobile>
                       _buildDatePicker(
                         context,
                         "From: ",
-                        get<StockViewModel>().dateFromFilter,
+                        watchOnly((StockViewModel x) => x.dateFromFilter),
+                        // get<StockViewModel>().dateFromFilter,
                         (date) {
                           get<StockViewModel>().dateFromFilter = date;
                         },
@@ -75,7 +78,8 @@ class _DashboardMobileState extends State<DashboardMobile>
                       _buildDatePicker(
                         context,
                         "To: ",
-                        get<StockViewModel>().dateToFilter,
+                        watchOnly((StockViewModel x) => x.dateToFilter),
+                        // get<StockViewModel>().dateToFilter,
                         (date) {
                           get<StockViewModel>().dateToFilter = date;
                         },
@@ -86,9 +90,50 @@ class _DashboardMobileState extends State<DashboardMobile>
                           padding: EdgeInsets.zero,
                           buttonHeight: 34,
                           onPressed: () async {
-                            await get<StockViewModel>().fetchCommissionData(
-                              context: context,
-                            );
+                            if (isClient) {
+                              if (get<SystemViewModel>().salesId != null &&
+                                  get<SystemViewModel>().salesId!.isNotEmpty) {
+                                await get<StockViewModel>()
+                                    .fetchClientCommissionData(
+                                      context: context,
+                                      id: get<SystemViewModel>().salesId!,
+                                      clientType: "salesman",
+                                    );
+                              }
+                              if (get<SystemViewModel>().subAgentId != null &&
+                                  get<SystemViewModel>()
+                                      .subAgentId!
+                                      .isNotEmpty) {
+                                await get<StockViewModel>()
+                                    .fetchClientCommissionData(
+                                      context: context,
+                                      id: get<SystemViewModel>().subAgentId!,
+                                      clientType: "subAgent",
+                                    );
+                              }
+                              if (get<SystemViewModel>().agentId != null &&
+                                  get<SystemViewModel>().agentId!.isNotEmpty) {
+                                await get<StockViewModel>()
+                                    .fetchClientCommissionData(
+                                      context: context,
+                                      id: get<SystemViewModel>().agentId!,
+                                      clientType: "agent",
+                                    );
+                              }
+                              if (get<SystemViewModel>().shopId != null &&
+                                  get<SystemViewModel>().shopId!.isNotEmpty) {
+                                await get<StockViewModel>()
+                                    .fetchClientCommissionData(
+                                      context: context,
+                                      id: get<SystemViewModel>().shopId!,
+                                      clientType: "shop",
+                                    );
+                              }
+                            } else {
+                              await get<StockViewModel>().fetchCommissionData(
+                                context: context,
+                              );
+                            }
                           },
                           child: Icon(
                             Icons.search,
@@ -110,23 +155,12 @@ class _DashboardMobileState extends State<DashboardMobile>
                 ],
               ),
             ),
-            ClientContent(),
 
-            if (get<SystemViewModel>().subAgentId != null)
-              _buildCommissionCard(
-                "SubAgent",
-                (get<StockViewModel>().commissionData?['subAgentCommission'] ??
-                        0 as num)
-                    .toDouble(),
-              ),
-
-            if (get<SystemViewModel>().agentId != null)
-              _buildCommissionCard(
-                "Agent",
-                (get<StockViewModel>().commissionData?['agentCommission'] ??
-                        0 as num)
-                    .toDouble(),
-              ),
+            if (isClient &&
+                (watchOnly((StockViewModel x) => x.clientCommissionData) !=
+                        null &&
+                    get<StockViewModel>().clientCommissionData!.isNotEmpty))
+              ClientContent(),
 
             isClient
                 ? SizedBox()
