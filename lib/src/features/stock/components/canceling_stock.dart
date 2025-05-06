@@ -28,7 +28,7 @@ class _AddProductScreenState extends State<CancelingStock>
     super.initState();
     _showError = false;
     isClient =
-        (get<SystemViewModel>().level ?? 0) < 4 &&
+        (get<SystemViewModel>().level ?? 0) < 4 ||
         (get<SystemViewModel>().level ?? 0) > 5;
   }
 

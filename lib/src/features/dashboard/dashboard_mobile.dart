@@ -21,7 +21,7 @@ class _DashboardMobileState extends State<DashboardMobile>
   @override
   Widget build(BuildContext context) {
     bool isClient =
-        (get<SystemViewModel>().level ?? 0) < 4 &&
+        (get<SystemViewModel>().level ?? 0) < 4 ||
         (get<SystemViewModel>().level ?? 0) > 5;
     return Scaffold(
       resizeToAvoidBottomInset: true,

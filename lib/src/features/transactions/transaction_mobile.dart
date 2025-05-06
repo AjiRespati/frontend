@@ -78,7 +78,7 @@ class _TransactionMobileState extends State<TransactionMobile>
         controller: _transactionTabController,
         children: [
           TransactionResume(),
-          (_level < 4 && _level > 5)
+          (_level < 4 || _level > 5)
               ? TransactionSellClient()
               : TransactionBuy(),
         ],

@@ -68,7 +68,7 @@ class _StockProcessedViewState extends State<StockProcessedView>
                 buttonHeight: 34,
                 onPressed: () {
                   bool isClient =
-                      (get<SystemViewModel>().level ?? 0) < 4 &&
+                      (get<SystemViewModel>().level ?? 0) < 4 ||
                       (get<SystemViewModel>().level ?? 0) > 5;
                   get<StockViewModel>().totalOnProgress = 0.0;
                   if (_validateClient(_client, _idChoosen)) {

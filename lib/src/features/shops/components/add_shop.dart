@@ -21,28 +21,44 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final ApiService apiService = ApiService();
 
+  String _errorMessage = "";
+
   void _submit() async {
     String? salesId = get<SystemViewModel>().salesId;
     String? subAgentId = get<SystemViewModel>().subAgentId;
     String? agentId = get<SystemViewModel>().agentId;
-    await get<StockViewModel>().createShop(
-      context: context,
-      salesId: salesId,
-      subAgentId: subAgentId,
-      agentId: agentId,
-      name: _nameController.text,
-      address: _addressController.text,
-      phone: _phoneController.text,
-      email: _emailController.text.isEmpty ? null : _emailController.text,
-      imageUrl: null,
-      coordinates: null,
-    );
-    await get<StockViewModel>().getShopsBySales(
-      context: context,
-      salesId: salesId ?? (subAgentId ?? (agentId ?? "")),
-    );
 
-    Navigator.pop(context);
+    if (_nameController.text.isEmpty ||
+        _addressController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _emailController.text.isEmpty) {
+      setState(() {
+        _errorMessage = "Data belum lengkap.";
+      });
+      await Future.delayed(Duration(seconds: 2));
+      setState(() {
+        _errorMessage = "";
+      });
+    } else {
+      await get<StockViewModel>().createShop(
+        context: context,
+        salesId: salesId,
+        subAgentId: subAgentId,
+        agentId: agentId,
+        name: _nameController.text,
+        address: _addressController.text,
+        phone: _phoneController.text,
+        email: _emailController.text,
+        imageUrl: null,
+        coordinates: null,
+      );
+      await get<StockViewModel>().getShopsBySales(
+        context: context,
+        salesId: salesId ?? (subAgentId ?? (agentId ?? "")),
+      );
+
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -140,21 +156,41 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
               }
               return null;
             },
-            autovalidateMode: AutovalidateMode.onUserInteraction,
+            autovalidateMode: AutovalidateMode.always,
           ),
-          SizedBox(height: 40),
-          Stack(
-            children: [
-              GradientElevatedButton(
-                // inactiveDelay: Duration.zero,
-                onPressed: _submit,
-                child: Text(
-                  "Tambah Toko",
+          SizedBox(
+            height: 40,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  _errorMessage,
                   style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
                   ),
                 ),
+              ],
+            ),
+          ),
+          Stack(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GradientElevatedButton(
+                    // inactiveDelay: Duration.zero,
+                    onPressed: _submit,
+                    child: Text(
+                      "Tambah Toko",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Row(
                 children: [
@@ -167,13 +203,14 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
                       child: SizedBox(
                         width: 25,
                         height: 25,
-                        child: CircularProgressIndicator(color: Colors.white70),
+                        child: CircularProgressIndicator(color: Colors.blue),
                       ),
                     ),
                 ],
               ),
             ],
           ),
+          SizedBox(height: 40),
         ],
       ),
     );

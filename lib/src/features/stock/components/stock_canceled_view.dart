@@ -44,7 +44,7 @@ class StockCanceledView extends StatelessWidget with GetItMixin {
                     context: context,
                     status: 'canceled',
                     isClient:
-                        (get<SystemViewModel>().level ?? 0) < 4 &&
+                        (get<SystemViewModel>().level ?? 0) < 4 ||
                         (get<SystemViewModel>().level ?? 0) > 5,
                     salesId: null,
                     agentId: null,

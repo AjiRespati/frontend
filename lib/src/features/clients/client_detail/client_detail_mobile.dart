@@ -115,23 +115,26 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
                     },
                   ),
 
-                  GradientElevatedButton(
-                    // inactiveDelay: Duration.zero,
-                    buttonHeight: 34,
-                    onPressed: () async {
-                      await get<StockViewModel>().getStockResume(
-                        context: context,
-                        salesId: item['id'],
-                        agentId: null,
-                        shopId: null,
-                        subAgentId: null,
-                      );
-                      await get<StockViewModel>().getTableBySalesId(
-                        context: context,
-                        salesId: item['id'],
-                      );
-                    },
-                    child: Icon(Icons.search, color: Colors.white, size: 30),
+                  SizedBox(
+                    // width: 40,
+                    child: GradientElevatedButton(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      buttonHeight: 34,
+                      onPressed: () async {
+                        await get<StockViewModel>().getStockResume(
+                          context: context,
+                          salesId: item['id'],
+                          agentId: null,
+                          shopId: null,
+                          subAgentId: null,
+                        );
+                        await get<StockViewModel>().getTableBySalesId(
+                          context: context,
+                          salesId: item['id'],
+                        );
+                      },
+                      child: Icon(Icons.search, color: Colors.white, size: 30),
+                    ),
                   ),
                 ],
               ),

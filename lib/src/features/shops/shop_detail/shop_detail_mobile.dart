@@ -72,7 +72,7 @@ class _ShopDetailMobileState extends State<ShopDetailMobile>
       resizeToAvoidBottomInset: true,
       appBar: AppBar(title: Text("Detail Toko")),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             Stack(
@@ -213,7 +213,7 @@ class _ShopDetailMobileState extends State<ShopDetailMobile>
                   ),
 
                   GradientElevatedButton(
-                    // inactiveDelay: Duration.zero,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     buttonHeight: 34,
                     onPressed: () async {
                       await get<StockViewModel>().getStockResume(

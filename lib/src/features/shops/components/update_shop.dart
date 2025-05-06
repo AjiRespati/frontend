@@ -61,7 +61,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
     // print(widget.shop);
     oldStatus = widget.shop["status"].toString().toUpperCase();
     _isClient =
-        (get<SystemViewModel>().level ?? 0) < 4 &&
+        (get<SystemViewModel>().level ?? 0) < 4 ||
         (get<SystemViewModel>().level ?? 0) > 5;
   }
 

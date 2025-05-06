@@ -19,7 +19,7 @@ class _StockState extends State<Stock> with GetItStateMixin {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bool isClient =
-          (get<SystemViewModel>().level ?? 0) < 4 &&
+          (get<SystemViewModel>().level ?? 0) < 4 ||
           (get<SystemViewModel>().level ?? 0) > 5;
       DateTime dateFromFilter = DateTime(
         DateTime.now().year,

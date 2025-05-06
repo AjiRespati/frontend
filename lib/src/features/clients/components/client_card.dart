@@ -48,7 +48,7 @@ class ClientCard extends StatelessWidget with GetItMixin {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(width: 70, child: Text("Name")),
-                      Text(": ${item['name']}"),
+                      Text(": ${item['name'] ?? " -"}"),
                     ],
                   ),
                   SizedBox(height: 5),
@@ -56,7 +56,7 @@ class ClientCard extends StatelessWidget with GetItMixin {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(width: 70, child: Text("Address")),
-                      Text(": ${item['address']}"),
+                      Text(": ${item['address'] ?? " -"}"),
                     ],
                   ),
                   SizedBox(height: 2),
@@ -64,18 +64,18 @@ class ClientCard extends StatelessWidget with GetItMixin {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(width: 70, child: Text("Phone")),
-                      Text(": ${item['phone']}"),
+                      Text(": ${item['phone'] ?? " -"}"),
                       SizedBox(width: 10),
-                      CopyToClipboard(item['phone'], isMobile: true),
+                      CopyToClipboard(item['phone'] ?? " -", isMobile: true),
                     ],
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(width: 70, child: Text("Email")),
-                      Text(": ${item['email']}"),
+                      Text(": ${item['email'] ?? " -"}"),
                       SizedBox(width: 10),
-                      CopyToClipboard(item['email'], isMobile: true),
+                      CopyToClipboard(item['email'] ?? " -", isMobile: true),
                     ],
                   ),
                 ],

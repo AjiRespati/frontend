@@ -28,7 +28,7 @@ class _TransactionResumeState extends State<TransactionResume>
     super.initState();
 
     isClient =
-        (get<SystemViewModel>().level ?? 0) < 4 &&
+        (get<SystemViewModel>().level ?? 0) < 4 ||
         (get<SystemViewModel>().level ?? 0) > 5;
   }
 

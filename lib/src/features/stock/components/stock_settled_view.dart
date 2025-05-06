@@ -13,6 +13,13 @@ class StockSettledView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    var user = get<SystemViewModel>().user;
+    var userClient = (user?['levelDesc'] ?? "salesman")
+        .toLowerCase()
+        .replaceAll(" ", "");
+    bool isClient =
+        (get<SystemViewModel>().level ?? 0) < 4 ||
+        (get<SystemViewModel>().level ?? 0) > 5;
     return Column(
       children: [
         Padding(
@@ -45,11 +52,26 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                     context: context,
                     status: 'settled',
                     isClient:
-                        (get<SystemViewModel>().level ?? 0) < 4 &&
+                        (get<SystemViewModel>().level ?? 0) < 4 ||
                         (get<SystemViewModel>().level ?? 0) > 5,
-                    salesId: null,
-                    agentId: null,
-                    subAgentId: null,
+                    salesId:
+                        isClient
+                            ? userClient == "salesman"
+                                ? get<SystemViewModel>().salesId
+                                : null
+                            : null,
+                    subAgentId:
+                        isClient
+                            ? userClient == "subagent"
+                                ? get<SystemViewModel>().subAgentId
+                                : null
+                            : null,
+                    agentId:
+                        isClient
+                            ? userClient == "agent"
+                                ? get<SystemViewModel>().agentId
+                                : null
+                            : null,
                     stockEvent: null,
                   );
                 },
