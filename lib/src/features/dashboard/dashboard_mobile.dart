@@ -20,7 +20,9 @@ class _DashboardMobileState extends State<DashboardMobile>
     with GetItStateMixin {
   @override
   Widget build(BuildContext context) {
-    bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
+    bool isClient =
+        (get<SystemViewModel>().level ?? 0) < 4 ||
+        (get<SystemViewModel>().level ?? 0) > 5;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(

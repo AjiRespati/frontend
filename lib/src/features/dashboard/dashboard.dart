@@ -42,7 +42,9 @@ class _DashboardState extends State<Dashboard> with GetItStateMixin {
     get<StockViewModel>().agentId = get<SystemViewModel>().agentId;
     get<StockViewModel>().shopId = get<SystemViewModel>().shopId;
 
-    bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
+    bool isClient =
+        (get<SystemViewModel>().level ?? 0) < 4 ||
+        (get<SystemViewModel>().level ?? 0) > 5;
     if (!isClient) {
       get<StockViewModel>().fetchCommissionData(context: context);
       get<StockViewModel>().fetchSalesmen(isInitial: true, status: 'active');

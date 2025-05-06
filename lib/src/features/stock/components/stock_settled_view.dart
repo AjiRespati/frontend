@@ -13,6 +13,13 @@ class StockSettledView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    var user = get<SystemViewModel>().user;
+    var userClient = (user?['levelDesc'] ?? "salesman")
+        .toLowerCase()
+        .replaceAll(" ", "");
+    bool isClient =
+        (get<SystemViewModel>().level ?? 0) < 4 ||
+        (get<SystemViewModel>().level ?? 0) > 5;
     return Column(
       children: [
         Padding(
@@ -44,10 +51,27 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                   get<StockViewModel>().getStockTable(
                     context: context,
                     status: 'settled',
-                    isClient: (get<SystemViewModel>().level ?? 0) < 4,
-                    salesId: null,
-                    agentId: null,
-                    subAgentId: null,
+                    isClient:
+                        (get<SystemViewModel>().level ?? 0) < 4 ||
+                        (get<SystemViewModel>().level ?? 0) > 5,
+                    salesId:
+                        isClient
+                            ? userClient == "salesman"
+                                ? get<SystemViewModel>().salesId
+                                : null
+                            : null,
+                    subAgentId:
+                        isClient
+                            ? userClient == "subagent"
+                                ? get<SystemViewModel>().subAgentId
+                                : null
+                            : null,
+                    agentId:
+                        isClient
+                            ? userClient == "agent"
+                                ? get<SystemViewModel>().agentId
+                                : null
+                            : null,
                     stockEvent: null,
                   );
                 },
@@ -79,7 +103,7 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                     int level = get<SystemViewModel>().level ?? 0;
                     Map<String, dynamic> stock =
                         get<StockViewModel>().stockTable[index];
-                    if (level > 3) {
+                    if (level > 3 && level < 6) {
                       return StockTableCard(
                         key: ValueKey(index + 14000),
                         isMobile: true,

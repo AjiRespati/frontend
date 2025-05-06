@@ -93,9 +93,12 @@ class _ShopTableCardState extends State<ShopTableCard> with GetItStateMixin {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              widget.shop['name'] ?? " N/A",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            Flexible(
+                              child: Text(
+                                widget.shop['name'] ?? " N/A",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -121,6 +124,17 @@ class _ShopTableCardState extends State<ShopTableCard> with GetItStateMixin {
                         ),
                         Row(
                           children: [
+                            Flexible(
+                              child: Text(
+                                widget.shop['email'] ?? " N/A",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
                             Text(
                               (widget.shop['status'] ?? " N/A").toUpperCase(),
                               style: TextStyle(
@@ -137,7 +151,7 @@ class _ShopTableCardState extends State<ShopTableCard> with GetItStateMixin {
                   ),
                   SizedBox(width: 5),
                   Expanded(
-                    flex: 7,
+                    flex: 5,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [

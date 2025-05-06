@@ -160,7 +160,8 @@ class ProductCard extends StatelessWidget with GetItMixin {
               ],
             ),
           ),
-          if ((watchOnly((SystemViewModel x) => x.level) ?? 0) > 3)
+          if ((watchOnly((SystemViewModel x) => x.level) ?? 0) > 3 &&
+              (get<SystemViewModel>().level ?? 0) < 6)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: RemoveButton(

@@ -30,6 +30,7 @@ class SystemViewModel extends ChangeNotifier {
     "Agent",
     "Admin",
     "Owner",
+    "Shop",
   ];
 
   dynamic _user;

@@ -29,7 +29,7 @@ class ShopsMobile extends StatelessWidget with GetItMixin {
                 child: CircularProgressIndicator(color: Colors.blue),
               ),
             ),
-          if (0 < (get<SystemViewModel>().level ?? 0) &&
+          if (0 < (get<SystemViewModel>().level ?? 0) ||
               (get<SystemViewModel>().level ?? 0) < 4)
             AddButton(
               size: 32,
@@ -55,23 +55,22 @@ class ShopsMobile extends StatelessWidget with GetItMixin {
       ),
       body: Column(
         children: [
+          Divider(),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height:
-                  (MediaQuery.of(context).size.height - 150) -
-                  (kIsWeb ? 5 : 50),
-              child: ListView.builder(
-                itemCount: get<StockViewModel>().shops.length,
-                itemBuilder: (context, index) {
-                  return ShopTableCard(
-                    isMobile: true,
-                    shop: get<StockViewModel>().shops[index],
-                    isClient: (get<SystemViewModel>().level ?? 0) < 4,
-                    key: ValueKey(index + 7000),
-                  );
-                },
-              ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: get<StockViewModel>().shops.length,
+              itemBuilder: (context, index) {
+                return ShopTableCard(
+                  isMobile: true,
+                  shop: get<StockViewModel>().shops[index],
+                  isClient:
+                      (get<SystemViewModel>().level ?? 0) < 4 &&
+                      (get<SystemViewModel>().level ?? 0) > 5,
+                  key: ValueKey(index + 7000),
+                );
+              },
             ),
           ),
         ],

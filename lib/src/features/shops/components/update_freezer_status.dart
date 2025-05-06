@@ -86,7 +86,9 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
   @override
   void initState() {
     super.initState();
-    _isClient = (get<SystemViewModel>().level ?? 0) < 4;
+    _isClient =
+        (get<SystemViewModel>().level ?? 0) < 4 ||
+        (get<SystemViewModel>().level ?? 0) > 5;
     _selectedStatus = freezerStatusFromString(widget.freezer?['status']);
     _freezerDescController.text = widget.freezer?['description'] ?? "";
   }

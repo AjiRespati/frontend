@@ -32,7 +32,9 @@ class _ProductDetailCardState extends State<ProductDetailCard>
 
   @override
   Widget build(BuildContext context) {
-    bool isClient = (get<SystemViewModel>().level ?? 0) < 4;
+    bool isClient =
+        (get<SystemViewModel>().level ?? 0) < 4 ||
+        (get<SystemViewModel>().level ?? 0) > 5;
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
