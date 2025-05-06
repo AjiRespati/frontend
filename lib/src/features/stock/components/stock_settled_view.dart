@@ -44,7 +44,9 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                   get<StockViewModel>().getStockTable(
                     context: context,
                     status: 'settled',
-                    isClient: (get<SystemViewModel>().level ?? 0) < 4,
+                    isClient:
+                        (get<SystemViewModel>().level ?? 0) < 4 &&
+                        (get<SystemViewModel>().level ?? 0) > 5,
                     salesId: null,
                     agentId: null,
                     subAgentId: null,
@@ -79,7 +81,7 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                     int level = get<SystemViewModel>().level ?? 0;
                     Map<String, dynamic> stock =
                         get<StockViewModel>().stockTable[index];
-                    if (level > 3) {
+                    if (level > 3 && level < 6) {
                       return StockTableCard(
                         key: ValueKey(index + 14000),
                         isMobile: true,

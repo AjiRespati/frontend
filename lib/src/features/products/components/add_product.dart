@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/services/api_service.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
+import 'package:frontend/src/widgets/currency_text_field.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -25,6 +26,9 @@ class _AddProductScreenState extends State<AddProductScreen>
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _shopPriceController = TextEditingController();
   final TextEditingController _netPriceController = TextEditingController();
+  String priceText = "";
+  String shopPriceText = "";
+  String netPriceText = "";
   String _selectedMetric = "carton"; // ✅ Default metric
   final ApiService apiService = ApiService();
 
@@ -67,9 +71,9 @@ class _AddProductScreenState extends State<AddProductScreen>
         name: _nameController.text,
         description: _descriptionController.text,
         metricType: _selectedMetric,
-        price: double.parse(_priceController.text),
-        netPrice: double.parse(_netPriceController.text),
-        shopPrice: double.parse(_shopPriceController.text),
+        price: double.parse(priceText),
+        netPrice: double.parse(netPriceText),
+        shopPrice: double.parse(shopPriceText),
         imageWeb: _imageWeb,
         imageDevice: _imageMobile,
       );
@@ -212,25 +216,43 @@ class _AddProductScreenState extends State<AddProductScreen>
             decoration: InputDecoration(labelText: "Metric"),
           ),
           SizedBox(height: 4),
-          TextField(
+          CurrencyTextField(
             controller: _priceController,
-            decoration: InputDecoration(labelText: "Harga Jual Pabrik"),
-            keyboardType: TextInputType.number,
+            label: "Harga Jual Pabrik",
+            onChanged: (value) => priceText = value,
           ),
           SizedBox(height: 4),
-          TextField(
+          CurrencyTextField(
             controller: _shopPriceController,
-            decoration: InputDecoration(labelText: "Harga Jual Distributor"),
-            keyboardType: TextInputType.number,
+            label: "Harga Jual Distributor",
+            onChanged: (value) => shopPriceText = value,
           ),
           SizedBox(height: 4),
-          TextField(
+          CurrencyTextField(
             controller: _netPriceController,
-            decoration: InputDecoration(labelText: "Harga Jual Toko"),
-            keyboardType: TextInputType.number,
+            label: "Harga Jual Toko",
+            onChanged: (value) => netPriceText = value,
           ),
           SizedBox(height: 4),
 
+          // TextField(
+          //   controller: _priceController,
+          //   decoration: InputDecoration(labelText: "Harga Jual Pabrik"),
+          //   keyboardType: TextInputType.number,
+          // ),
+          // SizedBox(height: 4),
+          // TextField(
+          //   controller: _shopPriceController,
+          //   decoration: InputDecoration(labelText: "Harga Jual Distributor"),
+          //   keyboardType: TextInputType.number,
+          // ),
+          // SizedBox(height: 4),
+          // TextField(
+          //   controller: _netPriceController,
+          //   decoration: InputDecoration(labelText: "Harga Jual Toko"),
+          //   keyboardType: TextInputType.number,
+          // ),
+          // SizedBox(height: 4),
           SizedBox(height: 30),
           GradientElevatedButton(
             onPressed: _submit,

@@ -19,7 +19,8 @@ class _SettingsState extends State<Settings> with GetItStateMixin {
   Future<void> _setup() async {
     get<StockViewModel>().isBusy = true;
     await get<SystemViewModel>().self(context);
-    if ((get<SystemViewModel>().level ?? 0) > 3) {
+    if ((get<SystemViewModel>().level ?? 0) > 3 &&
+        (get<SystemViewModel>().level ?? 0) < 6) {
       get<SystemViewModel>().getAllUser(context);
       get<StockViewModel>().getAllFrezer(context);
       get<StockViewModel>().getAllShops(context: context);

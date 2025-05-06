@@ -27,13 +27,15 @@ class _AddProductScreenState extends State<CancelingStock>
   void initState() {
     super.initState();
     _showError = false;
+    isClient =
+        (get<SystemViewModel>().level ?? 0) < 4 &&
+        (get<SystemViewModel>().level ?? 0) > 5;
   }
 
   @override
   void dispose() {
     super.dispose();
     _descriptionController.dispose();
-    isClient = (get<SystemViewModel>().level ?? 0) < 4;
   }
 
   @override

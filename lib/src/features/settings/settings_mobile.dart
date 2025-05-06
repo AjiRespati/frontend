@@ -47,7 +47,7 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                               ),
                             ],
                           )
-                          : ((model.level ?? 0) > 3)
+                          : ((model.level ?? 0) > 3 && (model.level ?? 0) < 6)
                           ? Column(
                             children: [
                               InkWell(

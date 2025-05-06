@@ -5,7 +5,7 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 
 class MobileNavbar extends StatelessWidget with GetItMixin {
   MobileNavbar({super.key});
-
+  //TODO: Handle level 6 (shop)
   @override
   Widget build(BuildContext context) {
     int? level = watchOnly((SystemViewModel x) => x.level);

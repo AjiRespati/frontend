@@ -20,7 +20,9 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      isClient = (get<SystemViewModel>().level ?? 0) < 4;
+      isClient =
+          (get<SystemViewModel>().level ?? 0) < 4 &&
+          (get<SystemViewModel>().level ?? 0) > 5;
       DateTime dateFromFilter = DateTime(
         DateTime.now().year,
         DateTime.now().month,

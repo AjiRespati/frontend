@@ -27,7 +27,9 @@ class _TransactionResumeState extends State<TransactionResume>
   void initState() {
     super.initState();
 
-    isClient = (get<SystemViewModel>().level ?? 0) < 4;
+    isClient =
+        (get<SystemViewModel>().level ?? 0) < 4 &&
+        (get<SystemViewModel>().level ?? 0) > 5;
   }
 
   _handleBatchActions(Map<String, dynamic> stock, double totalPrice) async {
@@ -501,6 +503,11 @@ class _TransactionResumeState extends State<TransactionResume>
         );
         break;
       default:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['shopPrice'] ?? 0)),
+        );
+        break;
     }
 
     return totalPrice;

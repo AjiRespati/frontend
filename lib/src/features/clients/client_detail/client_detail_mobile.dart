@@ -20,6 +20,8 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
             ? get<StockViewModel>().salesStockTable
             : level == 2
             ? get<StockViewModel>().subAgentStockTable
+            : level == 3
+            ? get<StockViewModel>().agentStockTable
             : get<StockViewModel>().agentStockTable;
 
     return Scaffold(
@@ -218,6 +220,11 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
           (sum, item) => sum + ((item['salesmanPrice'] ?? 0)),
         );
         break;
+      case 6:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['shopPrice'] ?? 0)),
+        );
       default:
         totalPrice;
     }
@@ -243,9 +250,12 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
       case 1:
         totalKomisi = mainItem['totalSalesmanCommission'].toDouble();
         break;
+      case 6:
+        totalKomisi = mainItem['totalShopCommission'].toDouble();
+        break;
       default:
         totalKomisi;
     }
-    return totalKomisi;
+    return totalKomisi.toDouble();
   }
 }

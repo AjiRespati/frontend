@@ -33,6 +33,12 @@ class _TransactionMobileState extends State<TransactionMobile>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _transactionTabController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -72,7 +78,9 @@ class _TransactionMobileState extends State<TransactionMobile>
         controller: _transactionTabController,
         children: [
           TransactionResume(),
-          _level < 4 ? TransactionSellClient() : TransactionBuy(),
+          (_level < 4 && _level > 5)
+              ? TransactionSellClient()
+              : TransactionBuy(),
         ],
       ),
       bottomNavigationBar: MobileNavbar(key: ValueKey(100008)),

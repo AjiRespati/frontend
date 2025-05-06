@@ -58,15 +58,20 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
 
     showModalBottomSheet(
       isScrollControlled: true,
-      constraints: BoxConstraints(maxHeight: 540),
+      constraints: BoxConstraints(maxHeight: 640),
       context: context,
       builder: (context) {
-        return BuyProduct(
-          measurement:
-              (_productDetail?['metricType'] ?? "").toString().toLowerCase(),
-          mainProduct: _productDetail,
-          stockEvent: 'stock_in',
-          shopId: null,
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: BuyProduct(
+            measurement:
+                (_productDetail?['metricType'] ?? "").toString().toLowerCase(),
+            mainProduct: _productDetail,
+            stockEvent: 'stock_in',
+            shopId: null,
+          ),
         );
       },
     ).then((value) async {
@@ -109,8 +114,7 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
             ],
           ),
 
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 500,
+          Expanded(
             child: ListView.builder(
               shrinkWrap: true,
               // physics: NeverScrollableScrollPhysics(),
@@ -169,7 +173,8 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
               },
             ),
           ),
-          Spacer(),
+          // Spacer(),
+          SizedBox(height: 5),
           Divider(),
 
           SizedBox(height: 5),
