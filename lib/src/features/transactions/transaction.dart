@@ -55,10 +55,10 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
           (get<SystemViewModel>().subAgentId ??
               (get<SystemViewModel>().agentId));
 
-      String salesId = id ?? "";
+      String clientId = id ?? "";
       get<StockViewModel>().getShopsBySales(
         context: context,
-        salesId: salesId,
+        clientId: clientId,
         isActive: true,
       );
     });

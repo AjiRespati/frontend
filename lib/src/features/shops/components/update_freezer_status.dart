@@ -36,7 +36,7 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
         get<SystemViewModel>().salesId ??
         (get<SystemViewModel>().subAgentId ?? (get<SystemViewModel>().agentId));
 
-    String salesId = id ?? "";
+    String clientId = id ?? "";
 
     if (_selectedStatus == FreezerStatus.idle) {
       bool result = await get<StockViewModel>().returnFreezer(
@@ -48,7 +48,7 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
         if (_isClient) {
           await get<StockViewModel>().getShopsBySales(
             context: context,
-            salesId: salesId,
+            clientId: clientId,
           );
         } else {
           await get<StockViewModel>().getAllShops(context: context);
@@ -70,7 +70,7 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
         if (_isClient) {
           await get<StockViewModel>().getShopsBySales(
             context: context,
-            salesId: salesId,
+            clientId: clientId,
           );
         } else {
           await get<StockViewModel>().getAllShops(context: context);

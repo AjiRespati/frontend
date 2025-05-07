@@ -1073,7 +1073,7 @@ class StockViewModel extends ChangeNotifier {
     required String name,
     required String address,
     required String phone,
-    required String? email,
+    required String email,
     required String? imageUrl,
     required String? coordinates,
   }) async {
@@ -1102,7 +1102,7 @@ class StockViewModel extends ChangeNotifier {
 
   Future<bool> getShopsBySales({
     required BuildContext context,
-    required String salesId,
+    required String clientId,
     bool? isActive,
   }) async {
     isBusy = true;
@@ -1110,7 +1110,7 @@ class StockViewModel extends ChangeNotifier {
 
     shops = await apiService.getAllShopsBySales(
       context: context,
-      salesId: salesId,
+      clientId: clientId,
     );
 
     if (isActive == true) {

@@ -54,7 +54,7 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
       );
       await get<StockViewModel>().getShopsBySales(
         context: context,
-        salesId: salesId ?? (subAgentId ?? (agentId ?? "")),
+        clientId: salesId ?? (subAgentId ?? (agentId ?? "")),
       );
 
       Navigator.pop(context);

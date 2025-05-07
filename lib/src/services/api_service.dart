@@ -1704,7 +1704,7 @@ class ApiService {
     required String name,
     required String address,
     required String phone,
-    required String? email,
+    required String email,
     required String? imageUrl,
     required String? coordinates,
   }) async {
@@ -1768,12 +1768,12 @@ class ApiService {
 
   Future<List<dynamic>> getAllShopsBySales({
     required BuildContext context,
-    required String salesId,
+    required String clientId,
   }) async {
     String? token = await _getToken();
 
     final response = await http.get(
-      Uri.parse('$baseUrl/shops/$salesId'),
+      Uri.parse('$baseUrl/shops/$clientId'),
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
