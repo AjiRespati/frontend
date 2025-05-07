@@ -37,4 +37,6 @@ class ApplicationInfo {
 
   //TODO: DEVELOPER SWITCH
   static const isDevelOn = false;
+
+  static const lowStockNumber = 5;
 }

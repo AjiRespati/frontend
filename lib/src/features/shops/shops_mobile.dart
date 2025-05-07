@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/shops/components/add_shop.dart';
 import 'package:frontend/src/features/shops/components/shop_table_card.dart';

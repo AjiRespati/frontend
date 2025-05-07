@@ -365,13 +365,37 @@ class _TransactionResumeState extends State<TransactionResume>
                       radioScaleFactor: 0.8,
                       activeColor: Colors.blue.shade700,
                       contentPadding: EdgeInsets.zero,
-                      title: Text(status.toUpperCase()),
+                      title: Badge.count(
+                        smallSize: 10,
+                        largeSize: 18,
+                        isLabelVisible:
+                            status == 'completed' &&
+                            watchOnly((StockViewModel x) => x.batchCompleted) >
+                                0,
+                        textStyle: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        count: watchOnly(
+                          (StockViewModel x) => x.batchCompleted,
+                        ),
+                        child: Text(status.toUpperCase()),
+                      ),
                       value: status,
                       groupValue: _selectedStatus,
                       onChanged: (String? value) {
                         setState(() {
                           _selectedStatus = value!;
                         });
+                        get<StockViewModel>().getStockBatches(
+                          context: context,
+                          isClient: isClient,
+                          status: _selectedStatus ?? "all",
+                          sortBy: null,
+                          sortOrder: null,
+                          page: null,
+                          limit: null,
+                        );
                       },
                     ),
                   );

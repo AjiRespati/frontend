@@ -90,10 +90,14 @@ class StockTableCard extends StatelessWidget with GetItMixin {
                             ),
                             if (stockStatus == 'settled')
                               Text(
-                                "Stocks: ${stockStatus == 'settled' ? (stock['latestUpdateAmount'] ?? " N/A").toString() : " -"}",
+                                "Stocks: ${(stock['latestUpdateAmount'] ?? " N/A").toString()}",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w900,
-                                  color: Colors.green[800],
+                                  color:
+                                      (stock['latestUpdateAmount'] ?? 0) <=
+                                              ApplicationInfo.lowStockNumber
+                                          ? Colors.red.shade700
+                                          : Colors.green[800],
                                   fontSize: 16,
                                 ),
                               ),

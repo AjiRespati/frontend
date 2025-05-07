@@ -72,6 +72,7 @@ class StockViewModel extends ChangeNotifier {
   dynamic _reloadBuy;
 
   List<dynamic> _responseBatch = [];
+  int _batchCompleted = 0;
 
   String _client = 'salesman';
   final List<String> _clients = [
@@ -149,6 +150,12 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> get responseBatch => _responseBatch;
   set responseBatch(List<dynamic> val) {
     _responseBatch = val;
+    notifyListeners();
+  }
+
+  int get batchCompleted => _batchCompleted;
+  set batchCompleted(int val) {
+    _batchCompleted = val;
     notifyListeners();
   }
 
@@ -833,8 +840,10 @@ class StockViewModel extends ChangeNotifier {
 
     switch (status) {
       case 'settled':
+        print(response.first);
         totalSettled = 0;
         for (var el in response) {
+          print(el['latestUpdateAmount']);
           var price =
               (el?['agentPrice'] ?? 0) > 0
                   ? el['agentPrice']
@@ -1500,6 +1509,7 @@ class StockViewModel extends ChangeNotifier {
     required int? page,
     required int? limit,
   }) async {
+    batchCompleted = 0;
     isBusy = true;
     responseBatch = [];
 
@@ -1523,6 +1533,13 @@ class StockViewModel extends ChangeNotifier {
       return false;
     } else {
       responseBatch = response['data'];
+      for (var i = 0; i < responseBatch.length; i++) {
+        var item = responseBatch[i];
+
+        if (item['status'] == 'completed') {
+          batchCompleted = batchCompleted + 1;
+        }
+      }
       isBusy = false;
       return true;
     }
