@@ -233,6 +233,19 @@ class ApiService {
     }
   }
 
+  Future<bool> changePassword({required String newPassword}) async {
+    String? token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/change'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({"newPass": newPassword}),
+    );
+    return response.statusCode < 400;
+  }
+
   Future<bool> generic(BuildContext context, String table) async {
     String? token = await _getToken();
     final response = await http.post(

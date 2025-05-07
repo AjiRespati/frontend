@@ -273,4 +273,8 @@ class SystemViewModel extends ChangeNotifier {
   }) async {
     return apiService.generic(context, table);
   }
+
+  Future<bool> changePassword({required String newPassword}) async {
+    return apiService.changePassword(newPassword: newPassword);
+  }
 }

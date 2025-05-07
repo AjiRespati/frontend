@@ -840,10 +840,8 @@ class StockViewModel extends ChangeNotifier {
 
     switch (status) {
       case 'settled':
-        print(response.first);
         totalSettled = 0;
         for (var el in response) {
-          print(el['latestUpdateAmount']);
           var price =
               (el?['agentPrice'] ?? 0) > 0
                   ? el['agentPrice']
