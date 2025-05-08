@@ -71,6 +71,8 @@ class SystemViewModel extends ChangeNotifier {
 
   int get currentPageIndex => _currentPageIndex;
   set currentPageIndex(int val) {
+    print("LEVEL: $level");
+    print("BERAPA INI INDEXNYA ??? $val");
     _currentPageIndex = val;
     notifyListeners();
   }
@@ -188,6 +190,7 @@ class SystemViewModel extends ChangeNotifier {
       salesId = user?['salesId'];
       subAgentId = user?['subAgentId'];
       agentId = user?['agentId'];
+      shopId = user?['shopId'];
       return true;
     } else {
       isBusy = false;
@@ -207,6 +210,7 @@ class SystemViewModel extends ChangeNotifier {
     salesId = null;
     subAgentId = null;
     agentId = null;
+    shopId = null;
     level = null;
     currentPageIndex = 0;
     isLoginView = true;
@@ -232,6 +236,7 @@ class SystemViewModel extends ChangeNotifier {
       salesId = user?['salesId'];
       subAgentId = user?['subAgentId'];
       agentId = user?['agentId'];
+      shopId = user?['shopId'];
       return true;
     }
   }

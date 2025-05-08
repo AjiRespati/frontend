@@ -15,22 +15,27 @@ class Shops extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _ShopsState extends State<Shops> with GetItStateMixin {
+  Future<void> _setup() async {
+    await get<SystemViewModel>().self(context);
+    if (widget.isAllShop != true) {
+      String? id =
+          get<SystemViewModel>().salesId ??
+          (get<SystemViewModel>().subAgentId ??
+              (get<SystemViewModel>().agentId));
+
+      String clientId = id ?? "";
+      get<StockViewModel>().getShopsBySales(
+        // context: context,
+        clientId: clientId,
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.isAllShop != true) {
-        String? id =
-            get<SystemViewModel>().salesId ??
-            (get<SystemViewModel>().subAgentId ??
-                (get<SystemViewModel>().agentId));
-
-        String clientId = id ?? "";
-        get<StockViewModel>().getShopsBySales(
-          // context: context,
-          clientId: clientId,
-        );
-      }
+      _setup();
     });
   }
 

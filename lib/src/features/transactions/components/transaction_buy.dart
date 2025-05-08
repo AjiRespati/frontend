@@ -180,7 +180,7 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
 
           SizedBox(height: 5),
 
-          Row(children: [Text("Pilih Productx")]),
+          Row(children: [Text("Pilih Product")]),
           DropdownSearch<dynamic>(
             decoratorProps: DropDownDecoratorProps(
               baseStyle: const TextStyle(
@@ -228,7 +228,7 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
                 final hintStyle =
                     Theme.of(context).inputDecorationTheme.hintStyle ??
                     TextStyle(color: Colors.grey[600]);
-                return Text("Pilih productx", style: hintStyle);
+                return Text("Pilih product", style: hintStyle);
               }
               return Text("${selectedItem['productName']}");
             },

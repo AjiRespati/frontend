@@ -891,6 +891,7 @@ class ApiService {
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
+    required String? shopId,
   }) async {
     String? token = await _getToken();
     // Build the query parameters map conditionally
@@ -902,6 +903,7 @@ class ApiService {
       if (salesId != null && salesId.isNotEmpty) 'salesId': salesId,
       if (subAgentId != null && subAgentId.isNotEmpty) 'subAgentId': subAgentId,
       if (agentId != null && agentId.isNotEmpty) 'agentId': agentId,
+      if (shopId != null && shopId.isNotEmpty) 'shopId': shopId,
     };
 
     final uri = Uri.parse(baseUrl).replace(
@@ -963,6 +965,7 @@ class ApiService {
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
+    required String? shopId,
     required String? stockEvent,
   }) async {
     String? token = await _getToken();
@@ -975,6 +978,7 @@ class ApiService {
       if (salesId != null && salesId.isNotEmpty) 'salesId': salesId,
       if (subAgentId != null && subAgentId.isNotEmpty) 'subAgentId': subAgentId,
       if (agentId != null && agentId.isNotEmpty) 'agentId': agentId,
+      if (shopId != null && shopId.isNotEmpty) 'shopId': shopId,
       if (stockEvent != null && stockEvent.isNotEmpty) 'stockEvent': stockEvent,
     };
 

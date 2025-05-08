@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/transactions/transaction_desktop.dart';
 import 'package:frontend/src/features/transactions/transaction_mobile.dart';
@@ -16,51 +18,55 @@ class Transaction extends StatefulWidget with GetItStatefulWidgetMixin {
 class _TransactionState extends State<Transaction> with GetItStateMixin {
   bool isClient = true;
 
+  Future<void> _setup() async {
+    await get<SystemViewModel>().self(context);
+    isClient =
+        (get<SystemViewModel>().level ?? 0) < 4 ||
+        (get<SystemViewModel>().level ?? 0) > 5;
+    DateTime dateFromFilter = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      1,
+    );
+    DateTime dateToFilter = DateTime(
+      DateTime.now().year,
+      DateTime.now().month + 1,
+      1,
+    ).subtract(Duration(days: 1));
+    get<StockViewModel>().dateFromFilter = dateFromFilter;
+    get<StockViewModel>().dateToFilter = dateToFilter;
+
+    get<StockViewModel>().createdBy = get<SystemViewModel>().email;
+
+    await get<StockViewModel>().getStockBatches(
+      context: context,
+      isClient: isClient,
+      status: 'all',
+      sortBy: null,
+      sortOrder: null,
+      page: null,
+      limit: null,
+    );
+
+    get<StockViewModel>().fetchProducts(context);
+
+    String? id =
+        get<SystemViewModel>().salesId ??
+        (get<SystemViewModel>().subAgentId ?? (get<SystemViewModel>().agentId));
+
+    String clientId = id ?? "";
+    get<StockViewModel>().getShopsBySales(
+      // context: context,
+      clientId: clientId,
+      isActive: true,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      isClient =
-          (get<SystemViewModel>().level ?? 0) < 4 ||
-          (get<SystemViewModel>().level ?? 0) > 5;
-      DateTime dateFromFilter = DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        1,
-      );
-      DateTime dateToFilter = DateTime(
-        DateTime.now().year,
-        DateTime.now().month + 1,
-        1,
-      ).subtract(Duration(days: 1));
-      get<StockViewModel>().dateFromFilter = dateFromFilter;
-      get<StockViewModel>().dateToFilter = dateToFilter;
-
-      get<StockViewModel>().createdBy = get<SystemViewModel>().email;
-
-      get<StockViewModel>().getStockBatches(
-        context: context,
-        isClient: isClient,
-        status: 'all',
-        sortBy: null,
-        sortOrder: null,
-        page: null,
-        limit: null,
-      );
-
-      get<StockViewModel>().fetchProducts(context);
-
-      String? id =
-          get<SystemViewModel>().salesId ??
-          (get<SystemViewModel>().subAgentId ??
-              (get<SystemViewModel>().agentId));
-
-      String clientId = id ?? "";
-      get<StockViewModel>().getShopsBySales(
-        // context: context,
-        clientId: clientId,
-        isActive: true,
-      );
+      _setup();
     });
   }
 

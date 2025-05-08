@@ -818,6 +818,7 @@ class StockViewModel extends ChangeNotifier {
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
+    required String? shopId,
     required String? stockEvent,
   }) async {
     isBusy = true;
@@ -839,6 +840,7 @@ class StockViewModel extends ChangeNotifier {
         agentId: agentId,
         subAgentId: subAgentId,
         salesId: salesId,
+        shopId: shopId,
         stockEvent: stockEvent,
       );
     } else {
@@ -851,6 +853,7 @@ class StockViewModel extends ChangeNotifier {
           agentId: agentId,
           subAgentId: subAgentId,
           salesId: salesId,
+          shopId: shopId,
           stockEvent: stockEvent,
         );
       } else {
@@ -862,6 +865,7 @@ class StockViewModel extends ChangeNotifier {
           agentId: agentId,
           subAgentId: subAgentId,
           salesId: salesId,
+          shopId: shopId,
         );
       }
     }

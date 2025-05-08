@@ -22,10 +22,11 @@ class ResumeCard extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => onSelect(),
-      child: Card(
-        elevation: 3,
+    return Card(
+      elevation: 3,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onTap: () => onSelect(),
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Row(
