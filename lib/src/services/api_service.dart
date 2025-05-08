@@ -1710,7 +1710,7 @@ class ApiService {
   /// POST
 
   Future<bool> createShop({
-    required BuildContext context,
+    // required BuildContext context,
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
@@ -1742,9 +1742,10 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 401) {
-      Navigator.pushNamed(context, signInRoute);
-      return false;
+    if (response.statusCode == 401 || response.statusCode == 403) {
+      throw Exception("please reLogin");
+      // Navigator.pushNamed(context, signInRoute);
+      // return false;
       // token = await refreshAccessToken();
       // if (token == null) {
       //   Navigator.pushNamed(context, signInRoute);
@@ -1765,22 +1766,25 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return true;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          backgroundColor: Colors.red.shade400,
-          content: Text(
-            jsonDecode(response.body)['error'] ??
-                "Kesalahan system, hubungi pengembang aplikasi",
-          ),
-        ),
+      throw Exception(
+        jsonDecode(response.body)['message'] ?? 'Internal service error',
       );
-      return false;
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     showCloseIcon: true,
+      //     backgroundColor: Colors.red.shade400,
+      //     content: Text(
+      //       jsonDecode(response.body)['error'] ??
+      //           "Kesalahan system, hubungi pengembang aplikasi",
+      //     ),
+      //   ),
+      // );
+      // return false;
     }
   }
 
   Future<List<dynamic>> getAllShopsBySales({
-    required BuildContext context,
+    // required BuildContext context,
     required String clientId,
   }) async {
     String? token = await _getToken();
@@ -1793,9 +1797,10 @@ class ApiService {
       },
     );
 
-    if (response.statusCode == 401) {
-      Navigator.pushNamed(context, signInRoute);
-      return [];
+    if (response.statusCode == 401 || response.statusCode == 403) {
+      throw Exception("please reLogin");
+      // Navigator.pushNamed(context, signInRoute);
+      // return [];
       // token = await refreshAccessToken();
       // if (token == null) {
       //   Navigator.pushNamed(context, signInRoute);
@@ -1805,17 +1810,20 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          backgroundColor: Colors.red.shade400,
-          content: Text(
-            jsonDecode(response.body)['error'] ??
-                "Kesalahan system, hubungi pengembang aplikasi",
-          ),
-        ),
+      throw Exception(
+        jsonDecode(response.body)['message'] ?? 'Internal service error',
       );
-      return [];
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     showCloseIcon: true,
+      //     backgroundColor: Colors.red.shade400,
+      //     content: Text(
+      //       jsonDecode(response.body)['error'] ??
+      //           "Kesalahan system, hubungi pengembang aplikasi",
+      //     ),
+      //   ),
+      // );
+      // return [];
     }
   }
 

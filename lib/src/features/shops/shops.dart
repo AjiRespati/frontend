@@ -27,7 +27,7 @@ class _ShopsState extends State<Shops> with GetItStateMixin {
 
         String clientId = id ?? "";
         get<StockViewModel>().getShopsBySales(
-          context: context,
+          // context: context,
           clientId: clientId,
         );
       }

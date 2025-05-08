@@ -12,7 +12,11 @@ class StockViewModel extends ChangeNotifier {
   final ApiService apiService = ApiService();
   // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _isBusy = false;
-  // bool _isLoading = true;
+  bool _isNoSession = false;
+  bool? _isError;
+  bool _isSuccess = false;
+  String? _errorMessage;
+  String? _successMessage;
   final formKey = GlobalKey<FormState>();
 
   Map<String, dynamic>? _commissionData;
@@ -271,11 +275,35 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // bool get isLoading => _isLoading;
-  // set isLoading(bool val) {
-  //   _isLoading = val;
-  //   notifyListeners();
-  // }
+  bool get isNoSession => _isNoSession;
+  set isNoSession(bool val) {
+    _isNoSession = val;
+    notifyListeners();
+  }
+
+  bool get isSuccess => _isSuccess;
+  set isSuccess(bool val) {
+    _isSuccess = val;
+    notifyListeners();
+  }
+
+  bool? get isError => _isError;
+  set isError(bool? val) {
+    _isError = val;
+    notifyListeners();
+  }
+
+  String? get errorMessage => _errorMessage;
+  set errorMessage(String? val) {
+    _errorMessage = val;
+    notifyListeners();
+  }
+
+  String? get successMessage => _successMessage;
+  set successMessage(String? val) {
+    _successMessage = val;
+    notifyListeners();
+  }
 
   Map<String, dynamic>? get commissionData => _commissionData;
   set commissionData(Map<String, dynamic>? val) {
@@ -1063,8 +1091,7 @@ class StockViewModel extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> createShop({
-    required BuildContext context,
+  Future<void> createShop({
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
@@ -1075,51 +1102,72 @@ class StockViewModel extends ChangeNotifier {
     required String? imageUrl,
     required String? coordinates,
   }) async {
-    isBusy = true;
-    final resp = await apiService.createShop(
-      context: context,
-      salesId: salesId,
-      subAgentId: subAgentId,
-      agentId: agentId,
-      name: name,
-      address: address,
-      phone: phone,
-      email: email,
-      imageUrl: imageUrl,
-      coordinates: coordinates,
-    );
+    try {
+      isBusy = true;
 
-    if (resp) {
-      isBusy = false;
-      return true;
-    } else {
-      isBusy = false;
-      return false;
+      await apiService.createShop(
+        salesId: salesId,
+        subAgentId: subAgentId,
+        agentId: agentId,
+        name: name,
+        address: address,
+        phone: phone,
+        email: email,
+        imageUrl: imageUrl,
+        coordinates: coordinates,
+      );
+
+      shops = [];
+      shops = await apiService.getAllShopsBySales(
+        // context: context,
+        clientId: salesId ?? (subAgentId ?? (agentId ?? "")),
+      );
+
+      successMessage = "Tambah toko berhasil.";
+      isSuccess = true;
+    } catch (e) {
+      if (e.toString().contains("please reLogin")) {
+        isBusy = false;
+        isNoSession = true;
+      } else {
+        errorMessage = e.toString().replaceAll('Exception: ', '');
+        isBusy = false;
+        isError = true;
+      }
     }
   }
 
-  Future<bool> getShopsBySales({
-    required BuildContext context,
+  Future<void> getShopsBySales({
+    // required BuildContext context,
     required String clientId,
     bool? isActive,
   }) async {
-    isBusy = true;
-    shops = [];
+    try {
+      isBusy = true;
+      shops = [];
 
-    shops = await apiService.getAllShopsBySales(
-      context: context,
-      clientId: clientId,
-    );
+      shops = await apiService.getAllShopsBySales(
+        // context: context,
+        clientId: clientId,
+      );
 
-    if (isActive == true) {
-      shops.removeWhere((shop) {
-        // The test function: return true if the item should be removed
-        return shop['status'] == 'inactive';
-      });
+      if (isActive == true) {
+        shops.removeWhere((shop) {
+          // The test function: return true if the item should be removed
+          return shop['status'] == 'inactive';
+        });
+      }
+      isBusy = false;
+    } catch (e) {
+      if (e.toString().contains("please reLogin")) {
+        isBusy = false;
+        isNoSession = true;
+      } else {
+        errorMessage = e.toString().replaceAll('Exception: ', '');
+        isBusy = false;
+        isError = true;
+      }
     }
-
-    isBusy = false;
-    return true;
   }
 
   Future<bool> getAllShops({required BuildContext context}) async {

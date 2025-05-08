@@ -57,7 +57,7 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
 
       String clientId = id ?? "";
       get<StockViewModel>().getShopsBySales(
-        context: context,
+        // context: context,
         clientId: clientId,
         isActive: true,
       );

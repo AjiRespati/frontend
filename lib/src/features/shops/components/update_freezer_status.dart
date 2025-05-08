@@ -47,7 +47,7 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
       if (result) {
         if (_isClient) {
           await get<StockViewModel>().getShopsBySales(
-            context: context,
+            // context: context,
             clientId: clientId,
           );
         } else {
@@ -69,7 +69,7 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
       if (result) {
         if (_isClient) {
           await get<StockViewModel>().getShopsBySales(
-            context: context,
+            // context: context,
             clientId: clientId,
           );
         } else {

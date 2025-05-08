@@ -41,7 +41,6 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
       });
     } else {
       await get<StockViewModel>().createShop(
-        context: context,
         salesId: salesId,
         subAgentId: subAgentId,
         agentId: agentId,
@@ -52,10 +51,10 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
         imageUrl: null,
         coordinates: null,
       );
-      await get<StockViewModel>().getShopsBySales(
-        context: context,
-        clientId: salesId ?? (subAgentId ?? (agentId ?? "")),
-      );
+      // await get<StockViewModel>().getShopsBySales(
+      //   context: context,
+      //   clientId: salesId ?? (subAgentId ?? (agentId ?? "")),
+      // );
 
       Navigator.pop(context);
     }
