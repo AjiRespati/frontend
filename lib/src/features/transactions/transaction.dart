@@ -42,6 +42,10 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
       context: context,
       isClient: isClient,
       status: 'all',
+      level: get<SystemViewModel>().level,
+      shopId: get<SystemViewModel>().shopId,
+      parentId: get<SystemViewModel>().shopParentId,
+      parentType: get<SystemViewModel>().shopParentType,
       sortBy: null,
       sortOrder: null,
       page: null,
@@ -72,6 +76,8 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print(get<SystemViewModel>().shopParentId);
+    print(get<SystemViewModel>().shopParentType);
     return ResponsiveLayout(
       desktopLayout: TransactionDesktop(),
       mobileLayout: TransactionMobile(),

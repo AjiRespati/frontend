@@ -46,6 +46,8 @@ class SystemViewModel extends ChangeNotifier {
   String? _subAgentId;
   String? _agentId;
   String? _shopId;
+  String? _shopParentId;
+  String? _shopParentType;
 
   //====================//
   //  GETTER n SETTER   //
@@ -149,6 +151,18 @@ class SystemViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? get shopParentId => _shopParentId;
+  set shopParentId(String? val) {
+    _shopParentId = val;
+    notifyListeners();
+  }
+
+  String? get shopParentType => _shopParentType;
+  set shopParentType(String? val) {
+    _shopParentType = val;
+    notifyListeners();
+  }
+
   //====================//
   //       METHOD       //
   //====================//
@@ -227,16 +241,37 @@ class SystemViewModel extends ChangeNotifier {
     if (user == null) {
       return false;
     } else {
-      name = user?['name'];
-      username = user?['username'];
-      email = user?['email'];
-      phone = user?['phone'];
-      address = user?['address'];
-      level = user?['level'];
-      salesId = user?['salesId'];
-      subAgentId = user?['subAgentId'];
-      agentId = user?['agentId'];
-      shopId = user?['shopId'];
+      if (user?['level'] != 6) {
+        name = user?['name'];
+        username = user?['username'];
+        email = user?['email'];
+        phone = user?['phone'];
+        address = user?['address'];
+        level = user?['level'];
+        salesId = user?['salesId'];
+        subAgentId = user?['subAgentId'];
+        agentId = user?['agentId'];
+        shopId = user?['shopId'];
+      } else {
+        String parentType = "";
+        if (user?['salesId'] != null) {
+          parentType = 'sales';
+        } else if (user?['subAgentId'] != null) {
+          parentType = 'subAgent';
+        } else {
+          parentType = 'agent';
+        }
+        name = user?['name'];
+        username = user?['username'];
+        email = user?['email'];
+        phone = user?['phone'];
+        address = user?['address'];
+        level = user?['level'];
+        shopId = user?['shopId'];
+        shopParentId =
+            user?['salesId'] ?? user?['subAgentId'] ?? user?['agentId'];
+        shopParentType = parentType;
+      }
       return true;
     }
   }

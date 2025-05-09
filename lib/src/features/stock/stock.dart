@@ -38,7 +38,6 @@ class _StockState extends State<Stock> with GetItStateMixin {
     var userClient = (user?['levelDesc'] ?? "salesman")
         .toLowerCase()
         .replaceAll(" ", "");
-    print("GOMBAL: ${get<SystemViewModel>().shopId}");
     get<StockViewModel>().getStockTable(
       context: context,
       status: 'settled',
