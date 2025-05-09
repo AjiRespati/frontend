@@ -23,6 +23,18 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
     isClient =
         (get<SystemViewModel>().level ?? 0) < 4 ||
         (get<SystemViewModel>().level ?? 0) > 5;
+
+    String? id =
+        get<SystemViewModel>().salesId ??
+        (get<SystemViewModel>().subAgentId ?? (get<SystemViewModel>().agentId));
+
+    String clientId = id ?? "";
+    await get<StockViewModel>().getShopsBySales(
+      // context: context,
+      clientId: clientId,
+      isActive: true,
+    );
+
     DateTime dateFromFilter = DateTime(
       DateTime.now().year,
       DateTime.now().month,
@@ -53,17 +65,6 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
     );
 
     get<StockViewModel>().fetchProducts(context);
-
-    String? id =
-        get<SystemViewModel>().salesId ??
-        (get<SystemViewModel>().subAgentId ?? (get<SystemViewModel>().agentId));
-
-    String clientId = id ?? "";
-    get<StockViewModel>().getShopsBySales(
-      // context: context,
-      clientId: clientId,
-      isActive: true,
-    );
   }
 
   @override

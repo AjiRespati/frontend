@@ -8,6 +8,7 @@ import 'package:frontend/src/models/product_transaction.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:frontend/src/widgets/buttons/remove_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -22,7 +23,6 @@ class TransactionSellClient extends StatefulWidget
 
 class _TransactionSellClientState extends State<TransactionSellClient>
     with GetItStateMixin {
-  late StockViewModel viewModel;
   dynamic _selectedProduct;
   String? _selectedId;
   dynamic _selectedShop;
@@ -92,7 +92,13 @@ class _TransactionSellClientState extends State<TransactionSellClient>
   @override
   void initState() {
     super.initState();
-    viewModel = get<StockViewModel>();
+    if (get<SystemViewModel>().level == 6) {
+      _selectedShop = {
+        "name": get<SystemViewModel>().name,
+        "id": get<SystemViewModel>().shopId,
+      };
+      _selectedShopId = get<SystemViewModel>().shopId;
+    }
   }
 
   @override
@@ -195,68 +201,72 @@ class _TransactionSellClientState extends State<TransactionSellClient>
 
           SizedBox(height: 5),
 
-          Row(children: [Text("Pilih Toko")]),
-          DropdownSearch<dynamic>(
-            decoratorProps: DropDownDecoratorProps(
-              baseStyle: const TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
-              ), // Style for text inside the closed dropdown
-            ),
-            popupProps: PopupProps.menu(
-              // Or .dialog(), .modalBottomSheet(), .menu()
-              showSearchBox: true,
-              searchFieldProps: TextFieldProps(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  hintText: "Cari toko...",
-                ),
-                cursorColor: Theme.of(context).primaryColor,
+          if (get<SystemViewModel>().level != 6)
+            Row(children: [Text("Pilih Toko")]),
+          if (get<SystemViewModel>().level != 6)
+            DropdownSearch<dynamic>(
+              decoratorProps: DropDownDecoratorProps(
+                baseStyle: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ), // Style for text inside the closed dropdown
               ),
-              itemBuilder: _customPopupItemBuilder,
-            ),
-            // *** Core properties (mostly unchanged in how they are used) ***
-            items:
-                (filter, loadProps) =>
-                    get<StockViewModel>().shops, // The list of items
-            onChanged: (dynamic newValue) {
-              // Callback when an item is selected
-              setState(() {
-                _selectedShop = newValue;
-                _selectedShopId = newValue['id'];
-              });
+              popupProps: PopupProps.menu(
+                // Or .dialog(), .modalBottomSheet(), .menu()
+                showSearchBox: true,
+                searchFieldProps: TextFieldProps(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    hintText: "Cari toko...",
+                  ),
+                  cursorColor: Theme.of(context).primaryColor,
+                ),
+                itemBuilder: _customPopupItemBuilder,
+              ),
+              // *** Core properties (mostly unchanged in how they are used) ***
+              items:
+                  (filter, loadProps) =>
+                      get<StockViewModel>().shops, // The list of items
+              onChanged: (dynamic newValue) {
+                // Callback when an item is selected
+                setState(() {
+                  _selectedShop = newValue;
+                  _selectedShopId = newValue['id'];
+                });
 
-              _onSelectShop();
-            },
-            selectedItem: _selectedShop, // The currently selected item
-            // *** Optional: Customize the display of the selected item when closed ***
-            // This builder is still valid at the top level
-            dropdownBuilder: (context, selectedItem) {
-              if (selectedItem == null) {
-                // Use hint style from decoration if available and item is null
-                final hintStyle =
-                    Theme.of(context).inputDecorationTheme.hintStyle ??
-                    TextStyle(color: Colors.grey[600]);
-                return Text("Pilih toko", style: hintStyle);
-              }
-              return Text("${selectedItem['name']}");
-            },
-            filterFn: (item, filter) {
-              // Optional: Custom filter logic
-              if (filter.isEmpty) {
-                return true;
-              } // Show all if search is empty
-              // Case-insensitive search
-              return item['name'].toLowerCase().contains(filter.toLowerCase());
-            },
-            compareFn: (item1, item2) => item1['id' == item2['id']],
-          ),
+                _onSelectShop();
+              },
+              selectedItem: _selectedShop, // The currently selected item
+              // *** Optional: Customize the display of the selected item when closed ***
+              // This builder is still valid at the top level
+              dropdownBuilder: (context, selectedItem) {
+                if (selectedItem == null) {
+                  // Use hint style from decoration if available and item is null
+                  final hintStyle =
+                      Theme.of(context).inputDecorationTheme.hintStyle ??
+                      TextStyle(color: Colors.grey[600]);
+                  return Text("Pilih toko", style: hintStyle);
+                }
+                return Text("${selectedItem['name']}");
+              },
+              filterFn: (item, filter) {
+                // Optional: Custom filter logic
+                if (filter.isEmpty) {
+                  return true;
+                } // Show all if search is empty
+                // Case-insensitive search
+                return item['name'].toLowerCase().contains(
+                  filter.toLowerCase(),
+                );
+              },
+              compareFn: (item1, item2) => item1['id' == item2['id']],
+            ),
           SizedBox(height: 15),
 
           SizedBox(height: 5),
@@ -426,6 +436,7 @@ class _TransactionSellClientState extends State<TransactionSellClient>
                       ),
                 );
 
+                StockViewModel viewModel = get<StockViewModel>();
                 // Check result AFTER dialog closes
                 if (confirmResult == true) {
                   // Check if widget is still mounted BEFORE starting async work

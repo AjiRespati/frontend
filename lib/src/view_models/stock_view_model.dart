@@ -1565,10 +1565,15 @@ class StockViewModel extends ChangeNotifier {
   }) async {
     batchCompleted = 0;
     isBusy = true;
-    responseBatch = [];
+    // responseBatch = [];
 
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+    String? shopList;
+
+    if ((level ?? 0) < 4) {
+      shopList = shops.map((e) => e['email']).join(",");
+    }
 
     dynamic response = await ApiService().getStockBatches(
       context: context,
@@ -1576,6 +1581,7 @@ class StockViewModel extends ChangeNotifier {
       fromDate: fromDate,
       toDate: toDate,
       createdBy: isClient ? createdBy : null,
+      shopList: shopList,
       level: level,
       shopId: shopId,
       parentId: parentId,
