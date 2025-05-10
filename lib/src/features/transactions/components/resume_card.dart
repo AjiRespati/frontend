@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/components/canceling_stock.dart';
 import 'package:frontend/src/utils/helpers.dart';
-import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ResumeCard extends StatelessWidget with GetItMixin {
@@ -77,6 +76,28 @@ class ResumeCard extends StatelessWidget with GetItMixin {
                             ),
                           ],
                         ),
+                        if (stock['userDesc'] == "Shop" &&
+                            (level == 4 || level == 5))
+                          Row(
+                            children: [
+                              Text((stock['parentType'] ?? " -") + ":"),
+                            ],
+                          ),
+                        if (stock['userDesc'] == "Shop" &&
+                            (level == 4 || level == 5))
+                          Row(
+                            children: [
+                              SizedBox(width: 10),
+                              Text(
+                                stock['parentEmail'] ?? " -",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
                         SizedBox(height: 4),
                         Row(children: [Text("Total Product: $totalProduct")]),
                         Row(children: [Text("Total Item: $totalItem")]),
@@ -138,7 +159,8 @@ class ResumeCard extends StatelessWidget with GetItMixin {
                   ),
                 ],
               ),
-              if ((level != 6 && stock['status'] == 'completed') ||
+              if (((level > 0 && level < 4) &&
+                      stock['status'] == 'completed') ||
                   (stock['status'] == 'completed' &&
                       level == 6 &&
                       stock['userDesc'] == "Shop"))

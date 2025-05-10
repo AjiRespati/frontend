@@ -1392,8 +1392,9 @@ class StockViewModel extends ChangeNotifier {
               'salesId': tx.salesId, // Or get from tx / global state
               'subAgentId': tx.subAgentId, // Or get from tx / global state
               'agentId': tx.agentId, // Or get from tx / global state
-              'shopId':
-                  tx.shopId, // Assuming shopId is stored in ProductTransaction
+              'shopId': tx.shopId, // Assuming shopId is stored
+              'parentId': tx.parentId,
+              'parentType': tx.parentType,
               'status': 'created', // Or let backend decide
               'description':
                   null, //tx.description, // Assuming description is available

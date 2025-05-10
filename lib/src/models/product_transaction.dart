@@ -4,6 +4,8 @@ class ProductTransaction {
   String? subAgentId;
   String? agentId;
   String? shopId;
+  String? parentType;
+  String? parentId;
   dynamic productDetail;
   int productAmount;
   double price;
@@ -16,6 +18,8 @@ class ProductTransaction {
     required this.subAgentId,
     required this.agentId,
     required this.shopId,
+    required this.parentType,
+    required this.parentId,
     required this.productAmount,
     required this.productDetail,
     required this.price,

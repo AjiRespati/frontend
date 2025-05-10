@@ -152,6 +152,8 @@ class _BuyProductState extends State<BuyProduct> with GetItStateMixin {
                     subAgentId: subAgentId,
                     agentId: agentId,
                     shopId: widget.shopId,
+                    parentType: get<SystemViewModel>().shopParentType,
+                    parentId: get<SystemViewModel>().shopParentId,
                     productAmount: get<StockViewModel>().stockAmount,
                     productDetail: widget.mainProduct,
                     price:
