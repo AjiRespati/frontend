@@ -471,12 +471,13 @@ class _TransactionResumeState extends State<TransactionResume>
                             totalItem: totalItem,
                             totalPrice: totalPrice,
                             stocks: stocks,
-                            onSelect: () {
-                              if (!isClient &&
-                                  (stock['status'] == 'completed')) {
-                                _handleBatchActions(stock, totalPrice);
-                              }
-                            },
+                            level: get<SystemViewModel>().level ?? 0,
+                            onSelect:
+                                (stock['status'] == 'completed' && !isClient)
+                                    ? () {
+                                      _handleBatchActions(stock, totalPrice);
+                                    }
+                                    : null,
                           );
                         },
                       ),
