@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/models/product_transaction.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
+import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -124,6 +125,22 @@ class _BuyProductState extends State<BuyProduct> with GetItStateMixin {
               ),
               // inactiveDelay: Duration.zero,
               onPressed: () async {
+                var salesId = get<SystemViewModel>().salesId;
+                var subAgentId = get<SystemViewModel>().subAgentId;
+                var agentId = get<SystemViewModel>().agentId;
+                if (get<SystemViewModel>().level == 6) {
+                  switch (get<SystemViewModel>().shopParentType) {
+                    case 'sales':
+                      salesId = get<SystemViewModel>().shopParentId;
+                      break;
+                    case 'subAgent':
+                      subAgentId = get<SystemViewModel>().shopParentId;
+                      break;
+                    case 'agent':
+                      agentId = get<SystemViewModel>().shopParentId;
+                      break;
+                  }
+                }
                 if ((get<StockViewModel>().stockAmount == 0) ||
                     (((widget.mainProduct?['totalStock'] ?? 0) <
                             get<StockViewModel>().stockAmount) &&
@@ -131,6 +148,9 @@ class _BuyProductState extends State<BuyProduct> with GetItStateMixin {
                 } else {
                   ProductTransaction val = ProductTransaction(
                     productId: widget.mainProduct?["productId"],
+                    salesId: salesId,
+                    subAgentId: subAgentId,
+                    agentId: agentId,
                     shopId: widget.shopId,
                     productAmount: get<StockViewModel>().stockAmount,
                     productDetail: widget.mainProduct,
@@ -171,10 +191,12 @@ class _BuyProductState extends State<BuyProduct> with GetItStateMixin {
     switch (client) {
       case "agent":
         return (mainProduct?['agentPrice'] ?? 0).toDouble();
-      case "subAgent":
+      case "subagent":
         return (mainProduct?['subAgentPrice'] ?? 0).toDouble();
       case "salesman":
         return (mainProduct?['salesmanPrice'] ?? 0).toDouble();
+      case "shop":
+        return (mainProduct?['shopPrice'] ?? 0).toDouble();
 
       default:
         return (mainProduct?['price'] ?? 0).toDouble();

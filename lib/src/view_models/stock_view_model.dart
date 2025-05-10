@@ -1389,9 +1389,9 @@ class StockViewModel extends ChangeNotifier {
                   tx.productDetail['metricId'], // Adjust based on your ProductTransaction structure
               'stockEvent': tx.stockEvent, // Or get from tx if variable
               'amount': tx.productAmount,
-              'salesId': salesId, // Or get from tx / global state
-              'subAgentId': subAgentId, // Or get from tx / global state
-              'agentId': agentId, // Or get from tx / global state
+              'salesId': tx.salesId, // Or get from tx / global state
+              'subAgentId': tx.subAgentId, // Or get from tx / global state
+              'agentId': tx.agentId, // Or get from tx / global state
               'shopId':
                   tx.shopId, // Assuming shopId is stored in ProductTransaction
               'status': 'created', // Or let backend decide

@@ -148,7 +148,7 @@ class ResumeCard extends StatelessWidget with GetItMixin {
       case "settled":
         return Colors.green.shade700;
       case "canceled":
-        return Colors.orangeAccent;
+        return Colors.blue.shade700;
       default:
         return Colors.black;
     }
