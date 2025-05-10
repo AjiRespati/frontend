@@ -21,9 +21,9 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
               case 1:
                 Navigator.pushNamed(context, transactionsRoute);
                 break;
-              case 2:
-                Navigator.pushNamed(context, stockRoute);
-                break;
+              // case 2:
+              //   Navigator.pushNamed(context, stockRoute);
+              //   break;
               default:
                 Navigator.pushNamed(context, settingsRoute);
                 break;
@@ -44,14 +44,14 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
               ),
               label: "Pembelian",
             ),
-            NavigationDestination(
-              icon: Icon(Icons.shopping_cart_checkout_rounded),
-              selectedIcon: Icon(
-                Icons.shopping_cart_checkout_rounded,
-                color: Colors.blueAccent.shade700,
-              ),
-              label: "Stock",
-            ),
+            // NavigationDestination(
+            //   icon: Icon(Icons.shopping_cart_checkout_rounded),
+            //   selectedIcon: Icon(
+            //     Icons.shopping_cart_checkout_rounded,
+            //     color: Colors.blueAccent.shade700,
+            //   ),
+            //   label: "Stock",
+            // ),
             NavigationDestination(
               icon: Icon(Icons.settings),
               selectedIcon: Icon(
@@ -201,7 +201,7 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
             get<SystemViewModel>().currentPageIndex = value;
             switch (value) {
               case 0:
-                Navigator.pushNamed(context, transactionsRoute);
+                Navigator.pushNamed(context, dashboardRoute);
                 break;
               case 1:
                 Navigator.pushNamed(context, clientsRoute);
@@ -214,12 +214,9 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
           selectedIndex: get<SystemViewModel>().currentPageIndex,
           destinations: [
             NavigationDestination(
-              icon: Icon(Icons.sell_outlined),
-              selectedIcon: Icon(
-                Icons.sell_outlined,
-                color: Colors.blueAccent.shade700,
-              ),
-              label: "Sell",
+              icon: Icon(Icons.home),
+              selectedIcon: Icon(Icons.home, color: Colors.blueAccent.shade700),
+              label: "Dashboard",
             ),
             NavigationDestination(
               icon: Icon(Icons.store_rounded),
@@ -251,10 +248,10 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
               case 1:
                 Navigator.pushNamed(context, transactionsRoute);
                 break;
+              // case 2:
+              //   Navigator.pushNamed(context, stockRoute);
+              //   break;
               case 2:
-                Navigator.pushNamed(context, stockRoute);
-                break;
-              case 3:
                 Navigator.pushNamed(context, shopsRoute, arguments: null);
                 break;
               default:
@@ -279,14 +276,14 @@ class MobileNavbar extends StatelessWidget with GetItMixin {
               ),
               label: "Pembelian",
             ),
-            NavigationDestination(
-              icon: Icon(Icons.shopping_cart_checkout_rounded),
-              selectedIcon: Icon(
-                Icons.shopping_cart_checkout_rounded,
-                color: Colors.blueAccent.shade700,
-              ),
-              label: "Stock",
-            ),
+            // NavigationDestination(
+            //   icon: Icon(Icons.shopping_cart_checkout_rounded),
+            //   selectedIcon: Icon(
+            //     Icons.shopping_cart_checkout_rounded,
+            //     color: Colors.blueAccent.shade700,
+            //   ),
+            //   label: "Stock",
+            // ),
             NavigationDestination(
               icon: Icon(Icons.store_rounded),
               selectedIcon: Icon(
