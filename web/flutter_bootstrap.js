@@ -2,15 +2,10 @@
 {{flutter_build_config}}
 
 //TODO: APP VERSION
-const appVersion = "1.0.20";
-
-// Get the domain
-var domain = window.location.hostname;
+const appVersion = "1.1.0";
 
 console.log("Version: ", appVersion);
 
-// //TODO: hardcode. hapus ketika deploy live
-// domain = 'citilink'
 const progressBar = document.getElementById('progressBar');
 const percentage = document.getElementById('percentage');
 const loadText = document.getElementById('loadingText');
