@@ -168,6 +168,10 @@ class _TransactionResumeState extends State<TransactionResume>
                             context: context,
                             isClient: isClient,
                             status: 'all',
+                            level: get<SystemViewModel>().level,
+                            shopId: get<SystemViewModel>().shopId,
+                            parentId: get<SystemViewModel>().shopParentId,
+                            parentType: get<SystemViewModel>().shopParentType,
                             sortBy: null,
                             sortOrder: null,
                             page: null,
@@ -218,7 +222,7 @@ class _TransactionResumeState extends State<TransactionResume>
                   child: GradientElevatedButton(
                     // inactiveDelay: Duration.zero,
                     gradient: LinearGradient(
-                      colors: [Colors.red.shade300, Colors.red.shade600],
+                      colors: [Colors.red.shade700, Colors.red.shade400],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -332,6 +336,10 @@ class _TransactionResumeState extends State<TransactionResume>
                           context: context,
                           isClient: isClient,
                           status: _selectedStatus ?? "all",
+                          shopId: get<SystemViewModel>().shopId,
+                          level: get<SystemViewModel>().level,
+                          parentId: get<SystemViewModel>().shopParentId,
+                          parentType: get<SystemViewModel>().shopParentType,
                           sortBy: null,
                           sortOrder: null,
                           page: null,
@@ -356,26 +364,59 @@ class _TransactionResumeState extends State<TransactionResume>
         ),
         Padding(
           padding: const EdgeInsets.only(left: 8, right: 60),
-          child: Row(
-            children:
-                ['all', 'completed'].map((status) {
-                  return Flexible(
-                    child: RadioListTile<String>(
-                      dense: true,
-                      radioScaleFactor: 0.8,
-                      activeColor: Colors.blue.shade700,
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(status.toUpperCase()),
-                      value: status,
-                      groupValue: _selectedStatus,
-                      onChanged: (String? value) {
-                        setState(() {
-                          _selectedStatus = value!;
-                        });
-                      },
-                    ),
-                  );
-                }).toList(),
+          child: SizedBox(
+            child: Row(
+              children:
+                  ['all', 'completed'].map((status) {
+                    return SizedBox(
+                      width: 148,
+                      child: RadioListTile<String>(
+                        dense: true,
+                        radioScaleFactor: 0.8,
+                        activeColor: Colors.blue.shade700,
+                        contentPadding: EdgeInsets.zero,
+                        title: Badge.count(
+                          smallSize: 10,
+                          largeSize: 18,
+                          isLabelVisible:
+                              status == 'completed' &&
+                              watchOnly(
+                                    (StockViewModel x) => x.batchCompleted,
+                                  ) >
+                                  0,
+                          textStyle: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          count: watchOnly(
+                            (StockViewModel x) => x.batchCompleted,
+                          ),
+                          child: Text(status.toUpperCase()),
+                        ),
+                        value: status,
+                        groupValue: _selectedStatus,
+                        onChanged: (String? value) {
+                          setState(() {
+                            _selectedStatus = value!;
+                          });
+                          get<StockViewModel>().getStockBatches(
+                            context: context,
+                            isClient: isClient,
+                            status: _selectedStatus ?? "all",
+                            level: get<SystemViewModel>().level,
+                            shopId: get<SystemViewModel>().shopId,
+                            parentId: get<SystemViewModel>().shopParentId,
+                            parentType: get<SystemViewModel>().shopParentType,
+                            sortBy: null,
+                            sortOrder: null,
+                            page: null,
+                            limit: null,
+                          );
+                        },
+                      ),
+                    );
+                  }).toList(),
+            ),
           ),
         ),
         Expanded(
@@ -412,6 +453,8 @@ class _TransactionResumeState extends State<TransactionResume>
                                   ? 2
                                   : stock['userDesc'] == 'Agent'
                                   ? 3
+                                  : stock['userDesc'] == 'Shop'
+                                  ? 6
                                   : 4;
 
                           List<dynamic> stocks = stock['Stocks'];
@@ -428,12 +471,13 @@ class _TransactionResumeState extends State<TransactionResume>
                             totalItem: totalItem,
                             totalPrice: totalPrice,
                             stocks: stocks,
-                            onSelect: () {
-                              if (!isClient &&
-                                  (stock['status'] == 'completed')) {
-                                _handleBatchActions(stock, totalPrice);
-                              }
-                            },
+                            level: get<SystemViewModel>().level ?? 0,
+                            onSelect:
+                                (stock['status'] == 'completed' && !isClient)
+                                    ? () {
+                                      _handleBatchActions(stock, totalPrice);
+                                    }
+                                    : null,
                           );
                         },
                       ),
@@ -472,6 +516,12 @@ class _TransactionResumeState extends State<TransactionResume>
   double _generateTotalPrice(List<dynamic> stocks, int level) {
     double totalPrice = 0;
     switch (level) {
+      case 6:
+        totalPrice = stocks.fold<double>(
+          0,
+          (sum, item) => sum + ((item['shopPrice'] ?? 0)),
+        );
+        break;
       case 5:
         totalPrice = stocks.fold<double>(
           0,

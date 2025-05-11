@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
+import 'package:frontend/src/features/settings/components/change_password_content.dart';
 import 'package:frontend/src/features/settings/components/truncate_table.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
@@ -32,6 +33,69 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                       Text("Username: ${model.username}"),
                       Text("Name: ${model.name}"),
                       Text("Level: ${model.level ?? 0}"),
+                      SizedBox(height: 10),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          shadowColor: Colors.transparent,
+                          overlayColor: Colors.transparent,
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Colors.transparent,
+                        ),
+                        onPressed: () async {
+                          var result = await showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) {
+                              return Stack(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 20,
+                                      right: 20,
+                                      top: 20,
+                                      bottom:
+                                          MediaQuery.of(
+                                            context,
+                                          ).viewInsets.bottom,
+                                    ),
+                                    child: ChangePasswordContent(
+                                      username: model.username ?? "-",
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      CloseButton(color: Colors.black),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                          if (result == true) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.green,
+                                content: Text("Ganti password sukses"),
+                                duration: Duration(
+                                  seconds: 2,
+                                ), // Adjust duration as needed
+                              ),
+                            );
+                          }
+                        },
+                        child: Text(
+                          "Ganti Password",
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.blue.shade600,
+                            color: Colors.blue.shade600,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                       SizedBox(height: 30),
                       Divider(),
                       watchOnly((StockViewModel x) => x.isBusy)

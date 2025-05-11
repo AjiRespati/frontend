@@ -233,6 +233,19 @@ class ApiService {
     }
   }
 
+  Future<bool> changePassword({required String newPassword}) async {
+    String? token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/change'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({"newPass": newPassword}),
+    );
+    return response.statusCode < 400;
+  }
+
   Future<bool> generic(BuildContext context, String table) async {
     String? token = await _getToken();
     final response = await http.post(
@@ -747,6 +760,11 @@ class ApiService {
     required String? fromDate,
     required String? toDate,
     required String? createdBy,
+    required String? shopList,
+    required int? level,
+    required String? shopId,
+    required String? parentId,
+    required String? parentType,
     required String? sortBy,
     required String? sortOrder,
     required int? page,
@@ -760,6 +778,11 @@ class ApiService {
       if (fromDate != null && fromDate.isNotEmpty) 'fromDate': fromDate,
       if (toDate != null && toDate.isNotEmpty) 'toDate': toDate,
       if (createdBy != null && createdBy.isNotEmpty) 'createdBy': createdBy,
+      if (shopList != null && shopList.isNotEmpty) 'shopList': shopList,
+      if (shopId != null && shopId.isNotEmpty) 'shopId': shopId,
+      if (parentId != null && parentId.isNotEmpty) 'parentId': parentId,
+      if (parentType != null && parentType.isNotEmpty) 'parentType': parentType,
+      if (level != null) 'level': level.toString(),
       if (sortBy != null && sortBy.isNotEmpty) 'sortBy': sortBy,
       if (sortOrder != null && sortOrder.isNotEmpty) 'sortOrder': sortOrder,
       if (page != null && page > 1) 'page': page,
@@ -878,6 +901,7 @@ class ApiService {
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
+    required String? shopId,
   }) async {
     String? token = await _getToken();
     // Build the query parameters map conditionally
@@ -889,6 +913,7 @@ class ApiService {
       if (salesId != null && salesId.isNotEmpty) 'salesId': salesId,
       if (subAgentId != null && subAgentId.isNotEmpty) 'subAgentId': subAgentId,
       if (agentId != null && agentId.isNotEmpty) 'agentId': agentId,
+      if (shopId != null && shopId.isNotEmpty) 'shopId': shopId,
     };
 
     final uri = Uri.parse(baseUrl).replace(
@@ -950,6 +975,7 @@ class ApiService {
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
+    required String? shopId,
     required String? stockEvent,
   }) async {
     String? token = await _getToken();
@@ -962,6 +988,7 @@ class ApiService {
       if (salesId != null && salesId.isNotEmpty) 'salesId': salesId,
       if (subAgentId != null && subAgentId.isNotEmpty) 'subAgentId': subAgentId,
       if (agentId != null && agentId.isNotEmpty) 'agentId': agentId,
+      if (shopId != null && shopId.isNotEmpty) 'shopId': shopId,
       if (stockEvent != null && stockEvent.isNotEmpty) 'stockEvent': stockEvent,
     };
 
@@ -1697,14 +1724,14 @@ class ApiService {
   /// POST
 
   Future<bool> createShop({
-    required BuildContext context,
+    // required BuildContext context,
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
     required String name,
     required String address,
     required String phone,
-    required String? email,
+    required String email,
     required String? imageUrl,
     required String? coordinates,
   }) async {
@@ -1729,9 +1756,10 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 401) {
-      Navigator.pushNamed(context, signInRoute);
-      return false;
+    if (response.statusCode == 401 || response.statusCode == 403) {
+      throw Exception("please reLogin");
+      // Navigator.pushNamed(context, signInRoute);
+      // return false;
       // token = await refreshAccessToken();
       // if (token == null) {
       //   Navigator.pushNamed(context, signInRoute);
@@ -1752,37 +1780,41 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return true;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          backgroundColor: Colors.red.shade400,
-          content: Text(
-            jsonDecode(response.body)['error'] ??
-                "Kesalahan system, hubungi pengembang aplikasi",
-          ),
-        ),
+      throw Exception(
+        jsonDecode(response.body)['message'] ?? 'Internal service error',
       );
-      return false;
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     showCloseIcon: true,
+      //     backgroundColor: Colors.red.shade400,
+      //     content: Text(
+      //       jsonDecode(response.body)['error'] ??
+      //           "Kesalahan system, hubungi pengembang aplikasi",
+      //     ),
+      //   ),
+      // );
+      // return false;
     }
   }
 
   Future<List<dynamic>> getAllShopsBySales({
-    required BuildContext context,
-    required String salesId,
+    // required BuildContext context,
+    required String clientId,
   }) async {
     String? token = await _getToken();
 
     final response = await http.get(
-      Uri.parse('$baseUrl/shops/$salesId'),
+      Uri.parse('$baseUrl/shops/$clientId'),
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
       },
     );
 
-    if (response.statusCode == 401) {
-      Navigator.pushNamed(context, signInRoute);
-      return [];
+    if (response.statusCode == 401 || response.statusCode == 403) {
+      throw Exception("please reLogin");
+      // Navigator.pushNamed(context, signInRoute);
+      // return [];
       // token = await refreshAccessToken();
       // if (token == null) {
       //   Navigator.pushNamed(context, signInRoute);
@@ -1792,17 +1824,20 @@ class ApiService {
     } else if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          backgroundColor: Colors.red.shade400,
-          content: Text(
-            jsonDecode(response.body)['error'] ??
-                "Kesalahan system, hubungi pengembang aplikasi",
-          ),
-        ),
+      throw Exception(
+        jsonDecode(response.body)['message'] ?? 'Internal service error',
       );
-      return [];
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     showCloseIcon: true,
+      //     backgroundColor: Colors.red.shade400,
+      //     content: Text(
+      //       jsonDecode(response.body)['error'] ??
+      //           "Kesalahan system, hubungi pengembang aplikasi",
+      //     ),
+      //   ),
+      // );
+      // return [];
     }
   }
 

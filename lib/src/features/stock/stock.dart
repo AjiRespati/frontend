@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/stock/stock_desktop.dart';
 import 'package:frontend/src/features/stock/stock_mobile.dart';
@@ -14,101 +16,127 @@ class Stock extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _StockState extends State<Stock> with GetItStateMixin {
+  Future<void> _setup() async {
+    await get<SystemViewModel>().self(context);
+
+    bool isClient =
+        (get<SystemViewModel>().level ?? 0) < 4 ||
+        (get<SystemViewModel>().level ?? 0) > 5;
+    DateTime dateFromFilter = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      1,
+    );
+    DateTime dateToFilter = DateTime(
+      DateTime.now().year,
+      DateTime.now().month + 1,
+      1,
+    ).subtract(Duration(days: 1));
+    get<StockViewModel>().dateFromFilter = dateFromFilter;
+    get<StockViewModel>().dateToFilter = dateToFilter;
+    var user = get<SystemViewModel>().user;
+    var userClient = (user?['levelDesc'] ?? "salesman")
+        .toLowerCase()
+        .replaceAll(" ", "");
+    get<StockViewModel>().getStockTable(
+      context: context,
+      status: 'settled',
+      isClient: isClient,
+      salesId:
+          isClient
+              ? userClient == "salesman"
+                  ? get<SystemViewModel>().salesId
+                  : null
+              : null,
+      subAgentId:
+          isClient
+              ? userClient == "subagent"
+                  ? get<SystemViewModel>().subAgentId
+                  : null
+              : null,
+      agentId:
+          isClient
+              ? userClient == "agent"
+                  ? get<SystemViewModel>().agentId
+                  : null
+              : null,
+      shopId:
+          isClient
+              ? userClient == "shop"
+                  ? get<SystemViewModel>().shopId
+                  : null
+              : null,
+      stockEvent: null,
+    );
+
+    get<StockViewModel>().getStockTable(
+      context: context,
+      status: 'created',
+      isClient: isClient,
+      salesId:
+          isClient
+              ? userClient == "salesman"
+                  ? get<SystemViewModel>().salesId
+                  : null
+              : null,
+      subAgentId:
+          isClient
+              ? userClient == "subagent"
+                  ? get<SystemViewModel>().subAgentId
+                  : null
+              : null,
+      agentId:
+          isClient
+              ? userClient == "agent"
+                  ? get<SystemViewModel>().agentId
+                  : null
+              : null,
+      shopId:
+          isClient
+              ? userClient == "shop"
+                  ? get<SystemViewModel>().shopId
+                  : null
+              : null,
+      stockEvent: null,
+    );
+
+    get<StockViewModel>().getStockTable(
+      context: context,
+      status: 'canceled',
+      isClient: isClient,
+      salesId:
+          isClient
+              ? userClient == "salesman"
+                  ? get<SystemViewModel>().salesId
+                  : null
+              : null,
+      subAgentId:
+          isClient
+              ? userClient == "subagent"
+                  ? get<SystemViewModel>().subAgentId
+                  : null
+              : null,
+      agentId:
+          isClient
+              ? userClient == "agent"
+                  ? get<SystemViewModel>().agentId
+                  : null
+              : null,
+      shopId:
+          isClient
+              ? userClient == "shop"
+                  ? get<SystemViewModel>().shopId
+                  : null
+              : null,
+      stockEvent: null,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      bool isClient =
-          (get<SystemViewModel>().level ?? 0) < 4 ||
-          (get<SystemViewModel>().level ?? 0) > 5;
-      DateTime dateFromFilter = DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        1,
-      );
-      DateTime dateToFilter = DateTime(
-        DateTime.now().year,
-        DateTime.now().month + 1,
-        1,
-      ).subtract(Duration(days: 1));
-      get<StockViewModel>().dateFromFilter = dateFromFilter;
-      get<StockViewModel>().dateToFilter = dateToFilter;
-      var user = get<SystemViewModel>().user;
-      var userClient = (user?['levelDesc'] ?? "salesman")
-          .toLowerCase()
-          .replaceAll(" ", "");
-      get<StockViewModel>().getStockTable(
-        context: context,
-        status: 'created',
-        isClient: isClient,
-        salesId:
-            isClient
-                ? userClient == "salesman"
-                    ? get<SystemViewModel>().salesId
-                    : null
-                : null,
-        subAgentId:
-            isClient
-                ? userClient == "subagent"
-                    ? get<SystemViewModel>().subAgentId
-                    : null
-                : null,
-        agentId:
-            isClient
-                ? userClient == "agent"
-                    ? get<SystemViewModel>().agentId
-                    : null
-                : null,
-        stockEvent: null,
-      );
-      get<StockViewModel>().getStockTable(
-        context: context,
-        status: 'settled',
-        isClient: isClient,
-        salesId:
-            isClient
-                ? userClient == "salesman"
-                    ? get<SystemViewModel>().salesId
-                    : null
-                : null,
-        subAgentId:
-            isClient
-                ? userClient == "subagent"
-                    ? get<SystemViewModel>().subAgentId
-                    : null
-                : null,
-        agentId:
-            isClient
-                ? userClient == "agent"
-                    ? get<SystemViewModel>().agentId
-                    : null
-                : null,
-        stockEvent: null,
-      );
-      get<StockViewModel>().getStockTable(
-        context: context,
-        status: 'canceled',
-        isClient: isClient,
-        salesId:
-            isClient
-                ? userClient == "salesman"
-                    ? get<SystemViewModel>().salesId
-                    : null
-                : null,
-        subAgentId:
-            isClient
-                ? userClient == "subagent"
-                    ? get<SystemViewModel>().subAgentId
-                    : null
-                : null,
-        agentId:
-            isClient
-                ? userClient == "agent"
-                    ? get<SystemViewModel>().agentId
-                    : null
-                : null,
-        stockEvent: null,
-      );
+      _setup();
     });
   }
 

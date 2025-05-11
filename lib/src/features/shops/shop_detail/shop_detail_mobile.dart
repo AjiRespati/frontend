@@ -67,6 +67,11 @@ class _ShopDetailMobileState extends State<ShopDetailMobile>
   @override
   Widget build(BuildContext context) {
     watchOnly((StockViewModel x) => x.shopStockTable);
+    watchOnly((StockViewModel x) => x.isError);
+    watchOnly((StockViewModel x) => x.isSuccess);
+    if (mounted) {
+      snackbarGenerator(context, get<StockViewModel>());
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: true,

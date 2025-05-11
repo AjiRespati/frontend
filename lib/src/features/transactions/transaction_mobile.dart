@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/features/transactions/components/transaction_buy.dart';
 import 'package:frontend/src/features/transactions/components/transaction_resume.dart';
 import 'package:frontend/src/features/transactions/components/transaction_sell_client.dart';
+import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
@@ -40,6 +41,12 @@ class _TransactionMobileState extends State<TransactionMobile>
 
   @override
   Widget build(BuildContext context) {
+    watchOnly((StockViewModel x) => x.isError);
+    watchOnly((StockViewModel x) => x.isSuccess);
+    if (mounted) {
+      snackbarGenerator(context, get<StockViewModel>());
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(

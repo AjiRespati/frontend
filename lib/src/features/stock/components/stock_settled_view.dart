@@ -72,6 +72,12 @@ class StockSettledView extends StatelessWidget with GetItMixin {
                                 ? get<SystemViewModel>().agentId
                                 : null
                             : null,
+                    shopId:
+                        isClient
+                            ? userClient == "shop"
+                                ? get<SystemViewModel>().shopId
+                                : null
+                            : null,
                     stockEvent: null,
                   );
                 },

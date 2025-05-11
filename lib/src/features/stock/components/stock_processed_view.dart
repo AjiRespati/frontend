@@ -89,6 +89,12 @@ class _StockProcessedViewState extends State<StockProcessedView>
                             userClient == "agent"
                                 ? get<SystemViewModel>().agentId
                                 : null,
+                        shopId:
+                            isClient
+                                ? userClient == "shop"
+                                    ? get<SystemViewModel>().shopId
+                                    : null
+                                : null,
                         stockEvent:
                             _client == 'distributor' ? "stock_in" : null,
                       );
@@ -98,8 +104,9 @@ class _StockProcessedViewState extends State<StockProcessedView>
                         status: 'created',
                         isClient: isClient,
                         salesId: _client == "salesman" ? _idChoosen : null,
-                        agentId: _client == "subAgent" ? _idChoosen : null,
-                        subAgentId: _client == "agent" ? _idChoosen : null,
+                        subAgentId: _client == "subAgent" ? _idChoosen : null,
+                        agentId: _client == "agent" ? _idChoosen : null,
+                        shopId: _client == "shop" ? _idChoosen : null,
                         stockEvent:
                             _client == 'distributor' ? "stock_in" : null,
                       );
@@ -336,7 +343,10 @@ class _StockProcessedViewState extends State<StockProcessedView>
   }
 
   bool _validateClient(String? client, String? idChoosen) {
-    if (client == "salesman" || client == "subAgent" || client == "agent") {
+    if (client == "salesman" ||
+        client == "subAgent" ||
+        client == "agent" ||
+        client == "shop") {
       if (idChoosen != null) {
         return true;
       }

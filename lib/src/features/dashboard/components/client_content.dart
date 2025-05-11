@@ -91,7 +91,11 @@ class _ClientContentState extends State<ClientContent> with GetItStateMixin {
                       Expanded(
                         child: Column(
                           children: [
-                            Text(formatCurrency(item[_mapClientCom[_client]])),
+                            Text(
+                              formatCurrency(
+                                item?[_mapClientCom[_client]] ?? 0,
+                              ),
+                            ),
                           ],
                         ),
                       ),

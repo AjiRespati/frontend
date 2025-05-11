@@ -2,6 +2,7 @@
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/application_info.dart';
 import 'package:frontend/src/features/transactions/components/buy_product.dart';
 import 'package:frontend/src/models/product_transaction.dart';
 import 'package:frontend/src/routes/route_names.dart';
@@ -296,8 +297,14 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
     bool isSelected,
   ) {
     // --- You can now use the 'isDisabled' flag ---
-    Color textColor = Colors.black87; // Default text color
-    FontWeight fontWeight = FontWeight.normal;
+    Color textColor =
+        (item['totalStock'] ?? 0) <= ApplicationInfo.lowStockNumber
+            ? Colors.red.shade700
+            : Colors.black87; // Default text color
+    FontWeight fontWeight =
+        (item['totalStock'] ?? 0) <= ApplicationInfo.lowStockNumber
+            ? FontWeight.bold
+            : FontWeight.normal;
 
     if (isDisabled) {
       textColor =
@@ -312,14 +319,35 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       // You might want to prevent interaction if isDisabled is true,
       // though the dropdown often handles this already.
-      child: Text(
-        item['productName'],
-        style: TextStyle(
-          fontSize: 16,
-          color: textColor, // Use the determined color
-          fontWeight: fontWeight, // Use the determined weight
-          // decoration: isDisabled ? TextDecoration.lineThrough : null, // Optional: strike-through
-        ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              item['productName'] ?? item['name'],
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 16,
+                color: textColor, // Use the determined color
+                fontWeight: fontWeight, // Use the determined weight
+                // decoration: isDisabled ? TextDecoration.lineThrough : null, // Optional: strike-through
+              ),
+            ),
+          ),
+
+          SizedBox(width: 15),
+          Text("Stock: "),
+          Text(
+            item['totalStock'] == null ? "" : item['totalStock'].toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color:
+                  (item['totalStock'] ?? 0) <= ApplicationInfo.lowStockNumber
+                      ? Colors.red.shade700
+                      : Colors.green.shade700,
+            ),
+          ),
+        ],
       ),
     );
   }

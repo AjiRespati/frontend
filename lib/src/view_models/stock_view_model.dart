@@ -12,7 +12,11 @@ class StockViewModel extends ChangeNotifier {
   final ApiService apiService = ApiService();
   // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _isBusy = false;
-  // bool _isLoading = true;
+  bool _isNoSession = false;
+  bool? _isError;
+  bool _isSuccess = false;
+  String? _errorMessage;
+  String? _successMessage;
   final formKey = GlobalKey<FormState>();
 
   Map<String, dynamic>? _commissionData;
@@ -72,6 +76,7 @@ class StockViewModel extends ChangeNotifier {
   dynamic _reloadBuy;
 
   List<dynamic> _responseBatch = [];
+  int _batchCompleted = 0;
 
   String _client = 'salesman';
   final List<String> _clients = [
@@ -149,6 +154,12 @@ class StockViewModel extends ChangeNotifier {
   List<dynamic> get responseBatch => _responseBatch;
   set responseBatch(List<dynamic> val) {
     _responseBatch = val;
+    notifyListeners();
+  }
+
+  int get batchCompleted => _batchCompleted;
+  set batchCompleted(int val) {
+    _batchCompleted = val;
     notifyListeners();
   }
 
@@ -264,11 +275,35 @@ class StockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // bool get isLoading => _isLoading;
-  // set isLoading(bool val) {
-  //   _isLoading = val;
-  //   notifyListeners();
-  // }
+  bool get isNoSession => _isNoSession;
+  set isNoSession(bool val) {
+    _isNoSession = val;
+    notifyListeners();
+  }
+
+  bool get isSuccess => _isSuccess;
+  set isSuccess(bool val) {
+    _isSuccess = val;
+    notifyListeners();
+  }
+
+  bool? get isError => _isError;
+  set isError(bool? val) {
+    _isError = val;
+    notifyListeners();
+  }
+
+  String? get errorMessage => _errorMessage;
+  set errorMessage(String? val) {
+    _errorMessage = val;
+    notifyListeners();
+  }
+
+  String? get successMessage => _successMessage;
+  set successMessage(String? val) {
+    _successMessage = val;
+    notifyListeners();
+  }
 
   Map<String, dynamic>? get commissionData => _commissionData;
   set commissionData(Map<String, dynamic>? val) {
@@ -783,6 +818,7 @@ class StockViewModel extends ChangeNotifier {
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
+    required String? shopId,
     required String? stockEvent,
   }) async {
     isBusy = true;
@@ -804,6 +840,7 @@ class StockViewModel extends ChangeNotifier {
         agentId: agentId,
         subAgentId: subAgentId,
         salesId: salesId,
+        shopId: shopId,
         stockEvent: stockEvent,
       );
     } else {
@@ -816,6 +853,7 @@ class StockViewModel extends ChangeNotifier {
           agentId: agentId,
           subAgentId: subAgentId,
           salesId: salesId,
+          shopId: shopId,
           stockEvent: stockEvent,
         );
       } else {
@@ -827,6 +865,7 @@ class StockViewModel extends ChangeNotifier {
           agentId: agentId,
           subAgentId: subAgentId,
           salesId: salesId,
+          shopId: shopId,
         );
       }
     }
@@ -1056,63 +1095,83 @@ class StockViewModel extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> createShop({
-    required BuildContext context,
+  Future<void> createShop({
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
     required String name,
     required String address,
     required String phone,
-    required String? email,
+    required String email,
     required String? imageUrl,
     required String? coordinates,
   }) async {
-    isBusy = true;
-    final resp = await apiService.createShop(
-      context: context,
-      salesId: salesId,
-      subAgentId: subAgentId,
-      agentId: agentId,
-      name: name,
-      address: address,
-      phone: phone,
-      email: email,
-      imageUrl: imageUrl,
-      coordinates: coordinates,
-    );
+    try {
+      isBusy = true;
 
-    if (resp) {
-      isBusy = false;
-      return true;
-    } else {
-      isBusy = false;
-      return false;
+      await apiService.createShop(
+        salesId: salesId,
+        subAgentId: subAgentId,
+        agentId: agentId,
+        name: name,
+        address: address,
+        phone: phone,
+        email: email,
+        imageUrl: imageUrl,
+        coordinates: coordinates,
+      );
+
+      shops = [];
+      shops = await apiService.getAllShopsBySales(
+        // context: context,
+        clientId: salesId ?? (subAgentId ?? (agentId ?? "")),
+      );
+
+      successMessage = "Tambah toko berhasil.";
+      isSuccess = true;
+    } catch (e) {
+      if (e.toString().contains("please reLogin")) {
+        isBusy = false;
+        isNoSession = true;
+      } else {
+        errorMessage = e.toString().replaceAll('Exception: ', '');
+        isBusy = false;
+        isError = true;
+      }
     }
   }
 
-  Future<bool> getShopsBySales({
-    required BuildContext context,
-    required String salesId,
+  Future<void> getShopsBySales({
+    // required BuildContext context,
+    required String clientId,
     bool? isActive,
   }) async {
-    isBusy = true;
-    shops = [];
+    try {
+      isBusy = true;
+      shops = [];
 
-    shops = await apiService.getAllShopsBySales(
-      context: context,
-      salesId: salesId,
-    );
+      shops = await apiService.getAllShopsBySales(
+        // context: context,
+        clientId: clientId,
+      );
 
-    if (isActive == true) {
-      shops.removeWhere((shop) {
-        // The test function: return true if the item should be removed
-        return shop['status'] == 'inactive';
-      });
+      if (isActive == true) {
+        shops.removeWhere((shop) {
+          // The test function: return true if the item should be removed
+          return shop['status'] == 'inactive';
+        });
+      }
+      isBusy = false;
+    } catch (e) {
+      if (e.toString().contains("please reLogin")) {
+        isBusy = false;
+        isNoSession = true;
+      } else {
+        errorMessage = e.toString().replaceAll('Exception: ', '');
+        isBusy = false;
+        isError = true;
+      }
     }
-
-    isBusy = false;
-    return true;
   }
 
   Future<bool> getAllShops({required BuildContext context}) async {
@@ -1330,11 +1389,12 @@ class StockViewModel extends ChangeNotifier {
                   tx.productDetail['metricId'], // Adjust based on your ProductTransaction structure
               'stockEvent': tx.stockEvent, // Or get from tx if variable
               'amount': tx.productAmount,
-              'salesId': salesId, // Or get from tx / global state
-              'subAgentId': subAgentId, // Or get from tx / global state
-              'agentId': agentId, // Or get from tx / global state
-              'shopId':
-                  tx.shopId, // Assuming shopId is stored in ProductTransaction
+              'salesId': tx.salesId, // Or get from tx / global state
+              'subAgentId': tx.subAgentId, // Or get from tx / global state
+              'agentId': tx.agentId, // Or get from tx / global state
+              'shopId': tx.shopId, // Assuming shopId is stored
+              'parentId': tx.parentId,
+              'parentType': tx.parentType,
               'status': 'created', // Or let backend decide
               'description':
                   null, //tx.description, // Assuming description is available
@@ -1495,16 +1555,26 @@ class StockViewModel extends ChangeNotifier {
     required BuildContext context,
     required bool isClient,
     required String status,
+    required int? level,
+    required String? shopId,
+    required String? parentId,
+    required String? parentType,
     required String? sortBy,
     required String? sortOrder,
     required int? page,
     required int? limit,
   }) async {
+    batchCompleted = 0;
     isBusy = true;
-    responseBatch = [];
+    // responseBatch = [];
 
     String fromDate = generateDateString(dateFromFilter);
     String toDate = generateDateString(dateToFilter.add(Duration(days: 1)));
+    String? shopList;
+
+    if ((level ?? 0) < 4) {
+      shopList = shops.map((e) => e['email']).join(",");
+    }
 
     dynamic response = await ApiService().getStockBatches(
       context: context,
@@ -1512,6 +1582,11 @@ class StockViewModel extends ChangeNotifier {
       fromDate: fromDate,
       toDate: toDate,
       createdBy: isClient ? createdBy : null,
+      shopList: shopList,
+      level: level,
+      shopId: shopId,
+      parentId: parentId,
+      parentType: parentType,
       sortBy: sortBy,
       sortOrder: sortOrder,
       page: page,
@@ -1523,6 +1598,13 @@ class StockViewModel extends ChangeNotifier {
       return false;
     } else {
       responseBatch = response['data'];
+      for (var i = 0; i < responseBatch.length; i++) {
+        var item = responseBatch[i];
+
+        if (item['status'] == 'completed') {
+          batchCompleted = batchCompleted + 1;
+        }
+      }
       isBusy = false;
       return true;
     }

@@ -1,20 +1,31 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/shops/components/add_shop.dart';
 import 'package:frontend/src/features/shops/components/shop_table_card.dart';
+import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/add_button.dart';
 import 'package:frontend/src/widgets/mobile_navbar.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
-class ShopsMobile extends StatelessWidget with GetItMixin {
+class ShopsMobile extends StatefulWidget with GetItStatefulWidgetMixin {
   ShopsMobile({super.key});
 
+  @override
+  State<ShopsMobile> createState() => _ShopsMobileState();
+}
+
+class _ShopsMobileState extends State<ShopsMobile> with GetItStateMixin {
   @override
   Widget build(BuildContext context) {
     watchOnly((StockViewModel x) => x.shops);
     watchOnly((StockViewModel x) => x.reloadBuy);
+    watchOnly((StockViewModel x) => x.isError);
+    watchOnly((StockViewModel x) => x.isSuccess);
+    if (mounted) {
+      snackbarGenerator(context, get<StockViewModel>());
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -56,21 +67,23 @@ class ShopsMobile extends StatelessWidget with GetItMixin {
       body: Column(
         children: [
           Divider(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: get<StockViewModel>().shops.length,
-              itemBuilder: (context, index) {
-                return ShopTableCard(
-                  isMobile: true,
-                  shop: get<StockViewModel>().shops[index],
-                  isClient:
-                      (get<SystemViewModel>().level ?? 0) < 4 &&
-                      (get<SystemViewModel>().level ?? 0) > 5,
-                  key: ValueKey(index + 7000),
-                );
-              },
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: get<StockViewModel>().shops.length,
+                itemBuilder: (context, index) {
+                  return ShopTableCard(
+                    isMobile: true,
+                    shop: get<StockViewModel>().shops[index],
+                    isClient:
+                        (get<SystemViewModel>().level ?? 0) < 4 &&
+                        (get<SystemViewModel>().level ?? 0) > 5,
+                    key: ValueKey(index + 7000),
+                  );
+                },
+              ),
             ),
           ),
         ],

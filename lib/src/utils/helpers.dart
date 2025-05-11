@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/src/models/freezer_status.dart';
+import 'package:frontend/src/routes/route_names.dart';
+import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:intl/intl.dart';
 
 String generateRandomValueKey() {
@@ -113,3 +115,46 @@ FreezerStatus freezerStatusFromString(
   }
 }
 // --- End Helper Function ---
+
+void snackbarGenerator(BuildContext context, StockViewModel model) {
+  return WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (model.isNoSession) {
+      Navigator.pushNamed(context, signInRoute);
+      model.isNoSession = false;
+    } else if (model.isError == true) {
+      _showSnackBar(
+        context,
+        model.errorMessage ?? "Error",
+        color: Colors.red.shade400,
+        duration: Duration(seconds: 2),
+      );
+      model.isError = null;
+      model.errorMessage = null;
+    } else if (model.isSuccess) {
+      _showSnackBar(
+        context,
+        model.successMessage ?? "Success",
+        color: Colors.green.shade400,
+        duration: Duration(seconds: 2),
+      );
+      model.isSuccess = false;
+      model.successMessage = null;
+    }
+  });
+}
+
+// Helper function to show SnackBars
+void _showSnackBar(
+  BuildContext context,
+  String message, {
+  Color color = Colors.blue,
+  Duration duration = const Duration(seconds: 4),
+}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      backgroundColor: color,
+      duration: duration,
+    ),
+  );
+}
