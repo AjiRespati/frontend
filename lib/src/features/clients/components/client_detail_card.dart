@@ -84,11 +84,14 @@ class ClientDetailCard extends StatelessWidget with GetItMixin {
   double _generateKomisi(dynamic item) {
     double result = 0;
 
-    if (item['totalSalesShare'] != null) {
+    if (item['totalSalesShare'] != null &&
+        item['totalSalesShare'].toDouble() > 0) {
       result = item['totalSalesShare'].toDouble();
-    } else if (item['totalSubAgentShare'] != null) {
+    } else if (item['totalSubAgentShare'] != null &&
+        item['totalSubAgentShare'].toDouble() > 0) {
       result = item['totalSubAgentShare'].toDouble();
-    } else if (item['totalAgentShare'] != null) {
+    } else if (item['totalAgentShare'] != null &&
+        item['totalAgentShare'].toDouble() > 0) {
       result = item['totalAgentShare'].toDouble();
     }
 
