@@ -203,7 +203,11 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
 
                               InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(context, productsRoute);
+                                  Navigator.pushNamed(
+                                    context,
+                                    productsRoute,
+                                    arguments: false,
+                                  );
                                 },
                                 child: Row(
                                   mainAxisAlignment:
@@ -215,6 +219,7 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                                         Navigator.pushNamed(
                                           context,
                                           productsRoute,
+                                          arguments: false,
                                         );
                                       },
                                       icon: Icon(

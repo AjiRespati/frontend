@@ -6,7 +6,9 @@ import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class Products extends StatefulWidget with GetItStatefulWidgetMixin {
-  Products({super.key});
+  Products({required this.showOnly, super.key});
+
+  final bool showOnly;
 
   @override
   State<Products> createState() => _ProductsState();
@@ -35,8 +37,8 @@ class _ProductsState extends State<Products> with GetItStateMixin {
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
-      mobileLayout: ProductMobile(),
-      desktopLayout: ProductDesktop(),
+      mobileLayout: ProductMobile(showOnly: widget.showOnly),
+      desktopLayout: ProductDesktop(showOnly: widget.showOnly),
     );
   }
 }

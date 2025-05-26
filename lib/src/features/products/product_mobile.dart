@@ -8,7 +8,9 @@ import 'package:frontend/src/features/products/components/product_card.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ProductMobile extends StatelessWidget with GetItMixin {
-  ProductMobile({super.key});
+  ProductMobile({required this.showOnly, super.key});
+
+  final bool showOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -16,41 +18,46 @@ class ProductMobile extends StatelessWidget with GetItMixin {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
-          "Products",
+          showOnly ? "Stock Distributor" : "Products",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
         ),
-        actions: [
-          if (watchOnly((StockViewModel x) => x.isBusy))
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: SizedBox(
-                width: 25,
-                height: 25,
-                child: CircularProgressIndicator(color: Colors.blue),
-              ),
-            ),
-          Text("Add Product"),
-          SizedBox(width: 5),
-          AddButton(
-            size: 30,
-            message: "Add Product",
-            onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (context) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom,
+        actions:
+            showOnly
+                ? null
+                : [
+                  if (watchOnly((StockViewModel x) => x.isBusy))
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: SizedBox(
+                        width: 25,
+                        height: 25,
+                        child: CircularProgressIndicator(color: Colors.blue),
+                      ),
                     ),
-                    child: SingleChildScrollView(child: AddProductScreen()),
-                  );
-                },
-              );
-            },
-          ),
-          SizedBox(width: 20),
-        ],
+                  Text("Add Product"),
+                  SizedBox(width: 5),
+                  AddButton(
+                    size: 30,
+                    message: "Add Product",
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: SingleChildScrollView(
+                              child: AddProductScreen(),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  SizedBox(width: 20),
+                ],
       ),
       body:
           watchOnly((StockViewModel x) => x.isBusy)
@@ -62,27 +69,28 @@ class ProductMobile extends StatelessWidget with GetItMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     const Center(child: Text("No products found")),
-                    AddButton(
-                      size: 30,
-                      message: "Add Product",
-                      onPressed: () {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (context) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom,
-                              ),
-                              child: SingleChildScrollView(
-                                child: AddProductScreen(),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    if (!showOnly)
+                      AddButton(
+                        size: 30,
+                        message: "Add Product",
+                        onPressed: () {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom,
+                                ),
+                                child: SingleChildScrollView(
+                                  child: AddProductScreen(),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
                   ],
                 ),
               )
@@ -107,6 +115,7 @@ class ProductMobile extends StatelessWidget with GetItMixin {
                           return ProductCard(
                             product: get<StockViewModel>().products[index],
                             isMobile: true,
+                            showOnly: showOnly,
                           );
                         },
                       ),

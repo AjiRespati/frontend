@@ -10,10 +10,16 @@ import '../../../../application_info.dart';
 import 'package:intl/intl.dart'; // ✅ For formatting dates
 
 class ProductCard extends StatelessWidget with GetItMixin {
-  ProductCard({super.key, required this.isMobile, required this.product});
+  ProductCard({
+    super.key,
+    required this.isMobile,
+    required this.product,
+    required this.showOnly,
+  });
 
   final Map<String, dynamic> product;
   final bool isMobile;
+  final bool showOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +45,16 @@ class ProductCard extends StatelessWidget with GetItMixin {
         alignment: AlignmentDirectional.bottomEnd,
         children: [
           InkWell(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                productDetailRoute,
-                arguments: product["productId"],
-              );
-            },
+            onTap:
+                showOnly
+                    ? null
+                    : () {
+                      Navigator.pushNamed(
+                        context,
+                        productDetailRoute,
+                        arguments: product["productId"],
+                      );
+                    },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -113,20 +122,26 @@ class ProductCard extends StatelessWidget with GetItMixin {
                           fontWeight: FontWeight.w900,
                         ),
                       ),
+
                       // ✅ Last Stock In Date
-                      Text(
-                        "Last In: $formattedStockIn",
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Colors.blue,
+                      if (!showOnly)
+                        Text(
+                          "Last In: $formattedStockIn",
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.blue,
+                          ),
                         ),
-                      ),
 
                       // ✅ Last Stock Out Date
-                      Text(
-                        "Last Out: $formattedStockOut",
-                        style: const TextStyle(fontSize: 11, color: Colors.red),
-                      ),
+                      if (!showOnly)
+                        Text(
+                          "Last Out: $formattedStockOut",
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.red,
+                          ),
+                        ),
                       Row(
                         children: [
                           Column(
@@ -176,7 +191,11 @@ class ProductCard extends StatelessWidget with GetItMixin {
                     status: 'inactive',
                     description: null,
                   );
-                  Navigator.pushNamed(context, productsRoute);
+                  Navigator.pushNamed(
+                    context,
+                    productsRoute,
+                    arguments: showOnly,
+                  );
                 },
               ),
             ),
