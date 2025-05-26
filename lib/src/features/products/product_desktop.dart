@@ -8,7 +8,9 @@ import 'package:frontend/src/features/products/components/product_card.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ProductDesktop extends StatelessWidget with GetItMixin {
-  ProductDesktop({super.key});
+  ProductDesktop({required this.showOnly, super.key});
+
+  final bool showOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +114,7 @@ class ProductDesktop extends StatelessWidget with GetItMixin {
                             return ProductCard(
                               product: get<StockViewModel>().products[index],
                               isMobile: false,
+                              showOnly: showOnly,
                             );
                           },
                         ),

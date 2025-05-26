@@ -37,7 +37,7 @@ class AppRouter {
           screen = Dashboard();
           break;
         case productsRoute:
-          screen = Products();
+          screen = Products(showOnly: arguments);
           break;
         case productDetailRoute:
           screen = ProductDetail(productId: arguments);

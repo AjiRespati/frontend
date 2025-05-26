@@ -111,7 +111,7 @@ class RemoveButton extends StatelessWidget {
               Icon(
                 Icons.remove,
                 color: Colors.white,
-                size: size == null ? 20 : size! * 0.6,
+                size: size == null ? 20 : size! * 0.85,
               ),
             ],
           ),
