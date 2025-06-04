@@ -46,7 +46,7 @@ class _UpdateLevelContentState extends State<UpdateStatusContent>
               widget.username,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
-            Text("Update Level", style: TextStyle(fontSize: 12)),
+            Text("Update Status", style: TextStyle(fontSize: 12)),
             SizedBox(height: 40),
             DropdownButtonFormField<String>(
               decoration: InputDecoration(isDense: true),

@@ -1881,6 +1881,9 @@ class ApiService {
   Future<bool> updateShop({
     required BuildContext context,
     required String? id,
+    required String? salesId,
+    required String? subAgentId,
+    required String? agentId,
     required String? name,
     required String? image,
     required String? address,
@@ -1891,42 +1894,32 @@ class ApiService {
   }) async {
     String? token = await _getToken();
 
+    Map<String, dynamic> mapbody = {
+      'name': name,
+      'image': image,
+      'address': address,
+      'coordinates': coordinates,
+      'phone': phone,
+      'email': email,
+      'status': status,
+    };
+
+    if (salesId != null) mapbody['salesId'] = salesId;
+    if (subAgentId != null) mapbody['subAgentId'] = subAgentId;
+    if (agentId != null) mapbody['agentId'] = agentId;
+
     final response = await http.put(
       Uri.parse('$baseUrl/shops/$id'),
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
       },
-      body: jsonEncode({
-        'name': name,
-        'image': image,
-        'address': address,
-        'coordinates': coordinates,
-        'phone': phone,
-        'email': email,
-        'status': status,
-      }),
+      body: jsonEncode(mapbody),
     );
 
     if (response.statusCode == 401) {
       Navigator.pushNamed(context, signInRoute);
       return false;
-      // token = await refreshAccessToken();
-      // if (token == null) {
-      //   Navigator.pushNamed(context, signInRoute);
-      //   return false;
-      // }
-      // return updateShop(
-      //   id: id,
-      //   context: context,
-      //   name: name,
-      //   image: image,
-      //   address: address,
-      //   coordinates: coordinates,
-      //   phone: phone,
-      //   email: email,
-      //   status: status,
-      // );
     } else if (response.statusCode == 200) {
       return true;
     } else {

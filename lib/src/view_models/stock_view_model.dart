@@ -1187,6 +1187,9 @@ class StockViewModel extends ChangeNotifier {
   Future<bool> updateShop({
     required BuildContext context,
     required String? id,
+    required String? salesId,
+    required String? subAgentId,
+    required String? agentId,
     required String? name,
     required String? image,
     required String? address,
@@ -1198,6 +1201,9 @@ class StockViewModel extends ChangeNotifier {
     return await apiService.updateShop(
       context: context,
       id: id,
+      salesId: salesId,
+      subAgentId: subAgentId,
+      agentId: agentId,
       name: name,
       image: image,
       address: address,

@@ -4,6 +4,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/src/features/shops/components/update_freezer_status.dart';
 import 'package:frontend/src/models/freezer_status.dart';
+import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/services/api_service.dart';
 import 'package:frontend/src/utils/helpers.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
@@ -26,6 +27,22 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
   String? _message;
   bool _isClient = true;
 
+  String? _salesman;
+  String? _subAgent;
+  String? _agent;
+  String? _salesmanId;
+  String? _subAgentId;
+  String? _agentId;
+
+  bool _isNoSales = false;
+
+  List<dynamic> _salesmen = [];
+  final List<String> _salesmenNames = [];
+  List<dynamic> _subAgents = [];
+  final List<String> _subAgentNames = [];
+  List<dynamic> _agents = [];
+  final List<String> _agentNames = [];
+
   void _submit() async {
     var shopInfo = widget.shop;
     var freezerInfo = _selectedFrezer;
@@ -41,6 +58,9 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
     await get<StockViewModel>().updateShop(
       context: context,
       id: shopInfo['id'],
+      salesId: _salesmanId,
+      subAgentId: _subAgentId,
+      agentId: _agentId,
       name: null,
       image: null,
       address: null,
@@ -51,8 +71,30 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
     );
 
     await get<StockViewModel>().getAllShops(context: context);
+    Navigator.pushNamed(context, shopsRoute);
+  }
 
-    Navigator.pop(context);
+  Future<void> _setup() async {
+    _salesmen = get<StockViewModel>().salesmen;
+    for (var i = 0; i < _salesmen.length; i++) {
+      _salesmenNames.add(_salesmen[i]['name']);
+    }
+
+    _subAgents = get<StockViewModel>().subAgents;
+    for (var i = 0; i < _subAgents.length; i++) {
+      _subAgentNames.add(_subAgents[i]['name']);
+    }
+
+    _agents = get<StockViewModel>().agents;
+    for (var i = 0; i < _agents.length; i++) {
+      _agentNames.add(_agents[i]['name']);
+    }
+
+    _isNoSales =
+        widget.shop['Salesman'] == null &&
+        widget.shop['SubAgent'] == null &&
+        widget.shop['Agent'] == null;
+    setState(() {});
   }
 
   @override
@@ -63,6 +105,9 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
     _isClient =
         (get<SystemViewModel>().level ?? 0) < 4 ||
         (get<SystemViewModel>().level ?? 0) > 5;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _setup();
+    });
   }
 
   @override
@@ -93,6 +138,15 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
               color: statusColor(widget.shop['status'] ?? ""),
             ),
           ),
+          if (!_isClient && _isNoSales)
+            Text(
+              "Tanpa Sales",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.red,
+              ),
+            ),
           SizedBox(height: 15),
           Divider(),
 
@@ -271,6 +325,104 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                 setState(() {});
               },
             ),
+          SizedBox(height: 30),
+          if (!_isClient && _isNoSales) Text("Tugaskan Sales"),
+
+          SizedBox(height: 10),
+          if (!_isClient && _isNoSales) Row(children: [Text("Salesman")]),
+          if (!_isClient && _isNoSales)
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(isDense: true),
+              value: _salesman,
+              items:
+                  _salesmenNames.map((item) {
+                    return DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(item),
+                    );
+                  }).toList(),
+              onChanged: (value) {
+                _salesman = value;
+                _subAgent = null;
+                _agent = null;
+
+                String? id;
+                int idx = _salesmenNames.indexOf(value ?? "");
+                if (idx >= 0) {
+                  id = _salesmen[idx]['id'];
+                }
+
+                _salesmanId = id;
+                _subAgentId = null;
+                _agentId = null;
+
+                setState(() {});
+              },
+            ),
+
+          SizedBox(height: 10),
+          if (!_isClient && _isNoSales) Row(children: [Text("Sub Agent")]),
+          if (!_isClient && _isNoSales)
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(isDense: true),
+              value: _subAgent,
+              items:
+                  _subAgentNames.map((item) {
+                    return DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(item),
+                    );
+                  }).toList(),
+              onChanged: (value) {
+                _salesman = null;
+                _subAgent = value;
+                _agent = null;
+
+                String? id;
+                int idx = _subAgentNames.indexOf(value ?? "");
+                if (idx >= 0) {
+                  id = _subAgents[idx]['id'];
+                }
+
+                _salesmanId = null;
+                _subAgentId = id;
+                _agentId = null;
+
+                setState(() {});
+              },
+            ),
+
+          SizedBox(height: 10),
+          if (!_isClient && _isNoSales) Row(children: [Text("Agent")]),
+          if (!_isClient && _isNoSales)
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(isDense: true),
+              value: _agent,
+              items:
+                  _agentNames.map((item) {
+                    return DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(item),
+                    );
+                  }).toList(),
+              onChanged: (value) {
+                _salesman = null;
+                _subAgent = null;
+                _agent = value;
+
+                String? id;
+                int idx = _agentNames.indexOf(value ?? "");
+                if (idx >= 0) {
+                  id = _agents[idx]['id'];
+                }
+
+                _salesmanId = null;
+                _subAgentId = null;
+                _agentId = id;
+
+                setState(() {});
+              },
+            ),
 
           Stack(
             children: [
@@ -299,6 +451,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
 
           if (!_isClient)
             Stack(
+              alignment: Alignment.center,
               children: [
                 GradientElevatedButton(
                   // inactiveDelay: Duration.zero,
@@ -331,7 +484,6 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                 ),
               ],
             ),
-          if (!_isClient) SizedBox(height: 400),
 
           if (_isClient)
             GradientElevatedButton(
@@ -345,7 +497,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                 ),
               ),
             ),
-          if (_isClient) SizedBox(height: 50),
+          SizedBox(height: 50),
         ],
       ),
     );
