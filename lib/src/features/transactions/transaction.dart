@@ -77,8 +77,6 @@ class _TransactionState extends State<Transaction> with GetItStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print(get<SystemViewModel>().shopParentId);
-    print(get<SystemViewModel>().shopParentType);
     return ResponsiveLayout(
       desktopLayout: TransactionDesktop(),
       mobileLayout: TransactionMobile(),

@@ -192,12 +192,28 @@ class _ShopTableCardState extends State<ShopTableCard> with GetItStateMixin {
                               ),
                             ],
                           ),
+                        if (widget.shop['Salesman'] == null &&
+                            widget.shop['SubAgent'] == null &&
+                            widget.shop['Agent'] == null)
+                          Row(
+                            children: [
+                              SizedBox(width: 10),
+                              Text(
+                                "Toko Tanpa Sales",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
                         Row(children: [Text("Freezer:")]),
                         Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: SizedBox(
                             height: 55,
                             child: ListView.builder(
+                              shrinkWrap: true,
                               itemCount:
                                   widget.shop['Refrigerators'] == null
                                       ? 0

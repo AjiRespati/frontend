@@ -73,8 +73,6 @@ class SystemViewModel extends ChangeNotifier {
 
   int get currentPageIndex => _currentPageIndex;
   set currentPageIndex(int val) {
-    print("LEVEL: $level");
-    print("BERAPA INI INDEXNYA ??? $val");
     _currentPageIndex = val;
     notifyListeners();
   }

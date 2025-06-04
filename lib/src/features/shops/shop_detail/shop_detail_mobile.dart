@@ -107,7 +107,6 @@ class _ShopDetailMobileState extends State<ShopDetailMobile>
                       onTap: () async {
                         showModalBottomSheet(
                           isScrollControlled: true,
-                          constraints: BoxConstraints(maxHeight: 640),
                           context: context,
                           builder: (context) {
                             return Padding(
