@@ -194,7 +194,8 @@ class _ShopTableCardState extends State<ShopTableCard> with GetItStateMixin {
                           ),
                         if (widget.shop['Salesman'] == null &&
                             widget.shop['SubAgent'] == null &&
-                            widget.shop['Agent'] == null)
+                            widget.shop['Agent'] == null &&
+                            !widget.isClient)
                           Row(
                             children: [
                               SizedBox(width: 10),
