@@ -280,7 +280,7 @@ class SystemViewModel extends ChangeNotifier {
       password: passwordController.text,
       name: nameController.text,
       phone: phoneController.text,
-      email: emailController.text,
+      email: emailController.text.replaceAll(" ", "").trim(),
     );
   }
 
