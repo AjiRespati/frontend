@@ -30,8 +30,8 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
 
     if (_nameController.text.isEmpty ||
         _addressController.text.isEmpty ||
-        _phoneController.text.isEmpty ||
-        _emailController.text.isEmpty) {
+        _phoneController.text.isEmpty) {
+      //  || _emailController.text.isEmpty) {
       setState(() {
         _errorMessage = "Data belum lengkap.";
       });
@@ -47,7 +47,10 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
         name: _nameController.text,
         address: _addressController.text,
         phone: _phoneController.text,
-        email: _emailController.text,
+        email:
+            _emailController.text.isEmpty
+                ? "${_nameController.text.replaceAll(" ", "").toLowerCase().trim()}@mail.com"
+                : _emailController.text,
         imageUrl: null,
         coordinates: null,
       );
@@ -147,14 +150,18 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
           ),
           SizedBox(height: 4),
           TextFormField(
+            keyboardType: TextInputType.emailAddress,
             controller: _emailController,
-            decoration: InputDecoration(labelText: "Email"),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Harus diisi";
-              }
-              return null;
-            },
+            decoration: InputDecoration(
+              labelText: "Email",
+              helperText: "Tidak wajib diisi",
+            ),
+            // validator: (value) {
+            //   if (value == null || value.isEmpty) {
+            //     return "Harus diisi";
+            //   }
+            //   return null;
+            // },
             autovalidateMode: AutovalidateMode.always,
           ),
           SizedBox(

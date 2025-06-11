@@ -43,6 +43,11 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
   List<dynamic> _agents = [];
   final List<String> _agentNames = [];
 
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
   void _submit() async {
     var shopInfo = widget.shop;
     var freezerInfo = _selectedFrezer;
@@ -61,12 +66,13 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
       salesId: _salesmanId,
       subAgentId: _subAgentId,
       agentId: _agentId,
-      name: null,
+      name: _nameController.text.isNotEmpty ? _nameController.text : null,
       image: null,
-      address: null,
+      address:
+          _addressController.text.isNotEmpty ? _addressController.text : null,
       coordinates: null,
-      phone: null,
-      email: null,
+      phone: _phoneController.text.isNotEmpty ? _phoneController.text : null,
+      email: _emailController.text.isNotEmpty ? _emailController.text : null,
       status: oldStatus.toLowerCase(),
     );
 
@@ -75,6 +81,11 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
   }
 
   Future<void> _setup() async {
+    final Map<String, dynamic> shop = widget.shop;
+    _nameController.text = shop['name'];
+    _addressController.text = shop['address'];
+    _phoneController.text = shop['phone'];
+    _emailController.text = shop['email'];
     _salesmen = get<StockViewModel>().salesmen;
     for (var i = 0; i < _salesmen.length; i++) {
       _salesmenNames.add(_salesmen[i]['name']);
@@ -91,9 +102,9 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
     }
 
     _isNoSales =
-        widget.shop['Salesman'] == null &&
-        widget.shop['SubAgent'] == null &&
-        widget.shop['Agent'] == null;
+        shop['Salesman'] == null &&
+        shop['SubAgent'] == null &&
+        shop['Agent'] == null;
     setState(() {});
   }
 
@@ -111,6 +122,15 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _addressController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     watchOnly((StockViewModel x) => x.shops);
 
@@ -118,6 +138,11 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
       padding: EdgeInsets.all(16.0),
       child: Column(
         children: [
+          Text(
+            "Edit Toko",
+            style: TextStyle(fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -151,302 +176,381 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
           Divider(),
 
           SizedBox(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount:
-                  widget.shop['Refrigerators'] == null
-                      ? 0
-                      : widget.shop['Refrigerators'].length,
-              itemBuilder: (context, index) {
-                var freezer = widget.shop['Refrigerators'][index];
-                var freezerStatus = freezer['status'];
-                return Padding(
-                  key: ValueKey(index + 9000),
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              "${freezer['name']} (${freezer['serialNumber']})",
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            freezerStatusFromString(freezerStatus).displayName,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: statusColor(freezerStatus),
-                            ),
-                          ),
-                          SizedBox(width: 30),
-                          InkWell(
-                            onTap: () async {
-                              bool? result = await showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return Dialog(
-                                    child: UpdateFreezerStatus(
-                                      freezer: freezer,
-                                      selectedStatus: (newStatus) {
-                                        setState(() {
-                                          freezerStatus = newStatus?.name;
-                                        });
-                                      },
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  /// INI DAFTAR REFRIGERATOR
+                  SizedBox(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount:
+                          widget.shop['Refrigerators'] == null
+                              ? 0
+                              : widget.shop['Refrigerators'].length,
+                      itemBuilder: (context, index) {
+                        var freezer = widget.shop['Refrigerators'][index];
+                        var freezerStatus = freezer['status'];
+                        return Padding(
+                          key: ValueKey(index + 9000),
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      "${freezer['name']} (${freezer['serialNumber']})",
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  );
-                                },
-                              );
-                              if (result == true) {
-                                get<StockViewModel>().reloadBuy = true;
-                                setState(() {
-                                  _message = "Berhasil update status freezer";
-                                });
-                                await Future.delayed(Durations.extralong4);
-                                get<StockViewModel>().reloadBuy = null;
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    freezerStatusFromString(
+                                      freezerStatus,
+                                    ).displayName,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: statusColor(freezerStatus),
+                                    ),
+                                  ),
+                                  SizedBox(width: 30),
+                                  InkWell(
+                                    onTap: () async {
+                                      bool? result = await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Dialog(
+                                            child: UpdateFreezerStatus(
+                                              freezer: freezer,
+                                              selectedStatus: (newStatus) {
+                                                setState(() {
+                                                  freezerStatus =
+                                                      newStatus?.name;
+                                                });
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      );
+                                      if (result == true) {
+                                        get<StockViewModel>().reloadBuy = true;
+                                        setState(() {
+                                          _message =
+                                              "Berhasil update status freezer";
+                                        });
+                                        await Future.delayed(
+                                          Durations.extralong4,
+                                        );
+                                        get<StockViewModel>().reloadBuy = null;
 
-                                setState(() {
-                                  _message = null;
-                                });
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              } else if (result == false) {
-                                setState(() {
-                                  _message =
-                                      "Update status freezer tidak berhasil";
-                                });
-                                await Future.delayed(Durations.extralong4);
-                                setState(() {
-                                  _message = null;
-                                });
-                              } else {
-                                setState(() {
-                                  _message = "test";
-                                });
-                                await Future.delayed(Durations.extralong4);
-                                setState(() {
-                                  _message = null;
-                                });
-                              }
-                            },
-                            child: Icon(Icons.edit, size: 18),
+                                        setState(() {
+                                          _message = null;
+                                        });
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      } else if (result == false) {
+                                        setState(() {
+                                          _message =
+                                              "Update status freezer tidak berhasil";
+                                        });
+                                        await Future.delayed(
+                                          Durations.extralong4,
+                                        );
+                                        setState(() {
+                                          _message = null;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _message = "test";
+                                        });
+                                        await Future.delayed(
+                                          Durations.extralong4,
+                                        );
+                                        setState(() {
+                                          _message = null;
+                                        });
+                                      }
+                                    },
+                                    child: Icon(Icons.edit, size: 18),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [Text(freezer['description'] ?? "")],
+                              ),
+                            ],
                           ),
-                        ],
+                        );
+                      },
+                    ),
+                  ),
+
+                  //TODO: AWAL ADMIN AREA
+                  if (!_isClient) Row(children: [Text("Kirim Freezer")]),
+                  if (!_isClient)
+                    DropdownSearch<dynamic>(
+                      decoratorProps: DropDownDecoratorProps(
+                        baseStyle: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ), // Style for text inside the closed dropdown
                       ),
-                      Row(children: [Text(freezer['description'] ?? "")]),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-
-          if (!_isClient) Row(children: [Text("Kirim Freezer")]),
-          if (!_isClient)
-            DropdownSearch<dynamic>(
-              decoratorProps: DropDownDecoratorProps(
-                baseStyle: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ), // Style for text inside the closed dropdown
-              ),
-              popupProps: PopupProps.menu(
-                // Or .dialog(), .modalBottomSheet(), .menu()
-                showSearchBox: true,
-                searchFieldProps: TextFieldProps(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
-                    ),
-                    hintText: "Cari freezer...",
-                  ),
-                  cursorColor: Theme.of(context).primaryColor,
-                ),
-                itemBuilder: _customPopupItemBuilder,
-              ),
-              // *** Core properties (mostly unchanged in how they are used) ***
-              items:
-                  (filter, loadProps) =>
-                      get<StockViewModel>().idleFreezers, // The list of items
-              onChanged: (dynamic newValue) {
-                // Callback when an item is selected
-                setState(() {
-                  _selectedFrezer = newValue;
-                  // print("Selected shop: $_selectedFrezer");
-                });
-              },
-              selectedItem: _selectedFrezer, // The currently selected item
-              // *** Optional: Customize the display of the selected item when closed ***
-              // This builder is still valid at the top level
-              dropdownBuilder: (context, selectedItem) {
-                if (selectedItem == null) {
-                  // Use hint style from decoration if available and item is null
-                  final hintStyle =
-                      Theme.of(context).inputDecorationTheme.hintStyle ??
-                      TextStyle(color: Colors.grey[600]);
-                  return Text("Pilih freezer", style: hintStyle);
-                }
-                return Text(
-                  "${selectedItem['name']} (${selectedItem['serialNumber']})",
-                );
-              },
-              filterFn: (item, filter) {
-                // Optional: Custom filter logic
-                if (filter.isEmpty) return true; // Show all if search is empty
-                // Case-insensitive search
-                return item['name'].toLowerCase().contains(
-                  filter.toLowerCase(),
-                );
-              },
-              compareFn: (item1, item2) => item1['id' == item2['id']],
-            ),
-
-          SizedBox(height: 10),
-          if (!_isClient) Row(children: [Text("Update Status Toko")]),
-          if (!_isClient)
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(isDense: true),
-              value: oldStatus,
-              items:
-                  ["ACTIVE", "INACTIVE"].map((item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-              onChanged: (value) {
-                oldStatus = value ?? "new";
-                setState(() {});
-              },
-            ),
-          SizedBox(height: 30),
-          if (!_isClient && _isNoSales) Text("Tugaskan Sales"),
-
-          SizedBox(height: 10),
-          if (!_isClient && _isNoSales) Row(children: [Text("Salesman")]),
-          if (!_isClient && _isNoSales)
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(isDense: true),
-              value: _salesman,
-              items:
-                  _salesmenNames.map((item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-              onChanged: (value) {
-                _salesman = value;
-                _subAgent = null;
-                _agent = null;
-
-                String? id;
-                int idx = _salesmenNames.indexOf(value ?? "");
-                if (idx >= 0) {
-                  id = _salesmen[idx]['id'];
-                }
-
-                _salesmanId = id;
-                _subAgentId = null;
-                _agentId = null;
-
-                setState(() {});
-              },
-            ),
-
-          SizedBox(height: 10),
-          if (!_isClient && _isNoSales) Row(children: [Text("Sub Agent")]),
-          if (!_isClient && _isNoSales)
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(isDense: true),
-              value: _subAgent,
-              items:
-                  _subAgentNames.map((item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-              onChanged: (value) {
-                _salesman = null;
-                _subAgent = value;
-                _agent = null;
-
-                String? id;
-                int idx = _subAgentNames.indexOf(value ?? "");
-                if (idx >= 0) {
-                  id = _subAgents[idx]['id'];
-                }
-
-                _salesmanId = null;
-                _subAgentId = id;
-                _agentId = null;
-
-                setState(() {});
-              },
-            ),
-
-          SizedBox(height: 10),
-          if (!_isClient && _isNoSales) Row(children: [Text("Agent")]),
-          if (!_isClient && _isNoSales)
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(isDense: true),
-              value: _agent,
-              items:
-                  _agentNames.map((item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-              onChanged: (value) {
-                _salesman = null;
-                _subAgent = null;
-                _agent = value;
-
-                String? id;
-                int idx = _agentNames.indexOf(value ?? "");
-                if (idx >= 0) {
-                  id = _agents[idx]['id'];
-                }
-
-                _salesmanId = null;
-                _subAgentId = null;
-                _agentId = id;
-
-                setState(() {});
-              },
-            ),
-
-          Stack(
-            children: [
-              SizedBox(height: 40),
-              if (_message != null)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _message ?? "",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color:
-                              (_message ?? "").contains('tidak')
-                                  ? Colors.red.shade600
-                                  : Colors.green.shade600,
+                      popupProps: PopupProps.menu(
+                        // Or .dialog(), .modalBottomSheet(), .menu()
+                        showSearchBox: true,
+                        searchFieldProps: TextFieldProps(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
+                            hintText: "Cari freezer...",
+                          ),
+                          cursorColor: Theme.of(context).primaryColor,
                         ),
+                        itemBuilder: _customPopupItemBuilder,
                       ),
+                      // *** Core properties (mostly unchanged in how they are used) ***
+                      items:
+                          (filter, loadProps) =>
+                              get<StockViewModel>()
+                                  .idleFreezers, // The list of items
+                      onChanged: (dynamic newValue) {
+                        // Callback when an item is selected
+                        setState(() {
+                          _selectedFrezer = newValue;
+                          // print("Selected shop: $_selectedFrezer");
+                        });
+                      },
+                      selectedItem:
+                          _selectedFrezer, // The currently selected item
+                      // *** Optional: Customize the display of the selected item when closed ***
+                      // This builder is still valid at the top level
+                      dropdownBuilder: (context, selectedItem) {
+                        if (selectedItem == null) {
+                          // Use hint style from decoration if available and item is null
+                          final hintStyle =
+                              Theme.of(
+                                context,
+                              ).inputDecorationTheme.hintStyle ??
+                              TextStyle(color: Colors.grey[600]);
+                          return Text("Pilih freezer", style: hintStyle);
+                        }
+                        return Text(
+                          "${selectedItem['name']} (${selectedItem['serialNumber']})",
+                        );
+                      },
+                      filterFn: (item, filter) {
+                        // Optional: Custom filter logic
+                        if (filter.isEmpty)
+                          return true; // Show all if search is empty
+                        // Case-insensitive search
+                        return item['name'].toLowerCase().contains(
+                          filter.toLowerCase(),
+                        );
+                      },
+                      compareFn: (item1, item2) => item1['id' == item2['id']],
+                    ),
+
+                  SizedBox(height: 10),
+                  if (!_isClient) Row(children: [Text("Update Status Toko")]),
+                  if (!_isClient)
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(isDense: true),
+                      value: oldStatus,
+                      items:
+                          ["ACTIVE", "INACTIVE"].map((item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        oldStatus = value ?? "new";
+                        setState(() {});
+                      },
+                    ),
+                  SizedBox(height: 30),
+                  if (!_isClient && _isNoSales) Text("Tugaskan Sales"),
+
+                  SizedBox(height: 10),
+                  if (!_isClient && _isNoSales)
+                    Row(children: [Text("Salesman")]),
+                  if (!_isClient && _isNoSales)
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(isDense: true),
+                      value: _salesman,
+                      items:
+                          _salesmenNames.map((item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        _salesman = value;
+                        _subAgent = null;
+                        _agent = null;
+
+                        String? id;
+                        int idx = _salesmenNames.indexOf(value ?? "");
+                        if (idx >= 0) {
+                          id = _salesmen[idx]['id'];
+                        }
+
+                        _salesmanId = id;
+                        _subAgentId = null;
+                        _agentId = null;
+
+                        setState(() {});
+                      },
+                    ),
+
+                  SizedBox(height: 10),
+                  if (!_isClient && _isNoSales)
+                    Row(children: [Text("Sub Agent")]),
+                  if (!_isClient && _isNoSales)
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(isDense: true),
+                      value: _subAgent,
+                      items:
+                          _subAgentNames.map((item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        _salesman = null;
+                        _subAgent = value;
+                        _agent = null;
+
+                        String? id;
+                        int idx = _subAgentNames.indexOf(value ?? "");
+                        if (idx >= 0) {
+                          id = _subAgents[idx]['id'];
+                        }
+
+                        _salesmanId = null;
+                        _subAgentId = id;
+                        _agentId = null;
+
+                        setState(() {});
+                      },
+                    ),
+
+                  SizedBox(height: 10),
+                  if (!_isClient && _isNoSales) Row(children: [Text("Agent")]),
+                  if (!_isClient && _isNoSales)
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(isDense: true),
+                      value: _agent,
+                      items:
+                          _agentNames.map((item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        _salesman = null;
+                        _subAgent = null;
+                        _agent = value;
+
+                        String? id;
+                        int idx = _agentNames.indexOf(value ?? "");
+                        if (idx >= 0) {
+                          id = _agents[idx]['id'];
+                        }
+
+                        _salesmanId = null;
+                        _subAgentId = null;
+                        _agentId = id;
+
+                        setState(() {});
+                      },
+                    ),
+
+                  Stack(
+                    children: [
+                      SizedBox(height: 40),
+                      if (_message != null)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                _message ?? "",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      (_message ?? "").contains('tidak')
+                                          ? Colors.red.shade600
+                                          : Colors.green.shade600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                     ],
                   ),
-                ),
-            ],
+
+                  //TODO: AKHIR ADMIN AREA
+                  SizedBox(height: 10),
+
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(labelText: "Nama Toko: "),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Harus diisi";
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.always,
+                  ),
+                  SizedBox(height: 4),
+                  TextFormField(
+                    controller: _addressController,
+                    decoration: InputDecoration(labelText: "Alamat: "),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Harus diisi";
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.always,
+                  ),
+                  SizedBox(height: 4),
+                  TextFormField(
+                    keyboardType: TextInputType.phone,
+                    controller: _phoneController,
+                    decoration: InputDecoration(labelText: "Telepon: "),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Harus diisi";
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.always,
+                  ),
+                  SizedBox(height: 4),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(labelText: "Email: "),
+                  ),
+                  SizedBox(height: 4),
+
+                  SizedBox(height: 30),
+                ],
+              ),
+            ),
           ),
 
           if (!_isClient)
@@ -484,18 +588,43 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                 ),
               ],
             ),
-
           if (_isClient)
-            GradientElevatedButton(
-              // inactiveDelay: Duration.zero,
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                "Tutup",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                GradientElevatedButton(
+                  // inactiveDelay: Duration.zero,
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    "Tutup",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-              ),
+                GradientElevatedButton(
+                  gradient: const LinearGradient(
+                    colors: [Colors.green, Colors.lightGreen],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  onPressed: _submit,
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit),
+                      SizedBox(width: 10),
+                      Text(
+                        "Edit",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           SizedBox(height: 50),
         ],

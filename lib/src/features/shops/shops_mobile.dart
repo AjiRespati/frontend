@@ -45,8 +45,8 @@ class _ShopsMobileState extends State<ShopsMobile> with GetItStateMixin {
             AddButton(
               size: 32,
               message: "Tambah Toko",
-              onPressed: () {
-                showModalBottomSheet(
+              onPressed: () async {
+                await showModalBottomSheet(
                   isScrollControlled: true,
                   constraints: BoxConstraints(maxHeight: 740),
                   context: context,
@@ -59,6 +59,7 @@ class _ShopsMobileState extends State<ShopsMobile> with GetItStateMixin {
                     );
                   },
                 );
+                get<StockViewModel>().isBusy = false;
               },
             ),
           SizedBox(width: 20),
