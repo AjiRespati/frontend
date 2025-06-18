@@ -1880,61 +1880,156 @@ class ApiService {
 
   Future<bool> updateShop({
     required BuildContext context,
-    required String? id,
+    required String id,
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
     required String? name,
-    required String? image,
     required String? address,
     required String? coordinates,
     required String? phone,
     required String? email,
     required String? status,
+    required Uint8List? imageWeb,
+    required XFile? imageDevice,
   }) async {
     String? token = await _getToken();
-
-    Map<String, dynamic> mapbody = {
-      'name': name,
-      'image': image,
-      'address': address,
-      'coordinates': coordinates,
-      'phone': phone,
-      'email': email,
-      'status': status,
-    };
-
-    if (salesId != null) mapbody['salesId'] = salesId;
-    if (subAgentId != null) mapbody['subAgentId'] = subAgentId;
-    if (agentId != null) mapbody['agentId'] = agentId;
-
-    final response = await http.put(
-      Uri.parse('$baseUrl/shops/$id'),
-      headers: {
-        'Content-Type': 'application/json',
-        "Authorization": "Bearer $token",
-      },
-      body: jsonEncode(mapbody),
-    );
-
-    if (response.statusCode == 401) {
+    if (token == null) {
       Navigator.pushNamed(context, signInRoute);
-      return false;
-    } else if (response.statusCode == 200) {
-      return true;
-    } else {
+    }
+
+    var request = http.MultipartRequest("PUT", Uri.parse('$baseUrl/shops/$id'));
+
+    request.headers['Authorization'] = "Bearer $token";
+
+    // ✅ Add params
+    if (name != null && name.isNotEmpty) {
+      request.fields["name"] = name;
+    }
+    if (status != null && status.isNotEmpty) {
+      request.fields["status"] = status;
+    }
+    if (address != null && address.isNotEmpty) {
+      request.fields["address"] = address;
+    }
+    if (coordinates != null && coordinates.isNotEmpty) {
+      request.fields["coordinates"] = coordinates;
+    }
+    if (phone != null && phone.isNotEmpty) {
+      request.fields["phone"] = phone;
+    }
+    if (email != null && email.isNotEmpty) {
+      request.fields["email"] = email;
+    }
+
+    if (salesId != null) request.fields['salesId'] = salesId;
+    if (subAgentId != null) request.fields['subAgentId'] = subAgentId;
+    if (agentId != null) request.fields['agentId'] = agentId;
+
+    // ✅ Handle Web (File Picker)
+    if (kIsWeb && imageWeb != null) {
+      Uint8List imageBytes = imageWeb;
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'image',
+          imageBytes,
+          filename: "shop_image.png",
+          contentType: MediaType('image', 'png'),
+        ),
+      );
+    }
+    // ✅ Handle Mobile (Gallery & Camera)
+    else if (!kIsWeb && imageDevice != null) {
+      XFile imageFile = XFile(imageDevice.path);
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'image',
+          imageFile.path,
+          contentType: MediaType('image', 'png'),
+        ),
+      );
+    }
+
+    // --- Send the Request ---
+    try {
+      var streamedResponse = await request.send();
+
+      // --- Process the Response ---
+      // Convert the streamed response to a standard HTTP response
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      } else if (response.statusCode == 200) {
+        return true;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.red.shade400,
+            content: Text(
+              jsonDecode(response.body)['error'] ??
+                  "Kesalahan system, hubungi pengembang aplikasi",
+            ),
+          ),
+        );
+        return false;
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           showCloseIcon: true,
           backgroundColor: Colors.red.shade400,
-          content: Text(
-            jsonDecode(response.body)['error'] ??
-                "Kesalahan system, hubungi pengembang aplikasi",
-          ),
+          content: Text("Kesalahan system, hubungi pengembang aplikasi"),
         ),
       );
       return false;
     }
+
+    // String? token = await _getToken();
+
+    // Map<String, dynamic> mapbody = {
+    //   'name': name,
+    //   'image': image,
+    //   'address': address,
+    //   'coordinates': coordinates,
+    //   'phone': phone,
+    //   'email': email,
+    //   'status': status,
+    // };
+
+    // if (salesId != null) mapbody['salesId'] = salesId;
+    // if (subAgentId != null) mapbody['subAgentId'] = subAgentId;
+    // if (agentId != null) mapbody['agentId'] = agentId;
+
+    // final response = await http.put(
+    //   Uri.parse('$baseUrl/shops/$id'),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     "Authorization": "Bearer $token",
+    //   },
+    //   body: jsonEncode(mapbody),
+    // );
+
+    // if (response.statusCode == 401) {
+    //   Navigator.pushNamed(context, signInRoute);
+    //   return false;
+    // } else if (response.statusCode == 200) {
+    //   return true;
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       showCloseIcon: true,
+    //       backgroundColor: Colors.red.shade400,
+    //       content: Text(
+    //         jsonDecode(response.body)['error'] ??
+    //             "Kesalahan system, hubungi pengembang aplikasi",
+    //       ),
+    //     ),
+    //   );
+    //   return false;
+    // }
   }
 
   // TODO: FREEZER ROUTES
@@ -2167,6 +2262,126 @@ class ApiService {
       );
       return false;
     }
+  }
+
+  Future<bool> updateFreezerImage({
+    required BuildContext context,
+    required String id,
+    required Uint8List? imageWeb,
+    required XFile? imageDevice,
+  }) async {
+    String? token = await _getToken();
+    if (token == null) {
+      Navigator.pushNamed(context, signInRoute);
+    }
+
+    var request = http.MultipartRequest(
+      "PUT",
+      Uri.parse('$baseUrl/refrigerators/$id'),
+    );
+    request.headers['Authorization'] = "Bearer $token";
+
+    // ✅ Handle Web (File Picker)
+    if (kIsWeb && imageWeb != null) {
+      Uint8List imageBytes = imageWeb;
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'image',
+          imageBytes,
+          filename: "refrigerator_image.png",
+          contentType: MediaType('image', 'png'),
+        ),
+      );
+    }
+    // ✅ Handle Mobile (Gallery & Camera)
+    else if (!kIsWeb && imageDevice != null) {
+      XFile imageFile = XFile(imageDevice.path);
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'image',
+          imageFile.path,
+          contentType: MediaType('image', 'png'),
+        ),
+      );
+    }
+
+    // --- Send the Request ---
+    try {
+      var streamedResponse = await request.send();
+
+      // --- Process the Response ---
+      // Convert the streamed response to a standard HTTP response
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        Navigator.pushNamed(context, signInRoute);
+        return false;
+      } else if (response.statusCode == 200) {
+        return true;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.red.shade400,
+            content: Text(
+              jsonDecode(response.body)['error'] ??
+                  "Kesalahan system, hubungi pengembang aplikasi",
+            ),
+          ),
+        );
+        return false;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red.shade400,
+          content: Text("Kesalahan system, hubungi pengembang aplikasi"),
+        ),
+      );
+      return false;
+    }
+
+    // String? token = await _getToken();
+
+    // final response = await http.put(
+    //   Uri.parse('$baseUrl/refrigerators/$id'),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     "Authorization": "Bearer $token",
+    //   },
+    //   body: jsonEncode({'status': status, 'description': description}),
+    // );
+
+    // if (response.statusCode == 401) {
+    //   Navigator.pushNamed(context, signInRoute);
+    //   return false;
+    //   // token = await refreshAccessToken();
+    //   // if (token == null) {
+    //   //   Navigator.pushNamed(context, signInRoute);
+    //   //   return false;
+    //   // }
+    //   // return updateFreezerStatus(
+    //   //   context: context,
+    //   //   id: id,
+    //   //   status: status,
+    //   //   description: description,
+    //   // );
+    // } else if (response.statusCode == 200) {
+    //   return true;
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       showCloseIcon: true,
+    //       backgroundColor: Colors.red.shade400,
+    //       content: Text(
+    //         jsonDecode(response.body)['error'] ??
+    //             "Kesalahan system, hubungi pengembang aplikasi",
+    //       ),
+    //     ),
+    //   );
+    //   return false;
+    // }
   }
 
   Future<List<dynamic>> getAllPercentages() async {

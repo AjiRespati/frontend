@@ -1,7 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/application_info.dart';
+import 'package:frontend/src/features/shops/components/update_freezer_image.dart';
 import 'package:frontend/src/features/shops/components/update_freezer_status.dart';
 import 'package:frontend/src/models/freezer_status.dart';
 import 'package:frontend/src/routes/route_names.dart';
@@ -11,6 +17,7 @@ import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UpdateShop extends StatefulWidget with GetItStatefulWidgetMixin {
   UpdateShop({required this.shop, super.key});
@@ -25,6 +32,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
   dynamic _selectedFrezer;
   String oldStatus = "ACTIVE";
   String? _message;
+  final String _errorMessage = "";
   bool _isClient = true;
 
   String? _salesman;
@@ -48,6 +56,30 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
+  XFile? _imageMobile;
+  Uint8List? _imageWeb;
+  final ImagePicker _picker = ImagePicker();
+
+  // ✅ Pick Image for Mobile
+  Future<void> _pickImageMobile(ImageSource source) async {
+    final XFile? pickedImage = await _picker.pickImage(source: source);
+    setState(() {
+      _imageMobile = pickedImage;
+    });
+  }
+
+  // ✅ Pick Image for Web
+  Future<void> _pickImageWeb() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+    if (result != null) {
+      setState(() {
+        _imageWeb = result.files.first.bytes;
+      });
+    }
+  }
+
   void _submit() async {
     var shopInfo = widget.shop;
     var freezerInfo = _selectedFrezer;
@@ -67,13 +99,14 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
       subAgentId: _subAgentId,
       agentId: _agentId,
       name: _nameController.text.isNotEmpty ? _nameController.text : null,
-      image: null,
       address:
           _addressController.text.isNotEmpty ? _addressController.text : null,
       coordinates: null,
       phone: _phoneController.text.isNotEmpty ? _phoneController.text : null,
       email: _emailController.text.isNotEmpty ? _emailController.text : null,
       status: oldStatus.toLowerCase(),
+      imageWeb: _imageWeb,
+      imageDevice: _imageMobile,
     );
 
     await get<StockViewModel>().getAllShops(context: context);
@@ -180,7 +213,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  /// INI DAFTAR REFRIGERATOR
+                  // ✅ INI DAFTAR REFRIGERATOR
                   SizedBox(
                     child: ListView.builder(
                       shrinkWrap: true,
@@ -275,11 +308,88 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                                     },
                                     child: Icon(Icons.edit, size: 18),
                                   ),
+                                  SizedBox(width: 10),
+                                  InkWell(
+                                    onTap: () async {
+                                      bool? result = await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Dialog(
+                                            child: UpdateFreezerImage(
+                                              freezer: freezer,
+                                              selectedStatus: (newStatus) {
+                                                setState(() {
+                                                  freezerStatus =
+                                                      newStatus?.name;
+                                                });
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      );
+                                      if (result == true) {
+                                        get<StockViewModel>().reloadBuy = true;
+                                        setState(() {
+                                          _message =
+                                              "Berhasil update status freezer";
+                                        });
+                                        await Future.delayed(
+                                          Durations.extralong4,
+                                        );
+                                        get<StockViewModel>().reloadBuy = null;
+
+                                        setState(() {
+                                          _message = null;
+                                        });
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      } else if (result == false) {
+                                        setState(() {
+                                          _message =
+                                              "Update status freezer tidak berhasil";
+                                        });
+                                        await Future.delayed(
+                                          Durations.extralong4,
+                                        );
+                                        setState(() {
+                                          _message = null;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _message = "test";
+                                        });
+                                        await Future.delayed(
+                                          Durations.extralong4,
+                                        );
+                                        setState(() {
+                                          _message = null;
+                                        });
+                                      }
+                                    },
+                                    child: Icon(Icons.image, size: 18),
+                                  ),
                                 ],
                               ),
                               Row(
                                 children: [Text(freezer['description'] ?? "")],
                               ),
+
+                              freezer['image'] != null
+                                  ? Container(
+                                    height: 120,
+                                    width: 200,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Image.network(
+                                      ApplicationInfo.baseUrl +
+                                          freezer['image'],
+                                    ),
+                                  )
+                                  : SizedBox(),
                             ],
                           ),
                         );
@@ -503,6 +613,86 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
 
                   //TODO: AKHIR ADMIN AREA
                   SizedBox(height: 10),
+
+                  // ✅ Image Preview
+                  _imageMobile != null || _imageWeb != null
+                      ? Container(
+                        height: 120,
+                        width: 150,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        child:
+                            kIsWeb
+                                ? Image.memory(_imageWeb!)
+                                : Image.file(File(_imageMobile!.path)),
+                      )
+                      : widget.shop['image'] != null
+                      ? Container(
+                        height: 120,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Image.network(
+                          ApplicationInfo.baseUrl + widget.shop['image'],
+                        ),
+                      )
+                      : SizedBox(
+                        height: 120,
+                        width: 150,
+                        child: Icon(Icons.image, size: 100, color: Colors.grey),
+                      ),
+
+                  SizedBox(height: 10),
+
+                  // ✅ Pick Image Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (!kIsWeb) // ✅ Mobile: Camera & Gallery
+                        ElevatedButton.icon(
+                          icon: Icon(Icons.camera),
+                          label: Text("Camera"),
+                          onPressed: () => _pickImageMobile(ImageSource.camera),
+                        ),
+                      if (!kIsWeb) SizedBox(width: 10),
+                      if (!kIsWeb)
+                        ElevatedButton.icon(
+                          icon: Icon(Icons.photo),
+                          label: Text("Gallery"),
+                          onPressed:
+                              () => _pickImageMobile(ImageSource.gallery),
+                        ),
+                      if (kIsWeb) // ✅ Web: File Picker
+                        GradientElevatedButton(
+                          onPressed: _pickImageWeb,
+                          buttonHeight: 30,
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.green,
+                              Colors.green[800] ?? Colors.greenAccent,
+                            ],
+                          ),
+                          // inactiveDelay: Duration.zero,
+                          child: Text(
+                            "Upload Image",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 18,
+                    child: Text(
+                      _errorMessage,
+                      style: TextStyle(
+                        color: Colors.redAccent.shade700,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
 
                   TextFormField(
                     controller: _nameController,

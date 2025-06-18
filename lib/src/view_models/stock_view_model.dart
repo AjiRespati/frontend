@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/application_info.dart';
 import 'package:frontend/src/models/product_transaction.dart';
 import 'package:frontend/src/services/api_service.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
@@ -1186,17 +1187,18 @@ class StockViewModel extends ChangeNotifier {
 
   Future<bool> updateShop({
     required BuildContext context,
-    required String? id,
+    required String id,
     required String? salesId,
     required String? subAgentId,
     required String? agentId,
     required String? name,
-    required String? image,
     required String? address,
     required String? coordinates,
     required String? phone,
     required String? email,
     required String? status,
+    required Uint8List? imageWeb,
+    required XFile? imageDevice,
   }) async {
     return await apiService.updateShop(
       context: context,
@@ -1205,12 +1207,13 @@ class StockViewModel extends ChangeNotifier {
       subAgentId: subAgentId,
       agentId: agentId,
       name: name,
-      image: image,
       address: address,
       coordinates: coordinates,
       phone: phone,
       email: email,
       status: status,
+      imageWeb: imageWeb,
+      imageDevice: imageDevice,
     );
   }
 
