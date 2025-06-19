@@ -23,7 +23,8 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
             : level == 3
             ? get<StockViewModel>().agentStockTable
             : get<StockViewModel>().agentStockTable;
-
+    print("HMMMMM null kah...???");
+    print(mainItem);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -73,7 +74,7 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
             Row(
               children: [
                 Text('Total item terjual: '),
-                Text(mainItem['totalAmount'].toString()),
+                Text((mainItem?['totalAmount'] ?? 0).toString()),
               ],
             ),
             Row(
@@ -237,27 +238,29 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
 
   double _generateTotalKomisi(dynamic mainItem, int level) {
     double totalKomisi = 0;
-    switch (level) {
-      case 5:
-        totalKomisi.toDouble();
-        break;
-      case 4:
-        totalKomisi.toDouble();
-        break;
-      case 3:
-        totalKomisi = mainItem['totalAgentCommission'].toDouble();
-        break;
-      case 2:
-        totalKomisi = mainItem['totalSubAgentCommission'].toDouble();
-        break;
-      case 1:
-        totalKomisi = mainItem['totalSalesmanCommission'].toDouble();
-        break;
-      case 6:
-        totalKomisi = mainItem['totalShopCommission'].toDouble();
-        break;
-      default:
-        totalKomisi;
+    if (mainItem != null) {
+      switch (level) {
+        case 5:
+          totalKomisi.toDouble();
+          break;
+        case 4:
+          totalKomisi.toDouble();
+          break;
+        case 3:
+          totalKomisi = mainItem['totalAgentCommission'].toDouble();
+          break;
+        case 2:
+          totalKomisi = mainItem['totalSubAgentCommission'].toDouble();
+          break;
+        case 1:
+          totalKomisi = mainItem['totalSalesmanCommission'].toDouble();
+          break;
+        case 6:
+          totalKomisi = mainItem['totalShopCommission'].toDouble();
+          break;
+        default:
+          totalKomisi;
+      }
     }
     return totalKomisi.toDouble();
   }
