@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:frontend/application_info.dart';
 import 'package:frontend/src/routes/route_names.dart';
 import 'package:frontend/src/view_models/stock_view_model.dart';
 
@@ -82,180 +83,193 @@ class _ShopTableCardState extends State<ShopTableCard> with GetItStateMixin {
               );
             },
             child: SizedBox(
-              height: 130,
-              child: Row(
-                children: [
-                  SizedBox(width: 10),
-                  Expanded(
-                    flex: 6,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                widget.shop['name'] ?? " N/A",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                maxLines: 2,
-                                widget.shop['address'] ?? " N/A",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              widget.shop['phone'] ?? " N/A",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                widget.shop['email'] ?? " N/A",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              (widget.shop['status'] ?? " N/A").toUpperCase(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: statusColor(
-                                  widget.shop['status'] ?? " N/A",
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 15),
-                        if (widget.shop['Salesman'] != null)
-                          Row(children: [Text("Sales:")]),
-                        if (widget.shop['Salesman'] != null)
+              height: 160,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              SizedBox(width: 10),
-                              Text(
-                                widget.shop['Salesman']['name'],
-                                style: TextStyle(fontWeight: FontWeight.w700),
-                              ),
-                            ],
-                          ),
-                        if (widget.shop['SubAgent'] != null)
-                          Row(children: [Text("Sub Agent:")]),
-                        if (widget.shop['SubAgent'] != null)
-                          Row(
-                            children: [
-                              SizedBox(width: 10),
-                              Text(
-                                widget.shop['SubAgent']['name'],
-                                style: TextStyle(fontWeight: FontWeight.w700),
-                              ),
-                            ],
-                          ),
-                        if (widget.shop['Agent'] != null)
-                          Row(children: [Text("Agent:")]),
-                        if (widget.shop['Agent'] != null)
-                          Row(
-                            children: [
-                              SizedBox(width: 10),
-                              Text(
-                                widget.shop['Agent']['name'],
-                                style: TextStyle(fontWeight: FontWeight.w700),
-                              ),
-                            ],
-                          ),
-                        if (widget.shop['Salesman'] == null &&
-                            widget.shop['SubAgent'] == null &&
-                            widget.shop['Agent'] == null &&
-                            !widget.isClient)
-                          Row(
-                            children: [
-                              SizedBox(width: 10),
-                              Text(
-                                "Toko Tanpa Sales",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        Row(children: [Text("Freezer:")]),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: SizedBox(
-                            height: 55,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount:
-                                  widget.shop['Refrigerators'] == null
-                                      ? 0
-                                      : widget.shop['Refrigerators'].length,
-                              itemBuilder: (context, index) {
-                                var item = widget.shop['Refrigerators'][index];
-                                return Row(
-                                  key: ValueKey(index + 8000),
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        "${item['name']} (${item['serialNumber']})",
-                                        overflow: TextOverflow.ellipsis,
+                              widget.shop['image'] != null
+                                  ? Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey.shade200,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
                                       ),
                                     ),
-                                  ],
-                                );
-                              },
-                            ),
+                                    child: Image.network(
+                                      ApplicationInfo.baseUrl +
+                                          widget.shop['image'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                  : SizedBox(
+                                    height: 100,
+                                    width: 100,
+                                    child: Icon(
+                                      Icons.image,
+                                      size: 100,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                              SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        widget.shop['name'] ?? " N/A",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        maxLines: 2,
+                                        widget.shop['address'] ?? " N/A",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        widget.shop['phone'] ?? " N/A",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        widget.shop['email'] ?? " N/A",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        (widget.shop['status'] ?? " N/A")
+                                            .toUpperCase(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: statusColor(
+                                            widget.shop['status'] ?? " N/A",
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
+                          SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              if (widget.shop['Salesman'] != null)
+                                Text("Sales: "),
+                              if (widget.shop['Salesman'] != null)
+                                Text(
+                                  widget.shop['Salesman']['name'],
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                              if (widget.shop['SubAgent'] != null)
+                                Text("Sales: "),
+                              if (widget.shop['SubAgent'] != null)
+                                Text(
+                                  widget.shop['SubAgent']['name'],
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                              if (widget.shop['Agent'] != null) Text("Sales: "),
+                              if (widget.shop['Agent'] != null)
+                                Text(
+                                  widget.shop['Agent']['name'],
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("Freezer:"),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        widget.shop['Refrigerators'] == null
+                                            ? 0
+                                            : widget
+                                                .shop['Refrigerators']
+                                                .length,
+                                    itemBuilder: (context, index) {
+                                      var item =
+                                          widget.shop['Refrigerators'][index];
+                                      return Row(
+                                        key: ValueKey(index + 8000),
+                                        children: [
+                                          Text(
+                                            "${item['name']} (${item['serialNumber']})",
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              shopsDetailRoute,
+                              arguments: widget.shop,
+                            );
+                          },
+                          icon: Icon(Icons.chevron_right_outlined, size: 40),
                         ),
                       ],
                     ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            shopsDetailRoute,
-                            arguments: widget.shop,
-                          );
-                        },
-                        icon: Icon(Icons.chevron_right_outlined, size: 40),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

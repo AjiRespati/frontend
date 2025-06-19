@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:frontend/application_info.dart';
 import 'package:frontend/src/features/freezer/components/update_freezer.dart';
 
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -13,8 +14,6 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    // String imageUrl = ApplicationInfo.baseUrl + (stock['image'] ?? '');
-    // print(freezer);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
@@ -36,14 +35,33 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
             },
           );
         },
-        child: SizedBox(
-          height: 130,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(width: 10),
+              freezer['image'] != null
+                  ? Container(
+                    height: 90,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade200),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: Image.network(
+                      ApplicationInfo.baseUrl + freezer['image'],
+                    ),
+                  )
+                  : SizedBox(
+                    height: 90,
+                    width: 80,
+                    child: Icon(Icons.image, size: 100, color: Colors.grey),
+                  ),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
@@ -51,22 +69,24 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
                           freezer['name'] ?? " N/A",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          freezer['serialNumber'] ?? " N/A",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        SizedBox(width: 8),
+                        Flexible(
+                          flex: 3,
+                          child: Text(
+                            freezer['serialNumber'] ?? " N/A",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          freezer['capacity'] ?? " N/A",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            freezer['capacity'] ?? " N/A",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
+                        SizedBox(width: 8),
                       ],
                     ),
                     Row(
@@ -84,92 +104,30 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
                         ),
                       ],
                     ),
-                    // Row(
-                    //   children: [
-                    //     Text("Unit: "),
-                    //     Text(
-                    //       stock['metricName'] ?? " N/A",
-                    //       style: TextStyle(
-                    //         fontWeight: FontWeight.bold,
-                    //         color: Colors.blue,
-                    //         fontSize: 16,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Text("Stock In: "),
-                    //     Text((stock['totalStockIn'] ?? " N/A").toString()),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Text("Stock Out: "),
-                    //     Text((stock['totalStockOut'] ?? " N/A").toString()),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Text("Stock On Hand: "),
-                    //     Text(
-                    //       stockStatus == 'settled'
-                    //           ? (stock['latestUpdateAmount'] ?? " N/A")
-                    //               .toString()
-                    //           : " -",
-                    //       style: TextStyle(
-                    //         fontWeight: FontWeight.w900,
-                    //         color: Colors.green[800],
-                    //         fontSize: 16,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Text("Last Update: "),
-                    //     Text(
-                    //       formatDateString(
-                    //         (stock['lastStockUpdate'] ??
-                    //             "2000-01-01T01:00:00.204Z"),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            freezer['Shop']['name'],
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            freezer['Shop']['address'],
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-              ),
-              SizedBox(width: 10),
-              Expanded(
-                child:
-                    freezer['Shop'] != null
-                        ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    freezer['Shop']['name'],
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    freezer['Shop']['address'],
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                        : SizedBox(),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -197,7 +155,6 @@ class FreezerTableCard extends StatelessWidget with GetItMixin {
                   ),
                 ],
               ),
-              SizedBox(width: 10),
             ],
           ),
         ),

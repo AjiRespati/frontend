@@ -485,10 +485,9 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                         setState(() {});
                       },
                     ),
-                  SizedBox(height: 30),
+                  if (!_isClient && _isNoSales) SizedBox(height: 30),
                   if (!_isClient && _isNoSales) Text("Tugaskan Sales"),
-
-                  SizedBox(height: 10),
+                  if (!_isClient && _isNoSales) SizedBox(height: 10),
                   if (!_isClient && _isNoSales)
                     Row(children: [Text("Salesman")]),
                   if (!_isClient && _isNoSales)
@@ -520,8 +519,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                         setState(() {});
                       },
                     ),
-
-                  SizedBox(height: 10),
+                  if (!_isClient && _isNoSales) SizedBox(height: 10),
                   if (!_isClient && _isNoSales)
                     Row(children: [Text("Sub Agent")]),
                   if (!_isClient && _isNoSales)
@@ -553,8 +551,7 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                         setState(() {});
                       },
                     ),
-
-                  SizedBox(height: 10),
+                  if (!_isClient && _isNoSales) SizedBox(height: 10),
                   if (!_isClient && _isNoSales) Row(children: [Text("Agent")]),
                   if (!_isClient && _isNoSales)
                     DropdownButtonFormField<String>(

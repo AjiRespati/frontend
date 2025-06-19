@@ -36,7 +36,6 @@ class _UpdateFreezerImageState extends State<UpdateFreezerImage>
   bool _isClient = true;
   final String _errorMessage = "";
   late FreezerStatus _selectedStatus;
-  final List<FreezerStatus> _allStatuses = FreezerStatus.values;
   final TextEditingController _freezerDescController = TextEditingController();
 
   XFile? _imageMobile;
