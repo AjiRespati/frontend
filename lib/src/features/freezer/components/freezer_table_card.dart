@@ -247,7 +247,7 @@ class _FreezerTableCardState extends State<FreezerTableCard>
                     children: [
                       Flexible(
                         child: Text(
-                          widget.freezer['Shop']['name'],
+                          widget.freezer['Shop']?['name'] ?? " -",
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -257,7 +257,7 @@ class _FreezerTableCardState extends State<FreezerTableCard>
                     children: [
                       Flexible(
                         child: Text(
-                          widget.freezer['Shop']['address'],
+                          widget.freezer['Shop']?['address'] ?? " -",
                           overflow: TextOverflow.ellipsis,
                           maxLines: 3,
                         ),
