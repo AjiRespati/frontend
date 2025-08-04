@@ -49,7 +49,7 @@ class ResumeCard extends StatelessWidget with GetItMixin {
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 14,
-                                color: Colors.blue.shade700,
+                                color: Colors.red.shade700,
                               ),
                             ),
                           ],
@@ -181,7 +181,7 @@ class ResumeCard extends StatelessWidget with GetItMixin {
                   icon: Icon(
                     Icons.delete,
                     size: 26,
-                    color: Colors.blue.shade600,
+                    color: Colors.red.shade600,
                   ),
                 ),
             ],
@@ -203,7 +203,7 @@ class ResumeCard extends StatelessWidget with GetItMixin {
       case "settled":
         return Colors.green.shade700;
       case "canceled":
-        return Colors.blue.shade700;
+        return Colors.red.shade700;
       default:
         return Colors.black;
     }

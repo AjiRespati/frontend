@@ -56,7 +56,7 @@ class RemoveButton extends StatelessWidget {
                             gradient: LinearGradient(
                               colors: [
                                 Colors.lightBlue.shade400,
-                                Colors.blueAccent,
+                                Colors.redAccent,
                               ],
                             ),
                             buttonHeight: 25,

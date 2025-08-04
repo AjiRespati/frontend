@@ -209,7 +209,7 @@ class _AddShopState extends State<AddShop> with GetItStateMixin {
                       child: SizedBox(
                         width: 25,
                         height: 25,
-                        child: CircularProgressIndicator(color: Colors.blue),
+                        child: CircularProgressIndicator(color: Colors.red),
                       ),
                     ),
                 ],

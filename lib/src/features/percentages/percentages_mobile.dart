@@ -68,7 +68,7 @@ class _PercentagesMobileState extends State<PercentagesMobile>
               child: SizedBox(
                 width: 25,
                 height: 25,
-                child: CircularProgressIndicator(color: Colors.blue),
+                child: CircularProgressIndicator(color: Colors.red),
               ),
             ),
           Text("Add"),
@@ -238,7 +238,7 @@ class _PercentagesMobileState extends State<PercentagesMobile>
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Colors.blue.shade800,
+                              color: Colors.red.shade800,
                             ),
                           ),
                           SizedBox(width: 4),
@@ -270,7 +270,7 @@ class _PercentagesMobileState extends State<PercentagesMobile>
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
-                                            color: Colors.blue.shade700,
+                                            color: Colors.red.shade700,
                                           ),
                                         ),
                                         Text(

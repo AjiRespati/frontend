@@ -126,7 +126,7 @@ class _ShopTableCardState extends State<ShopTableCard> with GetItStateMixin {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.download, color: Colors.blue.shade700),
+                      icon: Icon(Icons.download, color: Colors.red.shade700),
                       onPressed:
                           () => downloadImageAndClosePopup(
                             dialogContext,
@@ -136,7 +136,7 @@ class _ShopTableCardState extends State<ShopTableCard> with GetItStateMixin {
                     ),
                     SizedBox(width: 5),
                     IconButton(
-                      icon: Icon(Icons.close, color: Colors.blue.shade700),
+                      icon: Icon(Icons.close, color: Colors.red.shade700),
                       onPressed: () => Navigator.of(dialogContext).pop(),
                     ),
                   ],

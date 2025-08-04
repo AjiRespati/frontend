@@ -42,7 +42,7 @@ class UserTableCard extends StatelessWidget with GetItMixin {
                           user['email'] ?? " N/A",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue,
+                            color: Colors.red,
                             fontSize: 16,
                           ),
                         ),
@@ -57,7 +57,7 @@ class UserTableCard extends StatelessWidget with GetItMixin {
                           user['phone'] ?? " N/A",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue,
+                            color: Colors.red,
                             fontSize: 16,
                           ),
                         ),

@@ -6,7 +6,7 @@ class GradientElevatedButton extends StatefulWidget {
     required this.onPressed,
     required this.child,
     this.gradient = const LinearGradient(
-      colors: [Colors.blue, Color.fromRGBO(30, 48, 241, 1)],
+      colors: [Colors.red, Color.fromARGB(255, 249, 84, 72)],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),

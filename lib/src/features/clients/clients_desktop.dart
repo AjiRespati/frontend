@@ -10,7 +10,7 @@ class ClientsDesktop extends StatelessWidget with GetItMixin {
     return PageContainer(
       setSidebarExpanding: true,
       showMenubutton: true,
-      mainSection: Container(color: Colors.blueAccent),
+      mainSection: Container(color: Colors.redAccent),
     );
   }
 }

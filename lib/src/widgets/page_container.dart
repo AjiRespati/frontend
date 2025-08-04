@@ -106,7 +106,7 @@ class _PageContainerState extends State<PageContainer> {
                         height: 30,
                         child: Icon(
                           size: 26,
-                          color: Colors.blue[700],
+                          color: Colors.red[700],
                           sideBarExpanding
                               ? Icons.chevron_left
                               : Icons.chevron_right,
@@ -136,7 +136,7 @@ class _PageContainerState extends State<PageContainer> {
                 child: Icon(
                   Icons.menu_rounded,
                   size: 30,
-                  color: Colors.blue[700],
+                  color: Colors.red[700],
                 ),
               ),
             ),

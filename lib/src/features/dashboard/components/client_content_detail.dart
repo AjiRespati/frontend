@@ -36,7 +36,7 @@ class ClientContentDetail extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
-                  color: Colors.blue.shade700,
+                  color: Colors.red.shade700,
                 ),
               ),
             ],

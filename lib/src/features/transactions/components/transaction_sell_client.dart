@@ -129,7 +129,7 @@ class _TransactionSellClientState extends State<TransactionSellClient>
                 formatCurrency(get<StockViewModel>().sumTransactions),
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: Colors.blue.shade700,
+                  color: Colors.red.shade700,
                 ),
               ),
               SizedBox(width: 13),
@@ -392,7 +392,7 @@ class _TransactionSellClientState extends State<TransactionSellClient>
                                 gradient: LinearGradient(
                                   colors: [
                                     Colors.lightBlue.shade400,
-                                    Colors.blueAccent,
+                                    Colors.redAccent,
                                   ],
                                 ),
                                 buttonHeight: 25,

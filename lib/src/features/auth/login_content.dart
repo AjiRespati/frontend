@@ -37,11 +37,17 @@ class _LoginContentState extends State<LoginContent> with GetItStateMixin {
           children: [
             Text(
               ApplicationInfo.appName,
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.red,
+                fontWeight: FontWeight.w600,
+                decorationColor: Colors.red,
+                decorationThickness: 1.5,
+              ),
             ),
           ],
         ),
-        Text(ApplicationInfo.appVersion),
+        Text(ApplicationInfo.appVersion, style: TextStyle(fontSize: 12)),
         const SizedBox(height: 20),
         TextFormField(
           keyboardType: TextInputType.emailAddress,
@@ -55,6 +61,7 @@ class _LoginContentState extends State<LoginContent> with GetItStateMixin {
               vertical: 2,
             ),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+            isDense: true,
           ),
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) {
@@ -90,6 +97,7 @@ class _LoginContentState extends State<LoginContent> with GetItStateMixin {
                 });
               },
             ),
+            isDense: true,
           ),
           autovalidateMode: AutovalidateMode.onUnfocus,
           validator: (value) {
@@ -216,16 +224,29 @@ class _LoginContentState extends State<LoginContent> with GetItStateMixin {
               child: Text(
                 "Register",
                 style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                  color: Colors.red,
+                  fontWeight: FontWeight.w600,
                   decoration: TextDecoration.underline,
-                  decorationColor: Colors.blue,
+                  decorationColor: Colors.red,
                   decorationThickness: 1.5,
                 ),
               ),
             ),
           ],
+        ),
+        const SizedBox(height: 50),
+        Center(child: Image.asset('assets/images/walls_logo.png', width: 150)),
+        const SizedBox(height: 10),
+        Text(
+          "Bikin Semua Jadi Happy",
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.red,
+            fontWeight: FontWeight.w700,
+            decorationColor: Colors.red,
+            decorationThickness: 1.5,
+          ),
         ),
       ],
     );

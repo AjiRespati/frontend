@@ -90,8 +90,8 @@ class SettingsMobile extends StatelessWidget with GetItMixin {
                           "Ganti Password",
                           style: TextStyle(
                             decoration: TextDecoration.underline,
-                            decorationColor: Colors.blue.shade600,
-                            color: Colors.blue.shade600,
+                            decorationColor: Colors.red.shade600,
+                            color: Colors.red.shade600,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

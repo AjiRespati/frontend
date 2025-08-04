@@ -50,15 +50,15 @@ class _StockMobileState extends State<StockMobile>
               child: SizedBox(
                 width: 25,
                 height: 25,
-                child: CircularProgressIndicator(color: Colors.blue),
+                child: CircularProgressIndicator(color: Colors.red),
               ),
             ),
         ],
         bottom: TabBar(
-          labelColor: Colors.blue,
+          labelColor: Colors.red,
           unselectedLabelColor: Colors.grey,
           controller: _stockTabController,
-          indicatorColor: Colors.blue,
+          indicatorColor: Colors.red,
           indicatorSize: TabBarIndicatorSize.label,
           indicatorWeight: 5,
           tabs: [

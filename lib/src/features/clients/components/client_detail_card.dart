@@ -56,7 +56,7 @@ class ClientDetailCard extends StatelessWidget with GetItMixin {
                   formatCurrency(_generateKomisi(item)),
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    color: Colors.blue.shade700,
+                    color: Colors.red.shade700,
                   ),
                 ),
               ],

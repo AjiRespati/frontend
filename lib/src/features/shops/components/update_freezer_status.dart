@@ -119,7 +119,7 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
               freezerStatusFromString(widget.freezer['status']).displayName,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Colors.blue.shade600,
+                color: Colors.red.shade600,
               ),
             ),
             Divider(),
@@ -129,7 +129,7 @@ class _UpdateFreezerStatusState extends State<UpdateFreezerStatus>
               return RadioListTile<FreezerStatus>(
                 dense: true,
                 radioScaleFactor: 0.8,
-                activeColor: Colors.blue.shade700,
+                activeColor: Colors.red.shade700,
                 title: Text(status.displayName),
                 value: status,
                 groupValue:
