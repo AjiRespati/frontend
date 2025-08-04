@@ -147,7 +147,7 @@ void snackbarGenerator(BuildContext context, StockViewModel model) {
 void _showSnackBar(
   BuildContext context,
   String message, {
-  Color color = Colors.blue,
+  Color color = Colors.red,
   Duration duration = const Duration(seconds: 4),
 }) {
   ScaffoldMessenger.of(context).showSnackBar(

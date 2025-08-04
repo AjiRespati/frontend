@@ -59,7 +59,7 @@ class _TransactionMobileState extends State<TransactionMobile>
               child: SizedBox(
                 width: 25,
                 height: 25,
-                child: CircularProgressIndicator(color: Colors.blue),
+                child: CircularProgressIndicator(color: Colors.red),
               ),
             ),
         ],
@@ -68,10 +68,10 @@ class _TransactionMobileState extends State<TransactionMobile>
         //     ? null
         //     :
         TabBar(
-          labelColor: Colors.blue.shade800,
+          labelColor: Colors.red.shade800,
           unselectedLabelColor: Colors.grey.shade600,
           controller: _transactionTabController,
-          indicatorColor: Colors.blue.shade700,
+          indicatorColor: Colors.red.shade700,
           indicatorSize: TabBarIndicatorSize.label,
           indicatorWeight: 5,
           labelStyle: TextStyle(fontWeight: FontWeight.w500),

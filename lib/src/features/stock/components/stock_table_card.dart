@@ -110,7 +110,7 @@ class StockTableCard extends StatelessWidget with GetItMixin {
                               stock['metricName'] ?? " N/A",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.blue,
+                                color: Colors.red,
                                 fontSize: 16,
                               ),
                             ),

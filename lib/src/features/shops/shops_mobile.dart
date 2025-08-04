@@ -37,7 +37,7 @@ class _ShopsMobileState extends State<ShopsMobile> with GetItStateMixin {
               child: SizedBox(
                 width: 25,
                 height: 25,
-                child: CircularProgressIndicator(color: Colors.blue),
+                child: CircularProgressIndicator(color: Colors.red),
               ),
             ),
           if (0 < (get<SystemViewModel>().level ?? 0) ||

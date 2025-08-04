@@ -22,7 +22,7 @@ class UserManagementMobile extends StatelessWidget with GetItMixin {
               child: SizedBox(
                 width: 25,
                 height: 25,
-                child: CircularProgressIndicator(color: Colors.blue),
+                child: CircularProgressIndicator(color: Colors.red),
               ),
             ),
         ],
@@ -32,7 +32,7 @@ class UserManagementMobile extends StatelessWidget with GetItMixin {
               ? SizedBox(
                 width: 25,
                 height: 25,
-                child: CircularProgressIndicator(color: Colors.blue),
+                child: CircularProgressIndicator(color: Colors.red),
               )
               : watchOnly((SystemViewModel x) => x.users).isEmpty
               ? Text("user not found")

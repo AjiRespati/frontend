@@ -92,7 +92,7 @@ class _ShopDetailMobileState extends State<ShopDetailMobile>
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: Colors.blue[900],
+                          color: Colors.red[900],
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),

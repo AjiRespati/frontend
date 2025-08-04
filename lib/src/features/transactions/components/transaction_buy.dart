@@ -108,7 +108,7 @@ class _TransactionBuyState extends State<TransactionBuy> with GetItStateMixin {
                 formatCurrency(get<StockViewModel>().sumTransactions),
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: Colors.blue.shade700,
+                  color: Colors.red.shade700,
                 ),
               ),
               SizedBox(width: 13),
@@ -389,7 +389,7 @@ class _SelectMetricState extends State<SelectMetric> {
                         child: RadioListTile<String>(
                           dense: true,
                           radioScaleFactor: 0.8,
-                          activeColor: Colors.blue.shade700,
+                          activeColor: Colors.red.shade700,
                           title: Text(metric.toUpperCase()),
                           value: metric,
                           groupValue: _selectedMetric,

@@ -61,7 +61,7 @@ class _TransactionResumeState extends State<TransactionResume>
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: Colors.blue.shade600,
+                    color: Colors.red.shade600,
                   ),
                 ),
               ),
@@ -373,7 +373,7 @@ class _TransactionResumeState extends State<TransactionResume>
                       child: RadioListTile<String>(
                         dense: true,
                         radioScaleFactor: 0.8,
-                        activeColor: Colors.blue.shade700,
+                        activeColor: Colors.red.shade700,
                         contentPadding: EdgeInsets.zero,
                         title: Badge.count(
                           smallSize: 10,

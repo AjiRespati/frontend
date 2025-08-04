@@ -53,7 +53,7 @@ class _ProductDetailCardState extends State<ProductDetailCard>
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Colors.blue[900],
+                        color: Colors.red[900],
                       ),
                     ),
                   ],
@@ -67,7 +67,7 @@ class _ProductDetailCardState extends State<ProductDetailCard>
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: Colors.blue[900],
+                        color: Colors.red[900],
                       ),
                     ),
                     Text(
@@ -75,7 +75,7 @@ class _ProductDetailCardState extends State<ProductDetailCard>
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: Colors.blue[900],
+                        color: Colors.red[900],
                       ),
                     ),
                     SizedBox(width: 20),
@@ -217,7 +217,7 @@ class _ProductDetailCardState extends State<ProductDetailCard>
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: Colors.blue[900],
+                        color: Colors.red[900],
                       ),
                     ),
                     Text(
@@ -225,7 +225,7 @@ class _ProductDetailCardState extends State<ProductDetailCard>
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: Colors.blue[900],
+                        color: Colors.red[900],
                       ),
                     ),
                   ],
@@ -239,7 +239,7 @@ class _ProductDetailCardState extends State<ProductDetailCard>
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Colors.blue[900],
+                        color: Colors.red[900],
                       ),
                     ),
                   ],

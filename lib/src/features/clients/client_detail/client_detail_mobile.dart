@@ -36,7 +36,7 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
               child: SizedBox(
                 width: 25,
                 height: 25,
-                child: CircularProgressIndicator(color: Colors.blue),
+                child: CircularProgressIndicator(color: Colors.red),
               ),
             ),
         ],
@@ -55,7 +55,7 @@ class ClientDetailMobile extends StatelessWidget with GetItMixin {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: Colors.blue[900],
+                      color: Colors.red[900],
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),

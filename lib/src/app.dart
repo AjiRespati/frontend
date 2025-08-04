@@ -20,10 +20,33 @@ class App extends StatelessWidget {
         return MaterialApp(
           title: ApplicationInfo.appName,
           theme: ThemeData(
-            textTheme: GoogleFonts.mulishTextTheme(),
+            // Set the textTheme to a different Google Font.
+            // Rubik is a great option that has a playful, rounded feel.
+            textTheme: GoogleFonts.maliTextTheme(
+              Theme.of(
+                context,
+              ).textTheme, // This ensures that the existing theme properties are preserved
+            ),
             colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.deepPurple.shade700,
+              seedColor: Colors.red.shade400,
+              primary: Colors.red,
+              secondary: Colors.yellow.shade800,
               // surface: const Color.fromRGBO(0, 0, 255, 0.03),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+            ),
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.red,
+                side: const BorderSide(color: Colors.red),
+              ),
             ),
             useMaterial3: true,
           ),

@@ -179,7 +179,7 @@ class _UpdateFreezerImageState extends State<UpdateFreezerImage>
               freezerStatusFromString(widget.freezer['status']).displayName,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Colors.blue.shade600,
+                color: Colors.red.shade600,
               ),
             ),
             SizedBox(height: 10),

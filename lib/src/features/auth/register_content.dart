@@ -85,10 +85,10 @@ class RegisterContent extends StatelessWidget with GetItMixin {
                       "Login",
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.blue,
+                        color: Colors.red,
                         fontWeight: FontWeight.w700,
                         decoration: TextDecoration.underline,
-                        decorationColor: Colors.blue,
+                        decorationColor: Colors.red,
                         decorationThickness: 1.5,
                       ),
                     ),

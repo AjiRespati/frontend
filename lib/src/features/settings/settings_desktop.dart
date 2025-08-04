@@ -9,7 +9,7 @@ class SettingsDesktop extends StatelessWidget {
     return PageContainer(
       setSidebarExpanding: true,
       showMenubutton: true,
-      mainSection: Container(color: Colors.blueAccent),
+      mainSection: Container(color: Colors.redAccent),
     );
   }
 }

@@ -18,9 +18,9 @@ class ApplicationInfo {
 
   static const isProduction = baseUrl == baseUrlProd;
 
-  static const appVersion = '1.1.9 ${isProduction ? "" : "DEV"}';
+  static const appVersion = '2.0.0 ${isProduction ? "" : "DEV"}';
 
-  static const appName = "Gracia Rafflesia";
+  static const appName = "Magnum Rafflesia Bekasi";
 
   static const secondColor = Color.fromARGB(255, 171, 203, 60);
   static const thirdColor = Colors.amber;

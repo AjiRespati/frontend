@@ -23,7 +23,7 @@ class FreezerMobile extends StatelessWidget with GetItMixin {
               child: SizedBox(
                 width: 25,
                 height: 25,
-                child: CircularProgressIndicator(color: Colors.blue),
+                child: CircularProgressIndicator(color: Colors.red),
               ),
             ),
           SizedBox(width: 5),

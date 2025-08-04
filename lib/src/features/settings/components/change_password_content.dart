@@ -36,7 +36,7 @@ class _ChangePasswordContentState extends State<ChangePasswordContent>
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Colors.blue.shade600,
+                  color: Colors.red.shade600,
                 ),
               ),
             ],

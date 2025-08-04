@@ -129,7 +129,7 @@ class ProductCard extends StatelessWidget with GetItMixin {
                           "Last In: $formattedStockIn",
                           style: const TextStyle(
                             fontSize: 11,
-                            color: Colors.blue,
+                            color: Colors.red,
                           ),
                         ),
 
