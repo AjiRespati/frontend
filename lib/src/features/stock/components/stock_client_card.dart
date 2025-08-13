@@ -111,7 +111,7 @@ class StockClientCard extends StatelessWidget with GetItMixin {
                             ),
                             Flexible(
                               child: Text(
-                                stock['shopName'] ?? "Gracia Factory",
+                                stock['shopName'] ?? "Walls Factory",
                                 style: TextStyle(fontWeight: FontWeight.bold),
                                 overflow: TextOverflow.ellipsis,
                               ),

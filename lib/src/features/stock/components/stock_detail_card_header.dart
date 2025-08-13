@@ -34,7 +34,7 @@ class StockDetailCardHeader extends StatelessWidget {
                   SizedBox(width: 20),
                   Flexible(
                     child: Text(
-                      "${item['relatedEntity'] == 'N/A' ? "Gracia Factory" : item['relatedEntity']}",
+                      "${item['relatedEntity'] == 'N/A' ? "Walls Factory" : item['relatedEntity']}",
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,

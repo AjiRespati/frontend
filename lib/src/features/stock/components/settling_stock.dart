@@ -76,7 +76,7 @@ class _AddProductScreenState extends State<SettlingStock> with GetItStateMixin {
               SizedBox(width: 20),
               Text(
                 _isFactory
-                    ? "Gracia Factory"
+                    ? "Walls Factory"
                     : "${widget.item['entityType']}, ${widget.item['relatedEntity']}",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
