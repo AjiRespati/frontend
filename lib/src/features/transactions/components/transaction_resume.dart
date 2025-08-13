@@ -76,7 +76,7 @@ class _TransactionResumeState extends State<TransactionResume>
                       ),
                     ),
                     Text(
-                      "Gracia Factory",
+                      "Walls Factory",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -111,13 +111,13 @@ class _TransactionResumeState extends State<TransactionResume>
               ),
               SizedBox(height: 10),
               Text(
-                "Telah dilakukan?",
+                "Telah diterima?",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 20),
               Center(
                 child: Text(
-                  "Pastikan pembayaran telah dilakukan!",
+                  "Pastikan pembayaran telah diterima!",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
