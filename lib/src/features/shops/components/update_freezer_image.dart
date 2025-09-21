@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -150,7 +149,6 @@ class _UpdateFreezerImageState extends State<UpdateFreezerImage>
         (get<SystemViewModel>().level ?? 0) > 5;
     _selectedStatus = freezerStatusFromString(widget.freezer?['status']);
     _freezerDescController.text = widget.freezer?['description'] ?? "";
-    print(widget.freezer);
   }
 
   @override

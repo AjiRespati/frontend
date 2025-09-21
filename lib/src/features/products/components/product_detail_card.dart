@@ -47,7 +47,6 @@ class _ProductDetailCardState extends State<ProductDetailCard>
 
   @override
   Widget build(BuildContext context) {
-    print(widget.product);
     bool isClient =
         (get<SystemViewModel>().level ?? 0) < 4 ||
         (get<SystemViewModel>().level ?? 0) > 5;

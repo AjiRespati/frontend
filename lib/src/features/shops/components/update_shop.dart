@@ -457,8 +457,9 @@ class _UpdateShopState extends State<UpdateShop> with GetItStateMixin {
                       },
                       filterFn: (item, filter) {
                         // Optional: Custom filter logic
-                        if (filter.isEmpty)
-                          return true; // Show all if search is empty
+                        if (filter.isEmpty) {
+                          return true;
+                        } // Show all if search is empty
                         // Case-insensitive search
                         return item['name'].toLowerCase().contains(
                           filter.toLowerCase(),
