@@ -601,16 +601,20 @@ class StockViewModel extends ChangeNotifier {
     return;
   }
 
-  Future<bool> updatePrice(
-    BuildContext context,
-    String productId,
-    String priceId,
-    double price,
-  ) async {
+  Future<bool> updatePrice({
+    required BuildContext context,
+    required String productId,
+    required String priceId,
+    required double price,
+    required double shopPrice,
+    required double netPrice,
+  }) async {
     return await apiService.updatePrice(
       context: context,
       priceId: priceId,
       price: price,
+      shopPrice: shopPrice,
+      netPrice: netPrice,
     );
   }
 

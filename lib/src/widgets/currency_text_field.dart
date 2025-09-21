@@ -30,6 +30,12 @@ class _CurrencyTextFieldState extends State<CurrencyTextField> {
   void initState() {
     super.initState();
     widget.controller.addListener(_formatInput);
+    // ✅ Format once at startup if controller already has value
+    if (widget.controller.text.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _formatInput();
+      });
+    }
   }
 
   @override

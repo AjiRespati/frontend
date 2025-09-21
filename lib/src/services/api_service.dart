@@ -460,6 +460,8 @@ class ApiService {
     required BuildContext context,
     required String priceId,
     required double price,
+    required double shopPrice,
+    required double netPrice,
   }) async {
     String? token = await _getToken();
 
@@ -469,7 +471,11 @@ class ApiService {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $token",
       },
-      body: jsonEncode({'price': price}),
+      body: jsonEncode({
+        'price': price,
+        'shopPrice': shopPrice,
+        'netPrice': netPrice,
+      }),
     );
 
     if (response.statusCode == 401) {
