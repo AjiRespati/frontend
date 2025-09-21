@@ -6,6 +6,7 @@ import 'package:frontend/src/view_models/stock_view_model.dart';
 import 'package:frontend/src/view_models/system_view_model.dart';
 import 'package:frontend/src/widgets/buttons/add_button.dart';
 import 'package:frontend/src/widgets/buttons/gradient_elevated_button.dart';
+import 'package:frontend/src/widgets/currency_text_field.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
 class ProductDetailCard extends StatefulWidget with GetItStatefulWidgetMixin {
@@ -19,6 +20,11 @@ class ProductDetailCard extends StatefulWidget with GetItStatefulWidgetMixin {
 class _ProductDetailCardState extends State<ProductDetailCard>
     with GetItStateMixin {
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _shopPriceController = TextEditingController();
+  final TextEditingController _netPriceController = TextEditingController();
+  String priceText = "";
+  String shopPriceText = "";
+  String netPriceText = "";
   String _productId = "";
   String _priceId = "";
   // final List<dynamic>? stock;
@@ -26,8 +32,17 @@ class _ProductDetailCardState extends State<ProductDetailCard>
   @override
   void initState() {
     super.initState();
+
+    ///////////////////////////////////////////////////////
+    // Harga Jual Pabrik = widget.product.price          //
+    // Harga Jual Distributor = widget.product.shopPrice //
+    // Harga Jual Toko = widget.product.netPrice         //
+    ///////////////////////////////////////////////////////
     _priceId = widget.product['priceId'];
     _productId = widget.product['productId'];
+    _priceController.text = widget.product['price'].toString();
+    _shopPriceController.text = widget.product['shopPrice'].toString();
+    _netPriceController.text = widget.product['netPrice'].toString();
   }
 
   @override
@@ -119,12 +134,31 @@ class _ProductDetailCardState extends State<ProductDetailCard>
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                        TextField(
+
+                                        ///////////////////////////////////////////////////////
+                                        // Harga Jual Pabrik = widget.product.price          //
+                                        // Harga Jual Distributor = widget.product.shopPrice //
+                                        // Harga Jual Toko = widget.product.netPrice         //
+                                        ///////////////////////////////////////////////////////
+                                        CurrencyTextField(
                                           controller: _priceController,
-                                          decoration: InputDecoration(
-                                            labelText: "Harga",
-                                          ),
-                                          keyboardType: TextInputType.number,
+                                          label:
+                                              "Harga Jual Pabrik ke Distributor",
+                                          onChanged:
+                                              (value) => priceText = value,
+                                        ),
+                                        CurrencyTextField(
+                                          controller: _shopPriceController,
+                                          label:
+                                              "Harga Jual Distributor ke Toko",
+                                          onChanged:
+                                              (value) => shopPriceText = value,
+                                        ),
+                                        CurrencyTextField(
+                                          controller: _netPriceController,
+                                          label: "Harga Jual Toko ke Konsumen",
+                                          onChanged:
+                                              (value) => netPriceText = value,
                                         ),
                                         SizedBox(height: 30),
                                         Row(
@@ -171,11 +205,17 @@ class _ProductDetailCardState extends State<ProductDetailCard>
                                                   //TODO: KIRIM UPDATE
                                                   await get<StockViewModel>()
                                                       .updatePrice(
-                                                        context,
-                                                        _productId,
-                                                        _priceId,
-                                                        double.parse(
-                                                          _priceController.text,
+                                                        context: context,
+                                                        productId: _productId,
+                                                        priceId: _priceId,
+                                                        price: double.parse(
+                                                          priceText,
+                                                        ),
+                                                        shopPrice: double.parse(
+                                                          shopPriceText,
+                                                        ),
+                                                        netPrice: double.parse(
+                                                          netPriceText,
                                                         ),
                                                       );
                                                   await get<StockViewModel>()
